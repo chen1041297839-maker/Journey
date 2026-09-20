@@ -25,6 +25,16 @@ export type Evidence = {
   /** 公开页打不开或只有标题，链接仍保留 */
   partialRead?: boolean
   collectedBy?: "paste" | "search"
+  /** 评论不在公开 HTML 里（登录墙 / 仅 App） */
+  commentsGated?: boolean
+  /** 有用清单只在后续配图，公开页封面读不到 */
+  imageListPartial?: boolean
+}
+
+export type Warning = {
+  id: string
+  text: string
+  kind: "雷" | "注意"
 }
 
 export type Shop = {
@@ -92,6 +102,12 @@ export type Stop = {
   shops: Shop[]
   mustBuys: MustBuy[]
   photoSpots: PhotoSpot[]
+  warnings: Warning[]
+  /** 这一站公开页读不到评论 */
+  commentsGated?: boolean
+  /** 配图清单网页读不全 */
+  imageListPartial?: boolean
+  readFlags?: string[]
 }
 
 export type Day = {

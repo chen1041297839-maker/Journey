@@ -1,8 +1,7 @@
 "use client"
 
 import type { Outfit } from "@/data/types"
-import { EvidenceRow } from "@/components/evidence-card"
-import { useTrip } from "@/components/trip-provider"
+import { SourceLinks } from "@/components/source-links"
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -19,8 +18,6 @@ export function OutfitCard({
   outfit: Outfit
   compact?: boolean
 }) {
-  const { patchEvidence } = useTrip()
-
   if (compact) {
     return (
       <div className="rounded-xl border border-border bg-card px-4 py-3 ring-1 ring-foreground/5">
@@ -70,12 +67,7 @@ export function OutfitCard({
             <dd>{outfit.avoid}</dd>
           </div>
         </dl>
-        <EvidenceRow
-          evidence={outfit.evidence}
-          onChangeAt={(index, patch) =>
-            patchEvidence(outfit.evidence[index].id, patch)
-          }
-        />
+        <SourceLinks evidence={outfit.evidence} />
       </CardContent>
     </Card>
   )

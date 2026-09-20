@@ -8,6 +8,18 @@ const SAMPLE_URL: Record<Platform, string> = {
   instagram: "https://www.instagram.com/p/samplexenia/",
 }
 
+export function uniqueByUrl(list: Evidence[]): Evidence[] {
+  const seen = new Set<string>()
+  const next: Evidence[] = []
+  for (const item of list) {
+    if (item.isSample) continue
+    if (seen.has(item.url)) continue
+    seen.add(item.url)
+    next.push(item)
+  }
+  return next
+}
+
 export function sampleEvidence(
   seed: string,
   platform: Platform,

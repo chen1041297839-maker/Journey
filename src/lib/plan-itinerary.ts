@@ -22,7 +22,7 @@ import type {
 import { platformForSeed, sampleEvidence } from "@/lib/evidence"
 import { parseRouteText } from "@/lib/parse-routes"
 import type { PitravelImportResult } from "@/lib/pitravel"
-import { applyResearchedEvidence, researchedOutfitEvidence } from "@/lib/research"
+import { applyResearchedEvidence, applyResearchedOutfit, researchedOutfitEvidence } from "@/lib/research"
 import { describePlanChanges, planWalkableDays, preserveImportedDays } from "@/lib/plan-walk"
 import { uniqueStopId } from "@/lib/stop-id"
 import { stopFromDraft } from "@/lib/stop-templates"
@@ -234,6 +234,7 @@ function fromCatalog(catalog: CatalogStop, order: number, arrive: string): Stop 
     photoSpots: catalog.photoSpots.map((spot) =>
       toPhotoSpot(spot, `${seed}-${spot.id}`, catalog.xhsRefs)
     ),
+    warnings: [],
   }
 }
 
@@ -356,6 +357,8 @@ function buildDay(draft: DraftDay, index: number, startDate: string, importedOrd
   } else if (realFromStops.length > 0) {
     outfit.evidence = realFromStops.slice(0, 3)
   }
+  const outfitLabel = `${draft.label} ${stops.map((stop) => stop.name).join(" ")}`
+  const dressed = applyResearchedOutfit(outfit, outfitLabel, `day-${dayNumber}`)
 
   const mainStops = stops.filter((stop) => !stop.optional)
   const title =
@@ -383,7 +386,7 @@ function buildDay(draft: DraftDay, index: number, startDate: string, importedOrd
     routeSummary: mainStops.map((stop) => stop.name),
     planNote: draft.planNote,
     rawStopNames: draft.rawStopNames,
-    outfit,
+    outfit: dressed,
     stops,
   }
 }
@@ -416,10 +419,10 @@ export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
     endDate,
     intro:
       options?.intro ||
-      "把圆周旅迹链接贴进来。默认按导入顺序显示每一站的店、必买、机位和穿搭。规划建议要你确认后才会改顺序。",
+      "把圆周旅迹链接贴进来。默认按导入顺序显示每一站抽出的店、必买、机位、穿搭和避坑。原帖只留来源。规划建议要你确认后才会改顺序。",
     sourceNote:
       options?.sourceNote ||
-      "系统会公开检索小红书 / 抖音 / Instagram，并读取你粘贴的链接（公开页或 oEmbed）。打不开就标「网页读不全」。不会登录，也不会走 App 接口。",
+      "系统会公开检索小红书 / 抖音 / Instagram，并读取你粘贴的链接（公开页或 oEmbed）。抽出店、必买、机位、价格和避坑；原帖只留来源。评论网页读不到也会标明。不会登录，也不会走 App 接口。",
     sourceText: options?.sourceText ?? "",
     isSampleRoute: Boolean(options?.isSampleRoute),
     days: normalized,
@@ -447,10 +450,10 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
     {
       ...shared,
       importedOrder: true,
-      intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。默认按圆周旅迹原顺序。每一站有店、必买、机位和穿搭，并挂上公开检索/粘贴的笔记。规划建议要你确认后才会改这一天。`,
+      intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。默认按圆周旅迹原顺序。每一站先看抽出来的店、必买、机位、价格和避坑；原帖只留来源链接。规划建议要你确认后才会改这一天。`,
       sourceNote: `从圆周旅迹导入：${result.meta.shareUrl}${
         result.meta.timeDescription ? ` · ${result.meta.timeDescription}` : ""
-      }。导入顺序是准绳，不会悄悄重排。笔记来自公开网页和 Instagram oEmbed。打不开就标「网页读不全」。不会登录，也不会走 App 接口。`,
+      }。导入顺序是准绳，不会悄悄重排。小红书 / 抖音 / Instagram 只抽要点，不把原帖当主界面。评论不在公开页就标「评论网页读不到」。不会登录，也不会走 App 接口。`,
     }
   )
   const suggestedTrip = planItinerary(

@@ -15,6 +15,8 @@ export type FetchedPost = {
   imageSrc: string
   imageAlt: string
   partialRead: boolean
+  commentsGated: boolean
+  imageListPartial: boolean
 }
 
 const URL_RE =
@@ -132,7 +134,49 @@ async function fetchHtml(
   return { html, finalUrl: response.url || url, status: response.status }
 }
 
-function parseXhsNote(html: string): { title: string; desc: string; imageSrc: string } | null {
+function collectPublicComments(data: unknown): string[] {
+  const comments: string[] = []
+  const walk = (obj: unknown, depth: number, inCommentTree: boolean) => {
+    if (!obj || typeof obj !== "object" || depth > 10 || comments.length >= 12) return
+    if (Array.isArray(obj)) {
+      for (const item of obj.slice(0, 80)) walk(item, depth + 1, inCommentTree)
+      return
+    }
+    const rec = obj as Record<string, unknown>
+    const keys = Object.keys(rec)
+    const tree =
+      inCommentTree ||
+      keys.some((key) => /commentList|subCommentList|comments/i.test(key))
+    const content =
+      typeof rec.content === "string"
+        ? rec.content
+        : typeof rec.commentContent === "string"
+          ? rec.commentContent
+          : ""
+    if (
+      tree &&
+      content.length > 4 &&
+      content.length < 280 &&
+      (rec.user || rec.nickname || rec.commentId || rec.id) &&
+      !/打开\s*(App|APP)|仅支持在小红书|请先登录/.test(content)
+    ) {
+      comments.push(content.trim())
+    }
+    for (const [key, value] of Object.entries(rec)) {
+      walk(value, depth + 1, tree || /commentList|subCommentList|comments/i.test(key))
+    }
+  }
+  walk(data, 0, false)
+  return Array.from(new Set(comments))
+}
+
+function parseXhsNote(html: string): {
+  title: string
+  desc: string
+  imageSrc: string
+  comments: string[]
+  commentsGated: boolean
+} | null {
   const match = html.match(/window\.__INITIAL_STATE__=([\s\S]*?)<\/script>/)
   if (!match) return null
   const text = match[1].trim().replace(/;$/, "").replace(/\bundefined\b/g, "null")
@@ -196,7 +240,14 @@ function parseXhsNote(html: string): { title: string; desc: string; imageSrc: st
     }
   }
   if (!title && !desc && !imageSrc) return null
-  return { title: title || desc.slice(0, 42), desc, imageSrc }
+  const comments = collectPublicComments(data)
+  return {
+    title: title || desc.slice(0, 42),
+    desc,
+    imageSrc,
+    comments,
+    commentsGated: comments.length === 0,
+  }
 }
 
 async function fetchInstagramOembed(url: string): Promise<{ caption: string; quote: string; imageSrc: string } | null> {
@@ -240,10 +291,12 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
     canonicalUrl: rawUrl,
     platform,
     caption: "网页读不全",
-    quote: "公开页打不开或需要 App。链接已保存，点开原帖查看。",
+    quote: "公开页打不开或需要 App。链接已保存，点开原帖查看。评论网页读不到。",
     imageSrc: `/samples/${platform}.svg`,
     imageAlt: "网页读不全，没有读到配图",
     partialRead: true,
+    commentsGated: true,
+    imageListPartial: false,
   }
 
   try {
@@ -259,6 +312,8 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
           imageSrc: oembed.imageSrc || `/samples/${platform}.svg`,
           imageAlt: oembed.caption || "Instagram 配图",
           partialRead: !oembed.imageSrc || !oembed.caption,
+          commentsGated: true,
+          imageListPartial: false,
         }
       }
     }
@@ -270,16 +325,22 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
         const note = platform === "xiaohongshu" ? parseXhsNote(html) : null
         if (note && (note.desc.length > 0 || (note.title && !genericTitle(platform, note.title)))) {
           const caption = note.title || "小红书笔记"
-          const quote = note.desc || "公开页只读到标题和配图。"
+          const body = note.desc || "公开页只读到标题和配图。"
+          const commentBit =
+            note.comments.length > 0
+              ? `评论：${note.comments.slice(0, 3).join(" / ")}`
+              : "评论网页读不到。"
           return {
             url: rawUrl,
             canonicalUrl: finalUrl.includes("/login") ? rawUrl : finalUrl,
             platform,
             caption: caption.slice(0, 120),
-            quote: quote.slice(0, 280),
+            quote: `${body} ${commentBit}`.slice(0, 420),
             imageSrc: note.imageSrc || `/samples/${platform}.svg`,
             imageAlt: caption,
             partialRead: !note.desc || !note.imageSrc,
+            commentsGated: note.commentsGated,
+            imageListPartial: false,
           }
         }
 
@@ -295,10 +356,12 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
           canonicalUrl: finalUrl.includes("/login") ? rawUrl : finalUrl,
           platform,
           caption: caption.slice(0, 120),
-          quote: quote.slice(0, 280),
+          quote: `${quote}${gated || platform !== "instagram" ? " 评论网页读不到。" : ""}`.slice(0, 420),
           imageSrc: ogImage || `/samples/${platform}.svg`,
           imageAlt: ogImage ? caption : "网页读不全，没有读到配图",
           partialRead: gated || !ogDesc || !ogImage,
+          commentsGated: true,
+          imageListPartial: false,
         }
       }
     }
@@ -320,6 +383,8 @@ export function fetchedToEvidence(post: FetchedPost, seed: string): Evidence {
     isSample: false,
     partialRead: post.partialRead,
     collectedBy: "paste",
+    commentsGated: post.commentsGated,
+    imageListPartial: post.imageListPartial,
   }
 }
 

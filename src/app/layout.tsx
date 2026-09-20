@@ -25,7 +25,7 @@ const mono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Xenia 的行程站",
   description:
-    "从圆周旅迹分享链接导入行程，补上每一站的店铺、必买、机位和当日穿搭。",
+    "从圆周旅迹分享链接导入行程。每一站先看抽出的店铺、必买、机位、穿搭和避坑；原帖只留来源。",
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

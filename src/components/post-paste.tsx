@@ -30,7 +30,7 @@ export function PostPaste({
         `${result.unmatched.length} 条没有匹配到站点。打开对应那一站再贴一次，或在链接旁写上店名。`
       )
     }
-    setSummary(lines.join("\n") || "没有新的卡片。")
+    setSummary(lines.join("\n") || "没有抽出新的要点。")
     if (result.attached.length > 0) setText("")
   }
 
@@ -42,7 +42,7 @@ export function PostPaste({
           {stopId ? "把这一站的帖子贴进来" : "粘贴小红书 / 抖音 / Instagram 链接"}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          只读公开页和 Instagram oEmbed，不会登录、也不会走 App 接口。打不开就保存链接并标「网页读不全」。
+          只读公开页和 Instagram oEmbed，不会登录、也不会走 App 接口。抽出店、必买、机位、价格和避坑；原帖只留来源。评论不在公开页就标「评论网页读不到」。
           {stopId
             ? ""
             : ` 当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
@@ -56,7 +56,7 @@ export function PostPaste({
       />
       <div className="flex flex-wrap gap-2">
         <Button type="button" onClick={() => void onSubmit()} disabled={generating || !text.trim()}>
-          {generating ? "正在读取公开页…" : "读取并挂上证据"}
+          {generating ? "正在读取公开页…" : "读取并抽出要点"}
         </Button>
       </div>
       {localError ? (

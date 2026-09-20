@@ -1,9 +1,8 @@
 "use client"
 
 import type { PhotoSpot } from "@/data/types"
-import { EvidenceRow } from "@/components/evidence-card"
 import { ShotFrame } from "@/components/shot-frame"
-import { useTrip } from "@/components/trip-provider"
+import { SourceLinks } from "@/components/source-links"
 import {
   Card,
   CardContent,
@@ -13,8 +12,6 @@ import {
 } from "@/components/ui/card"
 
 export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number }) {
-  const { patchEvidence } = useTrip()
-
   return (
     <Card className="bg-card">
       <CardHeader className="border-b">
@@ -35,12 +32,7 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
             <Fact label="避坑" value={spot.avoid} />
           </dl>
         </div>
-        <EvidenceRow
-          evidence={spot.evidence}
-          onChangeAt={(evidenceIndex, patch) =>
-            patchEvidence(spot.evidence[evidenceIndex].id, patch)
-          }
-        />
+        <SourceLinks evidence={spot.evidence} />
       </CardContent>
     </Card>
   )

@@ -220,5 +220,6 @@ export function stopFromDraft(
     shops,
     mustBuys,
     photoSpots,
+    warnings: [],
   }
 }

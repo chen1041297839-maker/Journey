@@ -140,15 +140,16 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["民生路", "好吃街", "堰塘街", "省府北街", "电台街", "圆通街", "玉珍"],
+    "aliases": ["民生路", "好吃街"],
     "slot": "shop",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a33e80a000000000f01d838",
     "caption": "贵阳民生路📍对不起之前是我说话大声了",
-    "quote": "citywalk 不止民生路：中山西路地铁站→正新街→富水北路→省府北街→堰塘街→文昌阁→民生路。民生路可打包邮寄：丁家/徐家脆哨、徐记碗饵糕、香酥鸭（第一次建议微麻）、叶老五麻辣干丝、彭记卤味、董记炸洋芋片。打车别在民生路，穿过贵山苑到省府路石板街。空肚子、舒服鞋，辣度提前说。",
+    "quote": "citywalk 不止民生路：中山西路地铁站→正新街→富水北路→省府北街→堰塘街→文昌阁→民生路。民生路可打包邮寄：丁家/徐家脆哨、徐记碗饵糕、香酥鸭（第一次建议微麻）、叶老五麻辣干丝、彭记卤味、董记炸洋芋片。打车别在民生路，穿过贵山苑到省府路石板街。空肚子、舒服鞋，辣度提前说。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a33e80a.jpg",
     "partialRead": false,
-    "collectedBy": "paste"
+    "collectedBy": "paste",
+    "commentsGated": true
   },
   {
     "aliases": ["民生路", "好吃街"],
@@ -156,10 +157,11 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a33e80a000000000f01d838",
     "caption": "贵阳民生路📍对不起之前是我说话大声了",
-    "quote": "民生路大多适合打包、邮寄。丁家脆哨、徐家脆哨、徐记碗饵糕、香酥鸭、叶老五麻辣干丝、彭记卤味、董记炸洋芋片。有搭子可以分开排队。",
+    "quote": "民生路大多适合打包、邮寄。丁家脆哨、徐家脆哨、徐记碗饵糕、香酥鸭、叶老五麻辣干丝、彭记卤味、董记炸洋芋片。有搭子可以分开排队。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a33e80a.jpg",
     "partialRead": false,
     "collectedBy": "paste",
+    "commentsGated": true,
     "mustBuy": {
       "name": "脆哨 / 碗饵糕 / 香酥鸭",
       "reason": "一条街大部分是能带走、能邮寄的小吃，比只逛招牌更值。",
@@ -168,20 +170,22 @@
     }
   },
   {
-    "aliases": ["民生路", "好吃街", "青云市集", "亨特", "蒋家肠旺面"],
+    "aliases": ["民生路", "好吃街", "青云市集", "亨特"],
     "slot": "buy",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6aad51cc0000000028031555",
     "caption": "存一下下周去贵阳要吃要买的东西……",
-    "quote": "下周中秋来贵阳！半个本地人整理完整版美食清单。正文很短，小吃 / 伴手礼 / 烙锅 / 月饼清单在 8 张配图里。",
+    "quote": "下周中秋来贵阳！半个本地人整理完整版美食清单。正文很短。小吃 / 伴手礼 / 烙锅 / 月饼清单在 8 张配图里。封面只有标题，没有店名。配图清单网页读不全。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6aad51cc.jpg",
-    "partialRead": false,
+    "partialRead": true,
     "collectedBy": "paste",
+    "commentsGated": true,
+    "imageListPartial": true,
     "mustBuy": {
       "name": "贵阳要吃要买清单",
       "reason": "半个本地人整理的完整版，覆盖小吃、伴手礼、烙锅和月饼。",
       "budget": "按配图",
-      "tip": "清单在配图，不在正文。贵阳第 1–2 天逛街时对着图买。"
+      "tip": "清单在配图，不在正文。封面只有标题。配图清单网页读不全。"
     }
   },
   {
@@ -190,10 +194,12 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6aa0e7c20000000011036fe7",
     "caption": "贵阳的特色奶茶是啥",
-    "quote": "马上点！正文只有这一句，特色奶茶怎么点都在配图里。",
+    "quote": "马上点！正文只有这一句。特色奶茶怎么点都在配图里。封面是表情包，没有点单。配图清单网页读不全。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6aa0e7c2.jpg",
-    "partialRead": false,
+    "partialRead": true,
     "collectedBy": "paste",
+    "commentsGated": true,
+    "imageListPartial": true,
     "mustBuy": {
       "name": "贵阳特色奶茶",
       "reason": "本地特色怎么点，一张图说完。",
@@ -207,10 +213,12 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a72c3d70000000029031c47",
     "caption": "贵州肇兴侗寨旅游攻略",
-    "quote": "公开页标题为空，正文只有「贵州肇兴侗寨旅游攻略」和话题。攻略细节在 2 张配图里。",
+    "quote": "封面 OCR：堂安 1 一颗豆子奶茶（茶叶+本地食材煮，无科技奶茶味）；2 侗味集田螺闷土鸡（茅香煮，辣度可调）；3 住宿落日余晖（落地窗看梯田）。穿搭配图公开页读不到。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a72c3d7.jpg",
     "partialRead": true,
-    "collectedBy": "paste"
+    "collectedBy": "paste",
+    "commentsGated": true,
+    "imageListPartial": true
   },
   {
     "aliases": ["肇兴侗寨", "鼓楼群", "花椒树下", "侗家火锅"],
@@ -218,10 +226,12 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a72c3d70000000029031c47",
     "caption": "贵州肇兴侗寨旅游攻略",
-    "quote": "穿搭细节在配图，网页正文几乎没有。点开原帖看图。",
+    "quote": "穿搭细节在配图，网页正文几乎没有。配图清单网页读不全。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a72c3d7.jpg",
     "partialRead": true,
-    "collectedBy": "paste"
+    "collectedBy": "paste",
+    "commentsGated": true,
+    "imageListPartial": true
   },
   {
     "aliases": ["肇兴侗寨", "鼓楼群", "堂安", "侗家火锅", "花椒树下"],
@@ -229,10 +239,11 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a7f037e000000000502bba9",
     "caption": "拜托，去侗寨一定要多买两包松子酥",
-    "quote": "太好吃了！！正文就这一句。配图是松子酥。",
+    "quote": "太好吃了！！配图 OCR：鱼爱牛松子酥，保质期 28 天，配料松子 / 瓜子 / 麦芽糖。肇兴侗寨鱼爱牛土特产 / 正宗土特产经营店。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a7f037e.jpg",
     "partialRead": false,
     "collectedBy": "paste",
+    "commentsGated": true,
     "mustBuy": {
       "name": "松子酥",
       "reason": "侗寨路过都香，笔记说一定要多买两包。",
@@ -246,10 +257,11 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a66bd41000000001102d491",
     "caption": "用18张图分享我的肇兴侗寨拍照机位📸",
-    "quote": "天之逸民宿/礼团鼓楼、瞰肇兴山水美宿、有间小院（展示中心后门）、义团鼓楼桥面、礼团鼓楼巷口、佳杰蜡染、寨门、观光车售票点观景台、大观景台。高铁从江站→客运站景交车 ¥10，不要打车到寨外。门票含寨内景交车。蓝调约 19:30。",
+    "quote": "天之逸民宿/礼团鼓楼、瞰肇兴山水美宿、有间小院（展示中心后门）、义团鼓楼桥面、礼团鼓楼巷口、佳杰蜡染、寨门、观光车售票点观景台、大观景台。高铁从江站→客运站景交车 ¥10，不要打车到寨外。门票含寨内景交车。蓝调约 19:30。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a66bd41.jpg",
     "partialRead": false,
-    "collectedBy": "paste"
+    "collectedBy": "paste",
+    "commentsGated": true
   },
   {
     "aliases": ["肇兴侗寨", "鼓楼群", "堂安", "牛棚", "侗家火锅", "花椒树下"],
@@ -257,10 +269,11 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a7c864100000000220305f6",
     "caption": "肇兴侗寨一人行｜3天2夜｜有优有缺",
-    "quote": "寨子大半天能走完，想拍白天+夜晚再留一晚。堂安建议 17:00 后，电驴 30–40 分钟。吃：廖胖子脆皮猪肉惊艳；鱼王早餐不推荐；醉第一楼盗汗鸡踩雷；蓝头巾糯米饭包烤肉一般；一杯黔茶刺梨抢茶香；冰浆不如贵阳。松子酥好吃但粘牙。猎人部落旁巷巷里冰箱贴 9.9。",
+    "quote": "寨子大半天能走完，想拍白天+夜晚再留一晚。堂安建议 17:00 后，电驴 30–40 分钟。吃：廖胖子脆皮猪肉惊艳；鱼王早餐不推荐；醉第一楼盗汗鸡踩雷；蓝头巾糯米饭包烤肉一般；一杯黔茶刺梨抢茶香；冰浆不如贵阳。松子酥好吃但粘牙。猎人部落旁巷巷里冰箱贴 9.9。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a7c8641.jpg",
     "partialRead": false,
-    "collectedBy": "paste"
+    "collectedBy": "paste",
+    "commentsGated": true
   },
   {
     "aliases": ["猎人部落"],
@@ -268,10 +281,11 @@
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a7c864100000000220305f6",
     "caption": "肇兴侗寨一人行｜3天2夜｜有优有缺",
-    "quote": "猎人部落旁边巷子走进去，摄影师开的【巷巷里】，冰箱贴全场 9.9，还有画框、耳环、包。",
+    "quote": "猎人部落旁边巷子走进去，摄影师开的【巷巷里】，冰箱贴全场 9.9，还有画框、耳环、包。评论网页读不到。",
     "imageSrc": "/evidence/xhs-6a7c8641.jpg",
     "partialRead": false,
     "collectedBy": "paste",
+    "commentsGated": true,
     "mustBuy": {
       "name": "巷巷里冰箱贴",
       "reason": "猎人部落旁边巷子，全场 9.9，比景区摊位值。",

@@ -10,6 +10,7 @@ import { PlanProposalDialog } from "@/components/plan-proposal-dialog"
 import { useTrip } from "@/components/trip-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { stopFactChips, stopFactLine } from "@/lib/stop-facts"
 import { cn } from "@/lib/utils"
 
 function groupedStops(stops: Stop[]): { block: TimeBlock | "other"; items: Stop[] }[] {
@@ -81,7 +82,7 @@ export function DayTimeline({
         ) : null}
       </div>
 
-      <OutfitCard outfit={day.outfit} />
+      <OutfitCard outfit={day.outfit} compact />
 
       {day.stops.length === 0 ? (
         <p className="rounded-xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">
@@ -130,18 +131,20 @@ export function DayTimeline({
                           </span>
                         </div>
                         <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                          {stop.note}
+                          {stopFactLine(stop)}
                         </p>
                         <div className="mt-2 flex flex-wrap gap-3 text-[11px] text-muted-foreground">
+                          {stopFactChips(stop).map((chip) => (
+                            <span key={chip} className="inline-flex items-center gap-1">
+                              {chip.includes("机位") ? <Camera className="size-3" /> : null}
+                              {chip.includes("店") ? <ShoppingBag className="size-3" /> : null}
+                              {chip}
+                            </span>
+                          ))}
                           <span className="inline-flex items-center gap-1">
-                            <ShoppingBag className="size-3" />
-                            {stop.shops.length} 店
+                            <Clock3 className="size-3" />
+                            {stop.duration}
                           </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Camera className="size-3" />
-                            {stop.photoSpots.length} 机位
-                          </span>
-                          <span>{stop.duration}</span>
                         </div>
                       </Link>
                     </li>

@@ -1,4 +1,4 @@
-import type { Evidence, Stop, Trip } from "@/data/types"
+import type { Evidence, Stop, Trip, Warning } from "@/data/types"
 import type { FetchedPost } from "@/lib/social-posts"
 import { fetchedToEvidence, guessSlot, matchStopInTrip } from "@/lib/social-posts"
 
@@ -19,6 +19,40 @@ function uniquePush(list: Evidence[], item: Evidence): Evidence[] {
   return [item, ...list.filter((entry) => !entry.isSample)]
 }
 
+function hashCode(value: string): number {
+  let hash = 0
+  for (const char of value) hash = (hash * 31 + char.charCodeAt(0)) | 0
+  return Math.abs(hash)
+}
+
+function withReadFlags(stop: Stop, item: Evidence): Stop {
+  const flags = [...(stop.readFlags ?? [])]
+  if (item.commentsGated && !flags.includes("评论网页读不到")) flags.push("评论网页读不到")
+  if (item.imageListPartial && !flags.includes("配图清单网页读不全")) {
+    flags.push("配图清单网页读不全")
+  }
+  const warnings = [...(stop.warnings ?? [])]
+  for (const chunk of item.quote.split(/[。；\n]/)) {
+    const line = chunk.trim()
+    if (line.length < 4) continue
+    if (!/踩雷|不推荐|别买|凉了就硬|不要打车|别穿高跟|别在民生路/.test(line)) continue
+    if (warnings.some((entry) => entry.text.includes(line.slice(0, 10)))) continue
+    const created: Warning = {
+      id: `${stop.id}-paste-warn-${hashCode(line)}`,
+      text: line,
+      kind: /踩雷|不推荐/.test(line) ? "雷" : "注意",
+    }
+    warnings.push(created)
+  }
+  return {
+    ...stop,
+    warnings,
+    readFlags: flags,
+    commentsGated: stop.commentsGated || item.commentsGated,
+    imageListPartial: stop.imageListPartial || item.imageListPartial,
+  }
+}
+
 function ontoFirstPhoto(stop: Stop, item: Evidence): Stop {
   if (!stop.photoSpots[0]) return stop
   const photoSpots = stop.photoSpots.map((spot, index) =>
@@ -28,30 +62,31 @@ function ontoFirstPhoto(stop: Stop, item: Evidence): Stop {
 }
 
 function withEvidence(stop: Stop, item: Evidence, slot: AttachTarget["slot"]): Stop {
-  if (slot === "outfit") return stop
-  if (slot === "shop" && stop.shops[0]) {
-    const shops = stop.shops.map((shop, index) =>
+  const flagged = withReadFlags(stop, item)
+  if (slot === "outfit") return flagged
+  if (slot === "shop" && flagged.shops[0]) {
+    const shops = flagged.shops.map((shop, index) =>
       index === 0 ? { ...shop, evidence: uniquePush(shop.evidence, item) } : shop
     )
-    return ontoFirstPhoto({ ...stop, shops }, item)
+    return ontoFirstPhoto({ ...flagged, shops }, item)
   }
   if (slot === "buy") {
-    if (stop.mustBuys[0]) {
-      const mustBuys = stop.mustBuys.map((buy, index) =>
+    if (flagged.mustBuys[0]) {
+      const mustBuys = flagged.mustBuys.map((buy, index) =>
         index === 0 ? { ...buy, evidence: uniquePush(buy.evidence, item) } : buy
       )
-      return ontoFirstPhoto({ ...stop, mustBuys }, item)
+      return ontoFirstPhoto({ ...flagged, mustBuys }, item)
     }
     return ontoFirstPhoto(
       {
-        ...stop,
+        ...flagged,
         mustBuys: [
           {
-            id: `${stop.id}-paste-buy`,
+            id: `${flagged.id}-paste-buy`,
             name: item.caption.slice(0, 24) || "笔记里的必买",
             reason: item.quote,
             budget: "以现场为准",
-            tip: "点开原帖看配图。",
+            tip: item.commentsGated ? "评论网页读不到，先按正文。" : "以正文抽出的店名为准。",
             evidence: [item],
           },
         ],
@@ -59,16 +94,16 @@ function withEvidence(stop: Stop, item: Evidence, slot: AttachTarget["slot"]): S
       item
     )
   }
-  if (stop.photoSpots[0]) {
-    return ontoFirstPhoto(stop, item)
+  if (flagged.photoSpots[0]) {
+    return ontoFirstPhoto(flagged, item)
   }
-  if (stop.shops[0]) {
-    const shops = stop.shops.map((shop, index) =>
+  if (flagged.shops[0]) {
+    const shops = flagged.shops.map((shop, index) =>
       index === 0 ? { ...shop, evidence: uniquePush(shop.evidence, item) } : shop
     )
-    return { ...stop, shops }
+    return { ...flagged, shops }
   }
-  return stop
+  return flagged
 }
 
 export function attachPostsToTrip(

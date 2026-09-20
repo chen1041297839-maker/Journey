@@ -2,20 +2,19 @@
 
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
-import type { Day, Stop } from "@/data/types"
-import { EvidenceRow } from "@/components/evidence-card"
+import type { Day, MustBuy, Shop, Stop, Warning } from "@/data/types"
 import { SectionEmpty } from "@/components/empty-state"
 import { OutfitCard } from "@/components/outfit-card"
 import { PhotoSpotCard } from "@/components/photo-spot-card"
 import { PostPaste } from "@/components/post-paste"
-import { useTrip } from "@/components/trip-provider"
+import { ReadFlags, SourceLinks } from "@/components/source-links"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
 export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
-  const { patchEvidence } = useTrip()
+  const warnings = stop.warnings ?? []
 
   return (
     <article className="flex flex-col gap-6 pb-10">
@@ -44,26 +43,40 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
           <Badge variant="outline">{stop.shops.length} 家店</Badge>
           <Badge variant="outline">{stop.mustBuys.length} 件必买</Badge>
           <Badge variant="outline">{stop.photoSpots.length} 个机位</Badge>
+          {warnings.length > 0 ? (
+            <Badge variant="outline">{warnings.length} 条避坑</Badge>
+          ) : null}
         </div>
       </header>
 
+      <ReadFlags flags={stop.readFlags} />
+
       <OutfitCard outfit={day.outfit} compact />
 
-      <PostPaste dayId={day.id} stopId={stop.id} />
-
-      <Tabs defaultValue="spots">
+      <Tabs defaultValue="facts">
         <TabsList variant="line" className="w-full max-w-full justify-start overflow-x-auto">
+          <TabsTrigger value="facts">要点</TabsTrigger>
           <TabsTrigger value="spots">机位</TabsTrigger>
-          <TabsTrigger value="shops">店铺</TabsTrigger>
-          <TabsTrigger value="buys">必买</TabsTrigger>
-          <TabsTrigger value="outfit">穿搭证据</TabsTrigger>
+          <TabsTrigger value="outfit">穿搭</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="facts" className="mt-4 grid gap-5">
+          {warnings.length > 0 ? <WarningList warnings={warnings} /> : null}
+          <ShopList shops={stop.shops} />
+          <BuyList items={stop.mustBuys} />
+          {warnings.length === 0 && stop.shops.length === 0 && stop.mustBuys.length === 0 ? (
+            <SectionEmpty
+              title="这一站还没有抽出要点"
+              hint="把小红书 / 抖音 / Instagram 公开链接贴进来，我们抽店、必买、价格和避坑；原帖只留来源。"
+            />
+          ) : null}
+        </TabsContent>
 
         <TabsContent value="spots" className="mt-4 grid gap-4">
           {stop.photoSpots.length === 0 ? (
             <SectionEmpty
               title="这一站还没有机位"
-              hint="补上站位、角度和画面说明，出门就不用再翻收藏夹。"
+              hint="补上站位、角度和时段，出门就不用再翻收藏夹。"
             />
           ) : (
             stop.photoSpots.map((spot, index) => (
@@ -72,75 +85,76 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
           )}
         </TabsContent>
 
-        <TabsContent value="shops" className="mt-4 grid gap-3">
-          {stop.shops.length === 0 ? (
-            <SectionEmpty
-              title="这里不购物"
-              hint="酒店、机场这类节点通常没有店。买东西看前后一站。"
-            />
-          ) : (
-            stop.shops.map((shop) => (
-              <div
-                key={shop.id}
-                className="rounded-2xl border border-border bg-card px-4 py-3"
-              >
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="font-heading text-lg">{shop.name}</p>
-                  <span className="text-xs text-muted-foreground">{shop.hours}</span>
-                </div>
-                <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
-                <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  找什么 · {shop.whatToLookFor}
-                </p>
-                <div className="mt-3">
-                  <EvidenceRow
-                    evidence={shop.evidence}
-                    onChangeAt={(index, patch) =>
-                      patchEvidence(shop.evidence[index].id, patch)
-                    }
-                  />
-                </div>
-              </div>
-            ))
-          )}
-        </TabsContent>
-
-        <TabsContent value="buys" className="mt-4 grid gap-3">
-          {stop.mustBuys.length === 0 ? (
-            <SectionEmpty
-              title="这一站没有必买"
-              hint="省下行李箱。真想带手信，看相邻站点。"
-            />
-          ) : (
-            stop.mustBuys.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-2xl border border-border bg-card px-4 py-3"
-              >
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="font-heading text-lg">{item.name}</p>
-                  <span className="text-xs tabular-nums text-primary">{item.budget}</span>
-                </div>
-                <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
-                <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
-                <div className="mt-3">
-                  <EvidenceRow
-                    evidence={item.evidence}
-                    onChangeAt={(index, patch) =>
-                      patchEvidence(item.evidence[index].id, patch)
-                    }
-                  />
-                </div>
-              </div>
-            ))
-          )}
-        </TabsContent>
-
         <TabsContent value="outfit" className="mt-4 grid gap-3">
           <OutfitCard outfit={day.outfit} />
         </TabsContent>
       </Tabs>
+
+      <PostPaste dayId={day.id} stopId={stop.id} />
     </article>
+  )
+}
+
+function WarningList({ warnings }: { warnings: Warning[] }) {
+  return (
+    <section className="grid gap-2">
+      <p className="text-[11px] tracking-[0.16em] text-primary">避坑</p>
+      <ul className="grid gap-2">
+        {warnings.map((item) => (
+          <li
+            key={item.id}
+            className="rounded-2xl border border-border bg-card px-4 py-3 text-sm leading-relaxed"
+          >
+            <span className="mr-2 font-heading text-primary">{item.kind}</span>
+            {item.text}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function ShopList({ shops }: { shops: Shop[] }) {
+  if (shops.length === 0) return null
+  return (
+    <section className="grid gap-2">
+      <p className="text-[11px] tracking-[0.16em] text-primary">店铺</p>
+      <div className="grid gap-3">
+        {shops.map((shop) => (
+          <div key={shop.id} className="rounded-2xl border border-border bg-card px-4 py-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <p className="font-heading text-lg">{shop.name}</p>
+              <span className="text-xs tabular-nums text-muted-foreground">{shop.hours}</span>
+            </div>
+            <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
+            <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
+            <p className="mt-2 text-sm text-muted-foreground">找什么 · {shop.whatToLookFor}</p>
+            <SourceLinks evidence={shop.evidence} className="mt-3" />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function BuyList({ items }: { items: MustBuy[] }) {
+  if (items.length === 0) return null
+  return (
+    <section className="grid gap-2">
+      <p className="text-[11px] tracking-[0.16em] text-primary">必买</p>
+      <div className="grid gap-3">
+        {items.map((item) => (
+          <div key={item.id} className="rounded-2xl border border-border bg-card px-4 py-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <p className="font-heading text-lg">{item.name}</p>
+              <span className="text-xs tabular-nums text-primary">{item.budget}</span>
+            </div>
+            <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
+            <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
+            <SourceLinks evidence={item.evidence} className="mt-3" />
+          </div>
+        ))}
+      </div>
+    </section>
   )
 }
