@@ -1,5 +1,18 @@
 export type WalkingLevel = "light" | "moderate" | "heavy"
 
+export type Platform = "xiaohongshu" | "douyin" | "instagram"
+
+export type Evidence = {
+  id: string
+  platform: Platform
+  url: string
+  caption: string
+  quote: string
+  imageSrc: string
+  imageAlt: string
+  isSample: boolean
+}
+
 export type Shop = {
   id: string
   name: string
@@ -7,6 +20,7 @@ export type Shop = {
   hours: string
   note: string
   whatToLookFor: string
+  evidence: Evidence[]
 }
 
 export type MustBuy = {
@@ -15,6 +29,7 @@ export type MustBuy = {
   reason: string
   budget: string
   tip: string
+  evidence: Evidence[]
 }
 
 export type ShotComposition = {
@@ -34,16 +49,7 @@ export type PhotoSpot = {
   lens: string
   avoid: string
   composition: ShotComposition
-}
-
-export type XhsRef = {
-  id: string
-  caption: string
-  poseTips: string
-  outfitNotes: string
-  vibe: string
-  /** 以后可粘贴小红书笔记链接，当前为精选模拟内容，不会抓取小红书 */
-  url?: string
+  evidence: Evidence[]
 }
 
 export type Outfit = {
@@ -54,6 +60,7 @@ export type Outfit = {
   bag: string
   colors: string[]
   avoid: string
+  evidence: Evidence[]
 }
 
 export type Stop = {
@@ -69,7 +76,6 @@ export type Stop = {
   shops: Shop[]
   mustBuys: MustBuy[]
   photoSpots: PhotoSpot[]
-  xhsRefs: XhsRef[]
 }
 
 export type Day = {
@@ -98,6 +104,8 @@ export type Trip = {
   endDate: string
   intro: string
   sourceNote: string
+  sourceText: string
+  isSampleRoute: boolean
   days: Day[]
 }
 
@@ -105,4 +113,30 @@ export const walkingLevelLabel: Record<WalkingLevel, string> = {
   light: "少走",
   moderate: "适中",
   heavy: "暴走",
+}
+
+export const platformLabel: Record<Platform, string> = {
+  xiaohongshu: "小红书",
+  douyin: "抖音",
+  instagram: "Instagram",
+}
+
+export type DraftStop = {
+  raw: string
+  name: string
+  time?: string
+  area?: string
+  category?: string
+  note?: string
+  imageSrc?: string
+}
+
+export type DraftDay = {
+  dayNumber: number
+  label: string
+  stops: DraftStop[]
+}
+
+export type DraftRoute = {
+  days: DraftDay[]
 }

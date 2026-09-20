@@ -18,8 +18,8 @@ export default function GlobalError({
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col justify-center px-4 py-16">
       <EmptyState
-        title="手帐暂时打不开"
-        description="页面出错了。再试一次，或检查行程数据是否还符合类型定义。"
+        title="行程暂时打不开"
+        description="页面出错了。再试一次，或回到首页重新导入分享链接。"
       />
       <Button className="mx-auto mt-4" onClick={() => reset()}>
         重试

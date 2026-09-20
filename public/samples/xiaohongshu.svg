@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="800" viewBox="0 0 640 800" role="img" aria-label="¢f:‹Mþ">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4C7B8"/>
+      <stop offset="55%" stop-color="#C45C4A"/>
+      <stop offset="100%" stop-color="#3B1F1C"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="800" fill="url(#g)"/>
+  <rect x="48" y="48" width="544" height="704" fill="none" stroke="#fff" stroke-opacity="0.45" stroke-width="2"/>
+  <text x="320" y="360" text-anchor="middle" fill="#fff" font-size="36" font-family="serif">:‹</text>
+  <text x="320" y="410" text-anchor="middle" fill="#fff" font-size="22" font-family="sans-serif" opacity="0.9">¢f · …ÿbMþ</text>
+</svg>

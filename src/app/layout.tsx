@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Geist_Mono, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google"
+import { AppProviders } from "@/components/app-providers"
 import { TripHeader } from "@/components/trip-header"
+import { getTrip } from "@/data"
 import "./globals.css"
 
 const sans = Noto_Sans_SC({
@@ -21,19 +23,23 @@ const mono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Hologrow 的东京手帐",
-  description: "每一站的店铺、必买、机位和当日穿搭，比路线更细的个人行程伴侣。",
+  title: "Xenia 的行程站",
+  description:
+    "从圆周旅迹分享链接导入行程，补上每一站的店铺、必买、机位和当日穿搭。",
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const trip = getTrip()
   return (
     <html
       lang="zh-CN"
       className={`${sans.variable} ${serif.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <TripHeader />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <AppProviders initialTrip={trip}>
+          <TripHeader />
+          <div className="flex flex-1 flex-col">{children}</div>
+        </AppProviders>
       </body>
     </html>
   )

@@ -1,16 +1,12 @@
-# Hologrow 的东京手帐
+# Xenia 的行程站
 
-个人行程伴侣，不是通用旅行规划器。
+把圆周旅迹（pitravel.cn）的公开分享链接贴进来，生成可执行的个人行程：每一站的店、必买、拍照机位、当天穿搭，以及带平台 / 配图 / 摘录 / 链接的笔记证据卡。
 
-小红书、高德、圆周轨迹只记住地点和怎么走。这本手帐补上每一站还需要的东西：
+默认行程是 Xenia 的贵州路线（从分享链接导入），不是东京示例。
 
-- 这一站有哪些店
-- 什么值得买
-- 拍照机位：站哪、什么角度、画面长什么样
-- 按当天路线、天气感和街区气质写的穿搭
-- 小红书风格的站姿 / 穿搭参考（原创精选卡片，**不会抓取小红书**；以后可把笔记链接贴进数据里的 `url`）
-
-当前示例是 **Hologrow · 东京四日**（浅草 / 原宿表参道 / 新宿中目黑 / 下北泽代官山）。把数据换成你的真实行程时，不必改页面结构。
+- 只读取你贴入的 `pitravel.cn` 公开页，不会登录或抓取小红书、抖音、Instagram
+- 笔记证据默认标「示例」；可自行替换链接、上传配图，Instagram 真实帖走官方 embed
+- 东京四日只作为「填入示例」的演示，生成后也会标示例
 
 ## 本地运行
 
@@ -21,23 +17,22 @@ npm install
 npm run dev
 ```
 
-浏览器打开 [http://127.0.0.1:4317](http://127.0.0.1:4317)。
+浏览器打开 [http://127.0.0.1:4317](http://127.0.0.1:4317)。开发服务器绑定 `0.0.0.0:4317`。
 
 ```bash
 npm run build
-npm start -- --hostname 127.0.0.1 --port 4317
+npm start
 ```
 
-## 换成你的真实行程
+## 导入真实行程
 
-入口在 [`src/data/index.ts`](src/data/index.ts)，示例数据在 [`src/data/tokyo/`](src/data/tokyo/)。
+1. 打开首页，粘贴圆周旅迹分享链接（形如 `https://www.pitravel.cn/web/journey/detail/{id}`）
+2. 点「导入并生成行程」
+3. 行程必须是公开分享：好友不登录也能打开
 
-1. 保持 [`src/data/types.ts`](src/data/types.ts) 里的 `Trip` / `Day` / `Stop` 类型
-2. 按天新增模块（或改现有 `day-1.ts` … `day-4.ts`）
-3. 在 [`src/data/tokyo/index.ts`](src/data/tokyo/index.ts) 组装成一份 `Trip`
-4. 若要完全换一份行程，新建目录后改 `getTrip()` 的导出即可
+也可以在「手动粘贴地点」里按「第1天」分段，一行一个地点。
 
-站点顺序对应圆周轨迹里的停靠点；店铺、必买、机位、穿搭是每一站往下展开的字段。
+默认导入快照在 [`src/data/imported/pitravel-7662387918598377796.json`](src/data/imported/pitravel-7662387918598377796.json)，规划逻辑在 [`src/lib/plan-itinerary.ts`](src/lib/plan-itinerary.ts)。
 
 ## 技术栈
 

@@ -1,5 +1,9 @@
+"use client"
+
 import type { PhotoSpot } from "@/data/types"
+import { EvidenceRow } from "@/components/evidence-card"
 import { ShotFrame } from "@/components/shot-frame"
+import { useTrip } from "@/components/trip-provider"
 import {
   Card,
   CardContent,
@@ -9,6 +13,8 @@ import {
 } from "@/components/ui/card"
 
 export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number }) {
+  const { patchEvidence } = useTrip()
+
   return (
     <Card className="bg-card">
       <CardHeader className="border-b">
@@ -18,15 +24,23 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
         <CardTitle className="font-heading text-xl">{spot.title}</CardTitle>
         <CardDescription>最佳时段 {spot.bestTime}</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-5 sm:grid-cols-[minmax(0,180px)_1fr]">
-        <ShotFrame composition={spot.composition} />
-        <dl className="grid gap-3 text-sm">
-          <Fact label="站在哪" value={spot.standWhere} />
-          <Fact label="角度" value={spot.angle} />
-          <Fact label="画面长这样" value={spot.shotLooksLike} />
-          <Fact label="镜头" value={spot.lens} />
-          <Fact label="避坑" value={spot.avoid} />
-        </dl>
+      <CardContent className="grid gap-5">
+        <div className="grid gap-5 sm:grid-cols-[minmax(0,180px)_1fr]">
+          <ShotFrame composition={spot.composition} />
+          <dl className="grid gap-3 text-sm">
+            <Fact label="站在哪" value={spot.standWhere} />
+            <Fact label="角度" value={spot.angle} />
+            <Fact label="画面长这样" value={spot.shotLooksLike} />
+            <Fact label="镜头" value={spot.lens} />
+            <Fact label="避坑" value={spot.avoid} />
+          </dl>
+        </div>
+        <EvidenceRow
+          evidence={spot.evidence}
+          onChangeAt={(evidenceIndex, patch) =>
+            patchEvidence(spot.evidence[evidenceIndex].id, patch)
+          }
+        />
       </CardContent>
     </Card>
   )

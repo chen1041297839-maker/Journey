@@ -1,16 +1,21 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import type { Day, Stop } from "@/data/types"
+import { EvidenceRow } from "@/components/evidence-card"
 import { SectionEmpty } from "@/components/empty-state"
 import { OutfitCard } from "@/components/outfit-card"
 import { PhotoSpotCard } from "@/components/photo-spot-card"
-import { XhsRefCard } from "@/components/xhs-ref-card"
+import { useTrip } from "@/components/trip-provider"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 
 export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
+  const { patchEvidence } = useTrip()
+
   return (
     <article className="flex flex-col gap-6 pb-10">
       <div className="flex items-start justify-between gap-3">
@@ -29,7 +34,9 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
           {stop.duration}
         </p>
         <h2 className="mt-2 font-heading text-3xl leading-none">{stop.name}</h2>
-        <p className="mt-1 text-sm text-muted-foreground">{stop.nameJa}</p>
+        {stop.nameJa ? (
+          <p className="mt-1 text-sm text-muted-foreground">{stop.nameJa}</p>
+        ) : null}
         <p className="mt-3 text-sm leading-relaxed">{stop.note}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Badge variant="secondary">{stop.vibe}</Badge>
@@ -46,7 +53,7 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
           <TabsTrigger value="spots">机位</TabsTrigger>
           <TabsTrigger value="shops">店铺</TabsTrigger>
           <TabsTrigger value="buys">必买</TabsTrigger>
-          <TabsTrigger value="refs">穿搭参考</TabsTrigger>
+          <TabsTrigger value="outfit">穿搭证据</TabsTrigger>
         </TabsList>
 
         <TabsContent value="spots" className="mt-4 grid gap-4">
@@ -66,7 +73,7 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
           {stop.shops.length === 0 ? (
             <SectionEmpty
               title="这里不购物"
-              hint="雷门、神宫、都厅这种地方通常没有店。买东西看前后一站。"
+              hint="酒店、机场这类节点通常没有店。买东西看前后一站。"
             />
           ) : (
             stop.shops.map((shop) => (
@@ -83,6 +90,14 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
                 <p className="mt-2 text-sm text-muted-foreground">
                   找什么 · {shop.whatToLookFor}
                 </p>
+                <div className="mt-3">
+                  <EvidenceRow
+                    evidence={shop.evidence}
+                    onChangeAt={(index, patch) =>
+                      patchEvidence(shop.evidence[index].id, patch)
+                    }
+                  />
+                </div>
               </div>
             ))
           )}
@@ -106,20 +121,21 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
                 </div>
                 <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
                 <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
+                <div className="mt-3">
+                  <EvidenceRow
+                    evidence={item.evidence}
+                    onChangeAt={(index, patch) =>
+                      patchEvidence(item.evidence[index].id, patch)
+                    }
+                  />
+                </div>
               </div>
             ))
           )}
         </TabsContent>
 
-        <TabsContent value="refs" className="mt-4 grid gap-3 sm:grid-cols-2">
-          {stop.xhsRefs.length === 0 ? (
-            <SectionEmpty
-              title="还没有穿搭参考"
-              hint="用原创精选卡片即可，不要去抓取小红书。有链接再贴进 url。"
-            />
-          ) : (
-            stop.xhsRefs.map((item) => <XhsRefCard key={item.id} item={item} />)
-          )}
+        <TabsContent value="outfit" className="mt-4 grid gap-3">
+          <OutfitCard outfit={day.outfit} />
         </TabsContent>
       </Tabs>
     </article>

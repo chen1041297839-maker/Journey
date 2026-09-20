@@ -1,12 +1,15 @@
-import { tokyoTrip } from "./tokyo"
+import importedJourney from "@/data/imported/pitravel-7662387918598377796.json"
 import type { Day, Stop, Trip } from "./types"
+import { parsePitravelPayload, XENIA_SHARE_URL } from "@/lib/pitravel"
+import { planFromPitravel } from "@/lib/plan-itinerary"
 
 /**
- * 当前使用的行程。
- * 换成真实圆周轨迹时：新增一份 `src/data/your-trip/`，并在此改成导出那份 Trip。
+ * 默认行程：Xenia 从圆周旅迹分享链接导入的贵州路线。
+ * 首页仍可粘贴其他公开分享链接，或手动排期。
  */
 export function getTrip(): Trip {
-  return tokyoTrip
+  const result = parsePitravelPayload(importedJourney, XENIA_SHARE_URL)
+  return planFromPitravel(result)
 }
 
 export function getDays(): Day[] {
@@ -25,11 +28,6 @@ export function getDefaultDayId(): string | undefined {
   return getDays()[0]?.id
 }
 
-export function formatDayDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-")
-  if (!year || !month || !day) return isoDate
-  return `${Number(month)}月${Number(day)}日`
-}
-
 export type { Trip, Day, Stop } from "./types"
 export { walkingLevelLabel } from "./types"
+export { formatDayDate } from "@/lib/format-date"

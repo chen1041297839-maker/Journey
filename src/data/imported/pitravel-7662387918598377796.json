@@ -1,0 +1,558 @@
+{
+  "id": "7662387918598377796",
+  "name": "贵州省7日游",
+  "time_description": "09.30至10.05 6天5晚",
+  "days": 6,
+  "start_time": 1790697600000,
+  "end_time": 1791215999000,
+  "poi_count": 47,
+  "share_url": "https://www.pitravel.cn/web/journey/detail/7662387918598377796?lang=zh-Hans&source=copyLink",
+  "day_plans": [
+    {
+      "day_index": 1,
+      "day_plan_name": "09.30 周三",
+      "remark": "到达日",
+      "timestamp": 1790697600000,
+      "cities": [
+        "贵阳市"
+      ],
+      "events": [
+        {
+          "name": "谷莫尼 |MOSEN•叠翠墨岚酒店(甲秀楼青云市集大剧院店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "贵阳市",
+          "address": "贵阳市南明区瑞金南路388号(近东方大厦、贵阳大剧院)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/541cef6cdb6a4e8596dc2c2579f80446.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "玉珍酸笋火锅(喷水池店)",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区青禾路慈善巷(喷水池地铁站H口步行430米)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/274db75151a5446c845e171ed16a22e0.png",
+          "note": "抵达当天吃",
+          "is_transport": false
+        },
+        {
+          "name": "亨特CITY MALL",
+          "event_type": 103,
+          "category": "购物",
+          "city": "贵阳市",
+          "address": "贵阳市南明区文昌南路33号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/f29a3d26aff346c5a906c21b849013aa.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "谷莫尼 |MOSEN•叠翠墨岚酒店(甲秀楼青云市集大剧院店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "贵阳市",
+          "address": "贵阳市南明区瑞金南路388号(近东方大厦、贵阳大剧院)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/541cef6cdb6a4e8596dc2c2579f80446.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    },
+    {
+      "day_index": 2,
+      "day_plan_name": "10.01 周四",
+      "remark": "拍照逛吃日",
+      "timestamp": 1790784000000,
+      "cities": [
+        "贵阳市"
+      ],
+      "events": [
+        {
+          "name": "蒋家肠旺面(青云路总店)",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市南明区瑞金南路309号(新华街道神奇路49号)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/444f9873e30d410daff2a5aad6a00973.png",
+          "note": "Xenia朋友最爱",
+          "is_transport": false
+        },
+        {
+          "name": "青云市集",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市南明区青云路83号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/6b0c9338674043148c12245f22d9c866.png",
+          "note": "丁家脆哨（可晚上回酒店的时候买）\n巧八角（特色冰酿）",
+          "is_transport": false
+        },
+        {
+          "name": "贵阳广播电视台",
+          "event_type": 103,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市南明区遵义路15贵阳广播电视中心大楼",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/151d9267bde442aa9f98926c0358ee36.png",
+          "note": "地下通道20号门店—小洋芋",
+          "is_transport": false
+        },
+        {
+          "name": "花屿(花果园店)",
+          "event_type": 104,
+          "category": "购物",
+          "city": "贵阳市",
+          "address": "贵阳市南明区花果园一期17栋一单元402室",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/669916c320fc445e895614df045e4278.png",
+          "note": "39/h拍摄，假装在欧洲",
+          "is_transport": false
+        },
+        {
+          "name": "民生路好吃街",
+          "event_type": 101,
+          "category": "购物",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区民生路10号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/534f0d4f2d7a4d5da2999d816431e775.png",
+          "note": "购入特色产品/不购也行，纯citywalk\n\n碗饵糕（有咸鱼代购）\n但家香酥鸭\n俞记破酥包\n\n民生路菜场二楼买辣椒面（最后一天我自行购入，还得寄快递）",
+          "is_transport": false
+        },
+        {
+          "name": "电台街",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区云岩区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/ea60d6a2aeb44eb9882ab67af2a9afd5.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "堰塘街",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区云岩区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/af419c5395254308bdbb8e877ed1edad.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "省府北街",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区云岩区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/ef228cf0e81a4e88859bb22c42632023.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "圆通街",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区云岩区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/dcc320104bfb4522adcfbc4c565f97ae.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "杨记烤肉",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区中环社区服务中心瑞金北路128号附4号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/58c070371e3b4d509d41b2f0f0a74a0d.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "谷莫尼 |MOSEN•叠翠墨岚酒店(甲秀楼青云市集大剧院店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "贵阳市",
+          "address": "贵阳市南明区瑞金南路388号(近东方大厦、贵阳大剧院)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/541cef6cdb6a4e8596dc2c2579f80446.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    },
+    {
+      "day_index": 3,
+      "day_plan_name": "10.02 周五",
+      "remark": "小七孔日",
+      "timestamp": 1790870400000,
+      "cities": [
+        "贵阳市",
+        "黔南布依族苗族自治州"
+      ],
+      "events": [
+        {
+          "name": "六广门毛阿姨糯米饭(沙河街店)",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区沙河街138号利美康整形医院停车场入口旁边",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/2d05f465a8ab40adbbb1501798ebf808.png",
+          "note": "早饭吃这个，找酒店附近的就行，连锁店，小红书评论区说好吃，然后高铁去荔波",
+          "is_transport": false
+        },
+        {
+          "name": "小七孔景区",
+          "event_type": 103,
+          "category": "景点",
+          "city": "黔南布依族苗族自治州",
+          "address": "黔南布依族苗族自治州荔波县小七孔镇景区路6号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/77b15928ca98448e9387d4f15973c1d1.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "瑶家土菜馆",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "黔南布依族苗族自治州",
+          "address": "黔南布依族苗族自治州荔波县瑶山乡梦柳布依风情小镇14栋3单元",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/3a85d8e87b6f43ca827dcdb7f3ede0bf.png",
+          "note": "荔波当地，有贵州特色的虾酸牛肉",
+          "is_transport": false
+        },
+        {
+          "name": "谷莫尼 |MOSEN•叠翠墨岚酒店(甲秀楼青云市集大剧院店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "贵阳市",
+          "address": "贵阳市南明区瑞金南路388号(近东方大厦、贵阳大剧院)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/541cef6cdb6a4e8596dc2c2579f80446.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    },
+    {
+      "day_index": 4,
+      "day_plan_name": "10.03 周六",
+      "remark": "抵达黔东南日",
+      "timestamp": 1790956800000,
+      "cities": [
+        "黔东南苗族侗族自治州"
+      ],
+      "events": [
+        {
+          "name": "肇兴半山小筑民宿(堂安侗寨店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县厦格梯田·夏山甜品东北920米",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/34619d724b2d49b78a5b11be0b348ff6.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "肇兴侗寨-鼓楼群",
+          "event_type": 103,
+          "category": "景点",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴侗寨内(东侧)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/714c418b8e0a41819f3837233cb02d3a.png",
+          "note": "鼓楼群参观，散步遛弯",
+          "is_transport": false
+        },
+        {
+          "name": "花椒树下餐饮店",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴镇肇兴村中寨四组陆远志家",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/4d6f172b5b8443db9d655ec67469211c.png",
+          "note": "贵州风味，听说很新鲜",
+          "is_transport": false
+        },
+        {
+          "name": "肇兴半山小筑民宿(堂安侗寨店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县厦格梯田·夏山甜品东北920米",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/34619d724b2d49b78a5b11be0b348ff6.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    },
+    {
+      "day_index": 5,
+      "day_plan_name": "10.04 周日",
+      "remark": "梯田➕民俗体验日",
+      "timestamp": 1791043200000,
+      "cities": [
+        "黔东南苗族侗族自治州"
+      ],
+      "events": [
+        {
+          "name": "堂安梯田",
+          "event_type": 103,
+          "category": "景点",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴镇堂安村堂安侗寨",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/77373111155a4475a03f21e469eedb21.png",
+          "note": "拍照打卡",
+          "is_transport": false
+        },
+        {
+          "name": "牛棚咖啡屋",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县868县道堂安村2组日落余晖民宿右侧堂安篮球场旁",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/4243650495c944afb56d3e1914f6c080.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "猎人部落蜡染店",
+          "event_type": 103,
+          "category": "住宿",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴镇肇兴农商银行隔壁",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/03c75716fa734b7c80dbb54a5cfe60f8.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "侗家火锅",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴村五组",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/f38e82f0550b4c7096a5eb149d9a4a9c.png",
+          "note": "一半酸汤鱼一半干锅牛肉",
+          "is_transport": false
+        },
+        {
+          "name": "肇兴半山小筑民宿(堂安侗寨店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县厦格梯田·夏山甜品东北920米",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/34619d724b2d49b78a5b11be0b348ff6.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    },
+    {
+      "day_index": 6,
+      "day_plan_name": "10.05 周一",
+      "remark": "",
+      "timestamp": 1791129600000,
+      "cities": [
+        "贵阳市"
+      ],
+      "events": [
+        {
+          "name": "贵阳龙洞堡国际机场",
+          "event_type": 103,
+          "category": "交通",
+          "city": "贵阳市",
+          "address": "贵阳市南明区机场路1号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/6202ff27edcb4090b9659cd2efd2b8a7.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    },
+    {
+      "day_index": -1,
+      "day_plan_name": "待计划",
+      "remark": "",
+      "timestamp": null,
+      "cities": [],
+      "events": [
+        {
+          "name": "翁布洞穴瀑布咖啡",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "安顺市",
+          "address": "安顺市西秀区安顺国发食品有限公司西侧250米",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/a34cb415bb904663b52641cbcc6cab47.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "可研手凿巧克力",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市花溪区田园南路32号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/b148e36dcd8c417f82d5370440aca333.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "古埃蒙·艾玛coffee",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "清镇市站街镇杉树村大坡组15号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/199f20f9a5064fc9969892adecb6c2ca.png",
+          "note": "小埃及",
+          "is_transport": false
+        },
+        {
+          "name": "茉莉苗药SPA(大十字店)",
+          "event_type": 103,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区公园路8号都市名园2306室",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/2f8a4c0980c24309bf4b684bdf1afeb1.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "堰塘街",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区云岩区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/af419c5395254308bdbb8e877ed1edad.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "传书巷23号楼",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区文昌北路与君子巷交叉口东北120米",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/b9c8d58cbaaf4b7f9c74431fc5e9d419.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "电台街",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区云岩区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/ea60d6a2aeb44eb9882ab67af2a9afd5.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "镇山村",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市花溪区花溪区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/017474d0e1b04d9fb855e7c1f79497bd.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "堂安梯田",
+          "event_type": 103,
+          "category": "景点",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴镇堂安村堂安侗寨",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/77373111155a4475a03f21e469eedb21.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "兰草昕・物语工坊・溪宿(肇兴侗寨店)",
+          "event_type": 102,
+          "category": "住宿",
+          "city": "黔东南苗族侗族自治州",
+          "address": "黔东南苗族侗族自治州黎平县肇兴镇肇兴村七组",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/160a1f26ea8c44b3a99d26725e42a31c.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "织金大峡谷",
+          "event_type": 103,
+          "category": "景点",
+          "city": "毕节市",
+          "address": "毕节市织金县官寨乡贵州织金洞国家地质公园内",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/9da29b1b8c4749fcb7ea0aeab89a130d.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "北衙路",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市乌当区乌当区",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/4794fe545a854cd9a489c1ed2d555cc2.png",
+          "note": "我想想给你推荐一些我爱吃的，如果是在乌当区的话有一家巨好吃分量大50不到两个人就能吃饱鱼火锅店，他家好像是叫乌江片片鱼火锅地址在乌当区新添寨北衙路，北衙路那里有一家星空国际影城电影院  电影院旁边是地下商场下去穿地下商场走到对面直走哈,然后你就会看到一家乌江片片鱼火锅店，她家有酸痛麻辣清汤，好像清汤是最便宜的，她家蘸水巨好吃[害羞R]就是有点辣，她们家鱼也很嫩，我从初中吃到现在只吃辣锅所以清汤和酸汤她家好不好吃我不清楚，如果点辣锅两个人小份不点任何菜以及饮料就40多，她家也有那个免费的桶装水可以喝的，然后就是糯米饭，安顺裹卷，罗锅，酸汤丝娃娃，然后给你几个避雷指南",
+          "is_transport": false
+        },
+        {
+          "name": "四季丰豆米火锅",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市南明区彭家湾危旧房、棚户区改造项目B北区7至8栋101号商铺",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/1d1150b0d3374fee912e5af2f8819b00.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "民生路好吃街",
+          "event_type": 101,
+          "category": "购物",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区民生路10号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/534f0d4f2d7a4d5da2999d816431e775.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "罗小二贵州百年烙锅烤肉(飞山街店)",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市云岩区飞山街祥源大厦CD栋1层3号",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/5f0a7af95e8d4b1f8cc1243604216c67.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "胡子哥餐厅",
+          "event_type": 101,
+          "category": "吃喝",
+          "city": "贵阳市",
+          "address": "贵阳市南明区护国路42号(名士花园正对面20米)",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/7705d5923e5f4bd7a2b9e8a55ed816de.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "开心果大头贴4号",
+          "event_type": 104,
+          "category": "其他",
+          "city": "贵阳市",
+          "address": "贵阳市南明区瑞金南路与遵义路交叉口地下通道",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/73e9830c56f94de8906bd4cf2c756be3.png",
+          "note": "",
+          "is_transport": false
+        },
+        {
+          "name": "山时Gelato",
+          "event_type": 101,
+          "category": "购物",
+          "city": "贵阳市",
+          "address": "贵阳市观山湖区长岭街道",
+          "image": "https://pitravel.pitravelcdn.com/slytherin/3f1c32a5ea79441cad0d8c546761a310.png",
+          "note": "",
+          "is_transport": false
+        }
+      ]
+    }
+  ]
+}

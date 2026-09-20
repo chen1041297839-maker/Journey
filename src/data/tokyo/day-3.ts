@@ -1,6 +1,6 @@
-import type { Day } from "../types"
+import type { CatalogDay } from "../catalog"
 
-export const day3: Day = {
+export const day3: CatalogDay = {
   id: "d3",
   dayNumber: 3,
   date: "2026-10-18",

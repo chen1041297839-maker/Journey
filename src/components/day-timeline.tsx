@@ -1,6 +1,8 @@
+"use client"
+
 import Link from "next/link"
 import { Camera, Clock3, ShoppingBag } from "lucide-react"
-import { walkingLevelLabel } from "@/data"
+import { walkingLevelLabel } from "@/data/types"
 import type { Day } from "@/data/types"
 import { OutfitCard } from "@/components/outfit-card"
 import { Badge } from "@/components/ui/badge"
@@ -36,7 +38,7 @@ export function DayTimeline({
 
       {day.stops.length === 0 ? (
         <p className="rounded-xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">
-          这一天还没有站点。把圆周轨迹里的停靠点按顺序填进 `stops` 即可。
+          这一天还没有站点。回到首页粘贴圆周旅迹链接，或按天把地点加进去。
         </p>
       ) : (
         <ol className="relative flex flex-col gap-3 border-l border-primary/30 pl-5">
@@ -66,9 +68,11 @@ export function DayTimeline({
                       </p>
                       <p className="mt-0.5 font-heading text-lg leading-tight">
                         {stop.name}
-                        <span className="ml-2 text-sm font-normal text-muted-foreground">
-                          {stop.nameJa}
-                        </span>
+                        {stop.nameJa ? (
+                          <span className="ml-2 text-sm font-normal text-muted-foreground">
+                            {stop.nameJa}
+                          </span>
+                        ) : null}
                       </p>
                     </div>
                     <span className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground">

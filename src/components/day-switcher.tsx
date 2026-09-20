@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { formatDayDate } from "@/data"
+import { formatDayDate } from "@/lib/format-date"
 import type { Day } from "@/data/types"
 import { cn } from "@/lib/utils"
 
