@@ -338,8 +338,22 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
     `${draft.label} ${stops.map((stop) => stop.name).join(" ")}`,
     `day-${dayNumber}`
   )
+  const realFromStops = Array.from(
+    new Map(
+      stops
+        .flatMap((stop) => [
+          ...stop.shops.flatMap((shop) => shop.evidence),
+          ...stop.mustBuys.flatMap((item) => item.evidence),
+          ...stop.photoSpots.flatMap((spot) => spot.evidence),
+        ])
+        .filter((item) => !item.isSample)
+        .map((item) => [item.url, item])
+    ).values()
+  )
   if (researched.length > 0) {
     outfit.evidence = [...researched, ...outfit.evidence.filter((item) => !item.isSample)]
+  } else if (realFromStops.length > 0) {
+    outfit.evidence = realFromStops.slice(0, 3)
   }
 
   const mainStops = stops.filter((stop) => !stop.optional)
