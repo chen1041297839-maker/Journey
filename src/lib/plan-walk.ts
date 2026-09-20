@@ -1,4 +1,4 @@
-import type { DraftDay, DraftStop, TimeBlock } from "@/data/types"
+import type { DraftDay, DraftStop, PlanChange, TimeBlock } from "@/data/types"
 
 const BLOCK_CLOCK: Record<TimeBlock, number> = {
   morning: 8 * 60 + 30,
@@ -212,6 +212,97 @@ function wishlistBuckets(days: DraftDay[], scheduledNames: Set<string>): DraftDa
     }
   }
   return extras
+}
+
+function blockFromMinutes(total: number): TimeBlock {
+  if (total < 11 * 60) return "morning"
+  if (total < 13 * 60 + 30) return "noon"
+  if (total < 17 * 60) return "afternoon"
+  if (total < 19 * 60) return "evening"
+  return "night"
+}
+
+function parseArrive(time?: string): number | null {
+  if (!time) return null
+  const parts = time.split(":").map(Number)
+  if (!Number.isFinite(parts[0]) || !Number.isFinite(parts[1])) return null
+  return parts[0] * 60 + parts[1]
+}
+
+/** Keep 圆周旅迹 order. Only stamp clock so the timeline can group; never sort or drop. */
+export function preserveImportedDays(days: DraftDay[]): DraftDay[] {
+  return days.map((day) => {
+    let clock = 8 * 60 + 30
+    const stops = day.stops.map((stop) => {
+      const minutes = parseArrive(stop.time) ?? clock
+      const time = stop.time || formatArrive(minutes)
+      clock = minutes + 50
+      return {
+        ...stop,
+        time,
+        timeBlock: stop.timeBlock || blockFromMinutes(minutes),
+        optional: Boolean(stop.optional),
+      }
+    })
+    return {
+      ...day,
+      stops,
+      rawStopNames: day.stops.map((stop) => stop.name),
+      planNote: "按圆周旅迹导入顺序。规划建议不会自动改这一天。",
+    }
+  })
+}
+
+function namesOf(day: DraftDay): string[] {
+  return day.stops.map((stop) => stop.name)
+}
+
+function sameSequence(a: string[], b: string[]): boolean {
+  return a.length === b.length && a.every((name, index) => name === b[index])
+}
+
+export function describePlanChanges(imported: DraftDay[], suggested: DraftDay[]): PlanChange[] {
+  const changes: PlanChange[] = []
+  const suggestedByNumber = new Map(suggested.map((day) => [day.dayNumber, day]))
+  const used = new Set<number>()
+
+  for (const day of imported) {
+    const keep = namesOf(day)
+    const match = suggestedByNumber.get(day.dayNumber)
+    if (!match) {
+      changes.push({
+        dayTitle: day.label,
+        why: "建议里不再单独保留这一天。",
+        keep,
+        apply: [],
+      })
+      continue
+    }
+    used.add(match.dayNumber)
+    const apply = namesOf(match)
+    if (sameSequence(keep, apply)) continue
+    const droppedHotels = keep.filter((name) => /酒店|民宿|客栈|溪宿/.test(name) && !apply.includes(name))
+    changes.push({
+      dayTitle: day.label,
+      why: match.planNote || (droppedHotels.length > 0
+        ? `建议去掉重复回酒店：${droppedHotels.join("、")}。`
+        : "建议按片区重排，减少折返。"),
+      keep,
+      apply,
+    })
+  }
+
+  for (const day of suggested) {
+    if (used.has(day.dayNumber)) continue
+    changes.push({
+      dayTitle: day.label,
+      why: day.planNote || "建议把这一天从导入里拆出来。",
+      keep: [],
+      apply: namesOf(day),
+    })
+  }
+
+  return changes
 }
 
 export function planWalkableDays(days: DraftDay[]): DraftDay[] {

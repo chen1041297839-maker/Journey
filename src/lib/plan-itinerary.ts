@@ -23,7 +23,7 @@ import { platformForSeed, sampleEvidence } from "@/lib/evidence"
 import { parseRouteText } from "@/lib/parse-routes"
 import type { PitravelImportResult } from "@/lib/pitravel"
 import { applyResearchedEvidence, researchedOutfitEvidence } from "@/lib/research"
-import { planWalkableDays } from "@/lib/plan-walk"
+import { describePlanChanges, planWalkableDays, preserveImportedDays } from "@/lib/plan-walk"
 import { uniqueStopId } from "@/lib/stop-id"
 import { stopFromDraft } from "@/lib/stop-templates"
 
@@ -39,6 +39,7 @@ export type PlanOptions = {
   sourceNote?: string
   id?: string
   datesLabel?: string
+  importedOrder?: boolean
 }
 
 function weekdayLabel(iso: string): string {
@@ -306,7 +307,7 @@ function walkingLevel(stops: Stop[]): WalkingLevel {
   return "heavy"
 }
 
-function buildDay(draft: DraftDay, index: number, startDate: string): Day {
+function buildDay(draft: DraftDay, index: number, startDate: string, importedOrder = false): Day {
   const dayNumber = draft.dayNumber > 0 ? draft.dayNumber : index + 1
   const date = addDays(startDate, index)
   let clock = 8 * 60
@@ -366,12 +367,18 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
     date,
     weekday: weekdayLabel(date),
     title,
-    theme: `${uniqueAreas.join(" → ") || "行程"} · 推荐排期，不是圆周旅迹原顺序。`,
+    theme: importedOrder
+      ? `${uniqueAreas.join(" → ") || "行程"} · 圆周旅迹原顺序`
+      : `${uniqueAreas.join(" → ") || "行程"} · 已采用规划建议`,
     weatherVibe: catalog?.weatherVibe || "贵州天气善变，薄外套随身",
     walkingLevel: level,
     walkingNote:
       catalog?.walkingNote ||
-      (level === "heavy" ? "主线站点多，按时间块走，可选点随时砍。" : "按片区排好，给机位留出停留。"),
+      (importedOrder
+        ? "按导入顺序走。若要改片区穿插、回酒店或日落时机，先看规划建议。"
+        : level === "heavy"
+          ? "主线站点多，按时间块走，可选点随时砍。"
+          : "按片区排好，给机位留出停留。"),
     neighborhoodStyle: catalog?.neighborhoodStyle || uniqueAreas.join("、") || draft.label,
     routeSummary: mainStops.map((stop) => stop.name),
     planNote: draft.planNote,
@@ -385,7 +392,8 @@ export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
   const startDate = options?.startDate ?? "2026-10-16"
   const unlabeled = route.days.length === 1 && route.days[0].label === "待排期"
   const daysSource = unlabeled ? clusterUnlabeled(route.days[0].stops) : route.days
-  const days = daysSource.map((draft, index) => buildDay(draft, index, startDate))
+  const importedOrder = Boolean(options?.importedOrder)
+  const days = daysSource.map((draft, index) => buildDay(draft, index, startDate, importedOrder))
   const scheduled = days.filter((day) => !/待计划|备选/.test(day.title))
   const endDate = scheduled.at(-1)?.date ?? days.at(-1)?.date ?? startDate
   const wishlistDate = endDate
@@ -408,7 +416,7 @@ export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
     endDate,
     intro:
       options?.intro ||
-      "把圆周旅迹链接贴进来当原料，再按片区排成可走的一天。每一站补上店、必买、机位和当天穿搭，并附上公开笔记证据。",
+      "把圆周旅迹链接贴进来。默认按导入顺序显示每一站的店、必买、机位和穿搭。规划建议要你确认后才会改顺序。",
     sourceNote:
       options?.sourceNote ||
       "系统会公开检索小红书 / 抖音 / Instagram，并读取你粘贴的链接（公开页或 oEmbed）。打不开就标「网页读不全」。不会登录，也不会走 App 接口。",
@@ -423,9 +431,9 @@ export function planFromText(text: string, isSampleRoute = false): Trip {
 }
 
 export function planFromPitravel(result: PitravelImportResult): Trip {
-  return planItinerary(
-    { days: planWalkableDays(result.draft.days) },
-    {
+  const importedDraft = preserveImportedDays(result.draft.days)
+  const suggestedDraft = planWalkableDays(result.draft.days)
+  const shared = {
     id: result.meta.id ? `xenia-pitravel-${result.meta.id}` : undefined,
     sourceText: result.sourceText,
     isSampleRoute: false,
@@ -433,12 +441,41 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
     destination: result.meta.destination,
     title: result.meta.name || "Xenia 的行程站",
     datesLabel: result.meta.timeDescription || undefined,
-    intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。圆周旅迹只提供原料；下面是按片区重排的推荐日计划（时间块、可步行顺序、合并回酒店）。每一站仍有店、必买、机位和穿搭，并挂上公开检索/粘贴的笔记。`,
-    sourceNote: `从圆周旅迹导入：${result.meta.shareUrl}${
-      result.meta.timeDescription ? ` · ${result.meta.timeDescription}` : ""
-    }。导入 ≠ 规划：已按片区排成可走的一天，并去掉重复回酒店。笔记来自公开网页和 Instagram oEmbed，不是示例卡。打不开就标「网页读不全」。不会登录，也不会走 App 接口。`,
+  }
+  const importedTrip = planItinerary(
+    { days: importedDraft },
+    {
+      ...shared,
+      importedOrder: true,
+      intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。默认按圆周旅迹原顺序。每一站有店、必买、机位和穿搭，并挂上公开检索/粘贴的笔记。规划建议要你确认后才会改这一天。`,
+      sourceNote: `从圆周旅迹导入：${result.meta.shareUrl}${
+        result.meta.timeDescription ? ` · ${result.meta.timeDescription}` : ""
+      }。导入顺序是准绳，不会悄悄重排。笔记来自公开网页和 Instagram oEmbed。打不开就标「网页读不全」。不会登录，也不会走 App 接口。`,
     }
   )
+  const suggestedTrip = planItinerary(
+    { days: suggestedDraft },
+    {
+      ...shared,
+      importedOrder: false,
+      intro: importedTrip.intro,
+      sourceNote: importedTrip.sourceNote,
+    }
+  )
+  const changes = describePlanChanges(importedDraft, suggestedDraft)
+  return {
+    ...importedTrip,
+    planMode: "imported",
+    proposal:
+      changes.length > 0
+        ? {
+            summary: `有 ${changes.length} 处和导入顺序不同（片区穿插、回酒店占站、日落时机等）。默认仍按圆周旅迹。只有点「采用建议」后才会改。`,
+            changes,
+            importedDays: importedTrip.days,
+            suggestedDays: suggestedTrip.days,
+          }
+        : undefined,
+  }
 }
 
 export function defaultSampleTrip(): Trip {

@@ -6,6 +6,7 @@ import { SAMPLE_ROUTE_TEXT } from "@/data/sample-route"
 import type { DraftDay } from "@/data/types"
 import { useTrip } from "@/components/trip-provider"
 import { EmptyState } from "@/components/empty-state"
+import { PlanProposalDialog } from "@/components/plan-proposal-dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -15,7 +16,7 @@ import { countStops, draftToText, parseRouteText } from "@/lib/parse-routes"
 
 export function RouteComposer() {
   const router = useRouter()
-  const { generate, importShare, generating, error, trip } = useTrip()
+  const { generate, importShare, generating, error, trip, applyProposal, revertImported } = useTrip()
   const [shareUrl, setShareUrl] = useState(XENIA_SHARE_URL)
   const [text, setText] = useState(
     trip.isSampleRoute ? SAMPLE_ROUTE_TEXT : trip.sourceText || ""
@@ -23,6 +24,7 @@ export function RouteComposer() {
   const [structured, setStructured] = useState<DraftDay[]>(() =>
     parseRouteText(trip.isSampleRoute ? SAMPLE_ROUTE_TEXT : trip.sourceText || "").days
   )
+  const [proposalOpen, setProposalOpen] = useState(false)
   const [stopDraft, setStopDraft] = useState<Record<number, string>>({})
   const parsed = useMemo(() => parseRouteText(text), [text])
   const stopCount = countStops(parsed)
@@ -56,10 +58,10 @@ export function RouteComposer() {
       <div className="max-w-2xl">
         <p className="text-[11px] tracking-[0.2em] text-primary">圆周旅迹导入</p>
         <h2 className="mt-2 font-heading text-3xl leading-tight">
-          粘贴分享链接，生成推荐日计划
+          粘贴分享链接，按导入顺序打开
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          圆周旅迹链接只是原料。导入后会按片区重排成可走的一天：时间块、合并重复回酒店，并对照原顺序。店、必买、机位、穿搭会挂上公开检索和你粘贴的小红书 / 抖音 / Instagram 帖子（公开页或 oEmbed）。打不开就标「网页读不全」。不会登录，也不会走 App 接口。
+          圆周旅迹的站点顺序是准绳，导入后不会悄悄重排。若规划认为某一天在片区之间折返、回酒店占站、或日落时机不合理，会弹出确认框：改什么、为什么、保持原顺序还是采用建议。店、必买、机位、穿搭仍会挂上公开检索和你粘贴的小红书 / 抖音 / Instagram 帖子。打不开就标「网页读不全」。不会登录，也不会走 App 接口。
         </p>
       </div>
 
@@ -77,10 +79,32 @@ export function RouteComposer() {
             <Button type="button" onClick={() => router.push(`/day/${trip.days[0].id}`)}>
               打开行程
             </Button>
+            {trip.proposal ? (
+              <Button type="button" variant="outline" onClick={() => setProposalOpen(true)}>
+                {(trip.planMode || "imported") === "imported" ? "查看规划建议" : "规划建议 / 恢复原顺序"}
+              </Button>
+            ) : null}
             <Button type="button" variant="outline" onClick={onImport} disabled={generating}>
               {generating ? "正在导入…" : "重新导入当前链接"}
             </Button>
           </div>
+          {trip.proposal ? (
+            <PlanProposalDialog
+              open={proposalOpen}
+              onOpenChange={setProposalOpen}
+              proposal={trip.proposal}
+              planMode={trip.planMode || "imported"}
+              onKeep={() => setProposalOpen(false)}
+              onApply={() => {
+                applyProposal()
+                setProposalOpen(false)
+              }}
+              onRevert={() => {
+                revertImported()
+                setProposalOpen(false)
+              }}
+            />
+          ) : null}
         </section>
       ) : null}
 
@@ -100,7 +124,7 @@ export function RouteComposer() {
         </p>
         <div className="flex flex-wrap gap-2">
           <Button type="button" onClick={onImport} disabled={generating || !shareUrl.trim()}>
-            {generating ? "正在导入…" : "导入并生成行程"}
+            {generating ? "正在导入…" : "导入行程"}
           </Button>
         </div>
       </section>

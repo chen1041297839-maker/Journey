@@ -9,14 +9,15 @@ import {
   useState,
   type ReactNode,
 } from "react"
-import type { Evidence, Trip } from "@/data/types"
+import type { Day, Evidence, Trip } from "@/data/types"
+import { applySuggestedPlan, revertImportedPlan } from "@/lib/apply-plan"
 import { attachPostsToTrip } from "@/lib/attach-evidence"
 import { isPitravelInput } from "@/lib/pitravel"
 import { countStops, parseRouteText } from "@/lib/parse-routes"
 import { defaultSampleTrip, planFromText } from "@/lib/plan-itinerary"
 import type { FetchedPost } from "@/lib/social-posts"
 
-const STORAGE_KEY = "xenia.trip.v8"
+const STORAGE_KEY = "xenia.trip.v9"
 
 type TripContextValue = {
   trip: Trip
@@ -34,9 +35,33 @@ type TripContextValue = {
   } | null>
   resetToSample: () => Trip
   patchEvidence: (evidenceId: string, patch: Partial<Evidence>) => void
+  applyProposal: () => void
+  revertImported: () => void
 }
 
 const TripContext = createContext<TripContextValue | null>(null)
+
+function mapDays(days: Day[], mapList: (list: Evidence[]) => Evidence[]): Day[] {
+  return days.map((day) => ({
+    ...day,
+    outfit: { ...day.outfit, evidence: mapList(day.outfit.evidence) },
+    stops: day.stops.map((stop) => ({
+      ...stop,
+      shops: stop.shops.map((shop) => ({
+        ...shop,
+        evidence: mapList(shop.evidence),
+      })),
+      mustBuys: stop.mustBuys.map((item) => ({
+        ...item,
+        evidence: mapList(item.evidence),
+      })),
+      photoSpots: stop.photoSpots.map((spot) => ({
+        ...spot,
+        evidence: mapList(spot.evidence),
+      })),
+    })),
+  }))
+}
 
 function applyEvidencePatch(
   trip: Trip,
@@ -48,25 +73,14 @@ function applyEvidencePatch(
 
   return {
     ...trip,
-    days: trip.days.map((day) => ({
-      ...day,
-      outfit: { ...day.outfit, evidence: mapList(day.outfit.evidence) },
-      stops: day.stops.map((stop) => ({
-        ...stop,
-        shops: stop.shops.map((shop) => ({
-          ...shop,
-          evidence: mapList(shop.evidence),
-        })),
-        mustBuys: stop.mustBuys.map((item) => ({
-          ...item,
-          evidence: mapList(item.evidence),
-        })),
-        photoSpots: stop.photoSpots.map((spot) => ({
-          ...spot,
-          evidence: mapList(spot.evidence),
-        })),
-      })),
-    })),
+    days: mapDays(trip.days, mapList),
+    proposal: trip.proposal
+      ? {
+          ...trip.proposal,
+          importedDays: mapDays(trip.proposal.importedDays, mapList),
+          suggestedDays: mapDays(trip.proposal.suggestedDays, mapList),
+        }
+      : trip.proposal,
   }
 }
 
@@ -212,6 +226,14 @@ export function TripProvider({
     return next
   }, [persist])
 
+  const revertImported = useCallback(() => {
+    persist(revertImportedPlan(trip))
+  }, [persist, trip])
+
+  const applyProposal = useCallback(() => {
+    persist(applySuggestedPlan(trip))
+  }, [persist, trip])
+
   const patchEvidence = useCallback(
     (evidenceId: string, patch: Partial<Evidence>) => {
       persist(applyEvidencePatch(trip, evidenceId, patch))
@@ -230,8 +252,22 @@ export function TripProvider({
       importPosts,
       resetToSample,
       patchEvidence,
+      applyProposal,
+      revertImported,
     }),
-    [trip, ready, error, generating, generate, importShare, importPosts, resetToSample, patchEvidence]
+    [
+      trip,
+      ready,
+      error,
+      generating,
+      generate,
+      importShare,
+      importPosts,
+      resetToSample,
+      patchEvidence,
+      applyProposal,
+      revertImported,
+    ]
   )
 
   return <TripContext.Provider value={value}>{children}</TripContext.Provider>

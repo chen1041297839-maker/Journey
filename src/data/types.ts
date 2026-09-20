@@ -112,6 +112,22 @@ export type Day = {
   stops: Stop[]
 }
 
+export type PlanChange = {
+  dayTitle: string
+  why: string
+  keep: string[]
+  apply: string[]
+}
+
+export type PlanProposal = {
+  summary: string
+  changes: PlanChange[]
+  importedDays: Day[]
+  suggestedDays: Day[]
+}
+
+export type PlanMode = "imported" | "suggested"
+
 export type Trip = {
   id: string
   traveler: string
@@ -125,6 +141,8 @@ export type Trip = {
   sourceText: string
   isSampleRoute: boolean
   days: Day[]
+  planMode?: PlanMode
+  proposal?: PlanProposal
 }
 
 export const walkingLevelLabel: Record<WalkingLevel, string> = {

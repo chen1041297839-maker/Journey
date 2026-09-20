@@ -1,11 +1,15 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { Camera, Clock3, ShoppingBag } from "lucide-react"
 import { timeBlockLabel, walkingLevelLabel } from "@/data/types"
 import type { Day, Stop, TimeBlock } from "@/data/types"
 import { OutfitCard } from "@/components/outfit-card"
+import { PlanProposalDialog } from "@/components/plan-proposal-dialog"
+import { useTrip } from "@/components/trip-provider"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 function groupedStops(stops: Stop[]): { block: TimeBlock | "other"; items: Stop[] }[] {
@@ -26,13 +30,17 @@ export function DayTimeline({
   day: Day
   activeStopId?: string
 }) {
+  const { trip, applyProposal, revertImported } = useTrip()
+  const [proposalOpen, setProposalOpen] = useState(false)
   const groups = groupedStops(day.stops)
+  const imported = (trip.planMode || "imported") === "imported"
+  const proposal = trip.proposal
 
   return (
     <div className="flex flex-col gap-5">
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <Badge>推荐排期</Badge>
+          <Badge>{imported ? "圆周旅迹原顺序" : "已采用规划建议"}</Badge>
           <Badge variant="secondary">{walkingLevelLabel[day.walkingLevel]}</Badge>
           <Badge variant="outline">{day.weatherVibe.split("，")[0]}</Badge>
         </div>
@@ -49,17 +57,27 @@ export function DayTimeline({
         <p className="mt-3 text-xs tracking-wide text-muted-foreground">
           {day.routeSummary.join(" → ")}
         </p>
-        {day.rawStopNames && day.rawStopNames.length > 0 ? (
-          <details className="mt-3 rounded-xl border border-border bg-muted/30 px-3 py-2">
-            <summary className="cursor-pointer text-xs text-muted-foreground">
-              圆周旅迹原顺序（{day.rawStopNames.length} 站，含重复回酒店）
-            </summary>
-            <ol className="mt-2 list-decimal pl-4 text-xs leading-relaxed text-muted-foreground">
-              {day.rawStopNames.map((name, index) => (
-                <li key={`${name}-${index}`}>{name}</li>
-              ))}
-            </ol>
-          </details>
+        {proposal ? (
+          <div className="mt-3">
+            <Button type="button" size="sm" variant={imported ? "outline" : "secondary"} onClick={() => setProposalOpen(true)}>
+              {imported ? "查看规划建议" : "规划建议 / 恢复原顺序"}
+            </Button>
+            <PlanProposalDialog
+              open={proposalOpen}
+              onOpenChange={setProposalOpen}
+              proposal={proposal}
+              planMode={trip.planMode || "imported"}
+              onKeep={() => setProposalOpen(false)}
+              onApply={() => {
+                applyProposal()
+                setProposalOpen(false)
+              }}
+              onRevert={() => {
+                revertImported()
+                setProposalOpen(false)
+              }}
+            />
+          </div>
         ) : null}
       </div>
 
