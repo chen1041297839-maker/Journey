@@ -4,6 +4,7 @@ import { EmptyState } from "@/components/empty-state"
 import { JournalSkeleton } from "@/components/journal-skeleton"
 import { StopDetail } from "@/components/stop-detail"
 import { useTrip } from "@/components/trip-provider"
+import { findStop } from "@/lib/stop-id"
 
 function decodeSegment(value: string): string {
   try {
@@ -20,9 +21,7 @@ export function StopView({ dayId, stopId }: { dayId: string; stopId: string }) {
   const decodedDayId = decodeSegment(dayId)
   const decodedStopId = decodeSegment(stopId)
   const day = trip.days.find((item) => item.id === decodedDayId)
-  const stop = day?.stops.find(
-    (item) => item.id === decodedStopId || decodeSegment(item.id) === decodedStopId
-  )
+  const stop = day ? findStop(day, decodedStopId) : undefined
   if (!day || !stop) {
     return (
       <EmptyState

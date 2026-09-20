@@ -2,6 +2,7 @@ import importedJourney from "@/data/imported/pitravel-7662387918598377796.json"
 import type { Day, Stop, Trip } from "./types"
 import { parsePitravelPayload, XENIA_SHARE_URL } from "@/lib/pitravel"
 import { planFromPitravel } from "@/lib/plan-itinerary"
+import { findStop } from "@/lib/stop-id"
 
 /**
  * 默认行程：Xenia 从圆周旅迹分享链接导入的贵州路线。
@@ -21,7 +22,8 @@ export function getDay(dayId: string): Day | undefined {
 }
 
 export function getStop(dayId: string, stopId: string): Stop | undefined {
-  return getDay(dayId)?.stops.find((stop) => stop.id === stopId)
+  const day = getDay(dayId)
+  return day ? findStop(day, stopId) : undefined
 }
 
 export function getDefaultDayId(): string | undefined {

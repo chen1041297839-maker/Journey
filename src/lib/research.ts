@@ -70,14 +70,59 @@ function asEvidence(row: ResearchRow, seed: string): Evidence {
   }
 }
 
-function merge(list: Evidence[], extra: Evidence[]): Evidence[] {
-  const next = [...extra]
+function uniqueByUrl(list: Evidence[]): Evidence[] {
+  const seen = new Set<string>()
+  const next: Evidence[] = []
   for (const item of list) {
-    if (item.isSample) continue
-    if (next.some((entry) => entry.url === item.url)) continue
+    if (seen.has(item.url)) continue
+    seen.add(item.url)
     next.push(item)
   }
+  return next
+}
+
+function merge(list: Evidence[], extra: Evidence[]): Evidence[] {
+  const next = uniqueByUrl([...extra, ...list.filter((item) => !item.isSample)])
   return next.length > 0 ? next : list
+}
+
+function stripSamples(list: Evidence[]): Evidence[] {
+  const real = uniqueByUrl(list.filter((item) => !item.isSample))
+  return real.length > 0 ? real : list
+}
+
+function realEvidenceOnStop(stop: Stop): Evidence[] {
+  return uniqueByUrl(
+    [
+      ...stop.shops.flatMap((shop) => shop.evidence),
+      ...stop.mustBuys.flatMap((item) => item.evidence),
+      ...stop.photoSpots.flatMap((spot) => spot.evidence),
+    ].filter((item) => !item.isSample)
+  )
+}
+
+function preferRealEvidence(stop: Stop): Stop {
+  const real = realEvidenceOnStop(stop)
+  const fill = (list: Evidence[], index: number): Evidence[] => {
+    const stripped = stripSamples(list)
+    if (real.length === 0) return stripped
+    if (stripped.every((item) => item.isSample)) {
+      return index === 0 ? real : real.slice(0, 1)
+    }
+    return stripped
+  }
+  return {
+    ...stop,
+    shops: stop.shops.map((shop, index) => ({ ...shop, evidence: fill(shop.evidence, index) })),
+    mustBuys: stop.mustBuys.map((item, index) => ({
+      ...item,
+      evidence: fill(item.evidence, index),
+    })),
+    photoSpots: stop.photoSpots.map((spot, index) => ({
+      ...spot,
+      evidence: fill(spot.evidence, index),
+    })),
+  }
 }
 
 function evidenceByNoteId(noteId: string): Evidence | undefined {
@@ -88,7 +133,7 @@ function evidenceByNoteId(noteId: string): Evidence | undefined {
 function applyPhotoPacks(stop: Stop): Stop {
   const pack = packs.find((item) => matches(stop.name, item.aliases))
   if (!pack) return stop
-  const carried = stop.photoSpots.flatMap((spot) => spot.evidence).filter((item) => !item.isSample)
+  const carried = realEvidenceOnStop(stop)
   const photoSpots: PhotoSpot[] = pack.spots.map((spot, index) => {
     const evidence = evidenceByNoteId(spot.evidenceNoteId)
     return {
@@ -184,7 +229,7 @@ export function applyResearchedEvidence(stop: Stop): Stop {
       }
     }
   }
-  return applyPhotoPacks(next)
+  return preferRealEvidence(applyPhotoPacks(next))
 }
 
 export function researchedOutfitEvidence(label: string, seed: string): Evidence[] {

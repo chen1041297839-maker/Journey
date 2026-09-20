@@ -26,7 +26,7 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
       </CardHeader>
       <CardContent className="grid gap-5">
         <div className="grid gap-5 sm:grid-cols-[minmax(0,180px)_1fr]">
-          <ShotFrame composition={spot.composition} />
+          <ShotFrame composition={spot.composition ?? undefined} />
           <dl className="grid gap-3 text-sm">
             <Fact label="站在哪" value={spot.standWhere} />
             <Fact label="角度" value={spot.angle} />

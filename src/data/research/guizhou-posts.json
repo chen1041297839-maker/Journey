@@ -30,7 +30,7 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群", "鼓楼"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "鼓楼", "花椒树下"],
     "slot": "photo",
     "platform": "douyin",
     "url": "https://www.douyin.com/shipin/7370322820401956890",
@@ -40,7 +40,7 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼"],
+    "aliases": ["肇兴侗寨", "鼓楼", "花椒树下"],
     "slot": "photo",
     "platform": "instagram",
     "url": "https://www.instagram.com/reel/DVyBqtNCrwp/",
@@ -202,7 +202,7 @@
     }
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "花椒树下", "侗家火锅"],
     "slot": "photo",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a72c3d70000000029031c47",
@@ -213,7 +213,7 @@
     "collectedBy": "paste"
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "花椒树下", "侗家火锅"],
     "slot": "outfit",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a72c3d70000000029031c47",
@@ -224,7 +224,7 @@
     "collectedBy": "paste"
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群", "堂安"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "堂安", "侗家火锅", "花椒树下"],
     "slot": "buy",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a7f037e000000000502bba9",
@@ -241,7 +241,7 @@
     }
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "花椒树下", "侗家火锅"],
     "slot": "photo",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a66bd41000000001102d491",
@@ -252,7 +252,7 @@
     "collectedBy": "paste"
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群", "堂安", "牛棚"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "堂安", "牛棚", "侗家火锅", "花椒树下"],
     "slot": "photo",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a7c864100000000220305f6",

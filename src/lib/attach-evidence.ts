@@ -19,40 +19,48 @@ function uniquePush(list: Evidence[], item: Evidence): Evidence[] {
   return [item, ...list.filter((entry) => !entry.isSample)]
 }
 
+function ontoFirstPhoto(stop: Stop, item: Evidence): Stop {
+  if (!stop.photoSpots[0]) return stop
+  const photoSpots = stop.photoSpots.map((spot, index) =>
+    index === 0 ? { ...spot, evidence: uniquePush(spot.evidence, item) } : spot
+  )
+  return { ...stop, photoSpots }
+}
+
 function withEvidence(stop: Stop, item: Evidence, slot: AttachTarget["slot"]): Stop {
   if (slot === "outfit") return stop
   if (slot === "shop" && stop.shops[0]) {
     const shops = stop.shops.map((shop, index) =>
       index === 0 ? { ...shop, evidence: uniquePush(shop.evidence, item) } : shop
     )
-    return { ...stop, shops }
+    return ontoFirstPhoto({ ...stop, shops }, item)
   }
   if (slot === "buy") {
     if (stop.mustBuys[0]) {
       const mustBuys = stop.mustBuys.map((buy, index) =>
         index === 0 ? { ...buy, evidence: uniquePush(buy.evidence, item) } : buy
       )
-      return { ...stop, mustBuys }
+      return ontoFirstPhoto({ ...stop, mustBuys }, item)
     }
-    return {
-      ...stop,
-      mustBuys: [
-        {
-          id: `${stop.id}-paste-buy`,
-          name: item.caption.slice(0, 24) || "笔记里的必买",
-          reason: item.quote,
-          budget: "以现场为准",
-          tip: "点开原帖看配图。",
-          evidence: [item],
-        },
-      ],
-    }
+    return ontoFirstPhoto(
+      {
+        ...stop,
+        mustBuys: [
+          {
+            id: `${stop.id}-paste-buy`,
+            name: item.caption.slice(0, 24) || "笔记里的必买",
+            reason: item.quote,
+            budget: "以现场为准",
+            tip: "点开原帖看配图。",
+            evidence: [item],
+          },
+        ],
+      },
+      item
+    )
   }
   if (stop.photoSpots[0]) {
-    const photoSpots = stop.photoSpots.map((spot, index) =>
-      index === 0 ? { ...spot, evidence: uniquePush(spot.evidence, item) } : spot
-    )
-    return { ...stop, photoSpots }
+    return ontoFirstPhoto(stop, item)
   }
   if (stop.shops[0]) {
     const shops = stop.shops.map((shop, index) =>

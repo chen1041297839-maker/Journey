@@ -171,7 +171,7 @@ export function EvidenceRow({
   evidence: Evidence[]
   onChangeAt?: (index: number, patch: Partial<Evidence>) => void
 }) {
-  if (evidence.length === 0) return null
+  if (!evidence?.length) return null
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {evidence.map((item, index) => (

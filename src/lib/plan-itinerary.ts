@@ -24,6 +24,7 @@ import { parseRouteText } from "@/lib/parse-routes"
 import type { PitravelImportResult } from "@/lib/pitravel"
 import { applyResearchedEvidence, researchedOutfitEvidence } from "@/lib/research"
 import { planWalkableDays } from "@/lib/plan-walk"
+import { uniqueStopId } from "@/lib/stop-id"
 import { stopFromDraft } from "@/lib/stop-templates"
 
 const TRAVELER = "Xenia"
@@ -239,12 +240,13 @@ function resolveStop(
   draft: DraftStop,
   order: number,
   clock: number,
-  dayNumber: number
+  dayNumber: number,
+  usedIds: Set<string>
 ): { stop: Stop; nextClock: number } {
   const matched = matchPlace(draft.name)
   const catalog = matched?.stop
   const arrive = draft.time || formatArrive(clock)
-  const stableId = `d${dayNumber}-s${order}`
+  const stableId = uniqueStopId(dayNumber, catalog?.name || draft.name, usedIds)
   const stop = catalog
     ? { ...fromCatalog(catalog, order, arrive), id: stableId }
     : stopFromDraft(draft, order, arrive, stableId)
@@ -309,8 +311,9 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
   const date = addDays(startDate, index)
   let clock = 8 * 60
   const stops: Stop[] = []
+  const usedIds = new Set<string>()
   for (const [stopIndex, draftStop] of draft.stops.entries()) {
-    const resolved = resolveStop(draftStop, stopIndex + 1, clock, dayNumber)
+    const resolved = resolveStop(draftStop, stopIndex + 1, clock, dayNumber, usedIds)
     clock = resolved.nextClock
     stops.push(resolved.stop)
   }
