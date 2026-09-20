@@ -1,6 +1,7 @@
 "use client"
 
 import type { Outfit } from "@/data/types"
+import { FactImages } from "@/components/fact-images"
 import { SourceLinks } from "@/components/source-links"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -68,6 +69,7 @@ export function OutfitCard({
           </div>
         </dl>
         <SourceLinks evidence={outfit.evidence} />
+        <FactImages images={outfit.images} className="max-w-[180px]" />
       </CardContent>
     </Card>
   )

@@ -17,7 +17,7 @@ import { countStops, parseRouteText } from "@/lib/parse-routes"
 import { defaultSampleTrip, planFromText } from "@/lib/plan-itinerary"
 import type { FetchedPost } from "@/lib/social-posts"
 
-const STORAGE_KEY = "xenia.trip.v10"
+const STORAGE_KEY = "xenia.trip.v11"
 
 type TripContextValue = {
   trip: Trip

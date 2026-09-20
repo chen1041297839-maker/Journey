@@ -88,6 +88,9 @@ function withEvidence(stop: Stop, item: Evidence, slot: AttachTarget["slot"]): S
             budget: "以现场为准",
             tip: item.commentsGated ? "评论网页读不到，先按正文。" : "以正文抽出的店名为准。",
             evidence: [item],
+            images: item.imageSrc && !item.imageSrc.endsWith(".svg")
+              ? [{ src: item.imageSrc, alt: item.imageAlt || item.caption }]
+              : [{ src: "", alt: "", missing: true, missingCount: 1 }],
           },
         ],
       },

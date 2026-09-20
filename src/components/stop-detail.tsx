@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import type { Day, MustBuy, Shop, Stop, Warning } from "@/data/types"
 import { SectionEmpty } from "@/components/empty-state"
+import { FactImages } from "@/components/fact-images"
 import { OutfitCard } from "@/components/outfit-card"
 import { PhotoSpotCard } from "@/components/photo-spot-card"
 import { PostPaste } from "@/components/post-paste"
@@ -96,20 +97,24 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
 }
 
 function WarningList({ warnings }: { warnings: Warning[] }) {
+  const images = warnings.find((item) => item.images?.some((image) => image.src))?.images
   return (
     <section className="grid gap-2">
       <p className="text-[11px] tracking-[0.16em] text-primary">避坑</p>
-      <ul className="grid gap-2">
-        {warnings.map((item) => (
-          <li
-            key={item.id}
-            className="rounded-2xl border border-border bg-card px-4 py-3 text-sm leading-relaxed"
-          >
-            <span className="mr-2 font-heading text-primary">{item.kind}</span>
-            {item.text}
-          </li>
-        ))}
-      </ul>
+      <div className="grid gap-3 sm:grid-cols-[minmax(0,140px)_1fr] sm:items-start">
+        <FactImages images={images} />
+        <ul className="grid gap-2">
+          {warnings.map((item) => (
+            <li
+              key={item.id}
+              className="rounded-2xl border border-border bg-card px-4 py-3 text-sm leading-relaxed"
+            >
+              <span className="mr-2 font-heading text-primary">{item.kind}</span>
+              {item.text}
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   )
 }
@@ -121,15 +126,21 @@ function ShopList({ shops }: { shops: Shop[] }) {
       <p className="text-[11px] tracking-[0.16em] text-primary">店铺</p>
       <div className="grid gap-3">
         {shops.map((shop) => (
-          <div key={shop.id} className="rounded-2xl border border-border bg-card px-4 py-3">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="font-heading text-lg">{shop.name}</p>
-              <span className="text-xs tabular-nums text-muted-foreground">{shop.hours}</span>
+          <div
+            key={shop.id}
+            className="grid gap-3 rounded-2xl border border-border bg-card px-4 py-3 sm:grid-cols-[minmax(0,132px)_1fr] sm:items-start"
+          >
+            <FactImages images={shop.images} />
+            <div>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="font-heading text-lg">{shop.name}</p>
+                <span className="text-xs tabular-nums text-muted-foreground">{shop.hours}</span>
+              </div>
+              <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
+              <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
+              <p className="mt-2 text-sm text-muted-foreground">找什么 · {shop.whatToLookFor}</p>
+              <SourceLinks evidence={shop.evidence} className="mt-3" />
             </div>
-            <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
-            <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
-            <p className="mt-2 text-sm text-muted-foreground">找什么 · {shop.whatToLookFor}</p>
-            <SourceLinks evidence={shop.evidence} className="mt-3" />
           </div>
         ))}
       </div>
@@ -144,14 +155,20 @@ function BuyList({ items }: { items: MustBuy[] }) {
       <p className="text-[11px] tracking-[0.16em] text-primary">必买</p>
       <div className="grid gap-3">
         {items.map((item) => (
-          <div key={item.id} className="rounded-2xl border border-border bg-card px-4 py-3">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="font-heading text-lg">{item.name}</p>
-              <span className="text-xs tabular-nums text-primary">{item.budget}</span>
+          <div
+            key={item.id}
+            className="grid gap-3 rounded-2xl border border-border bg-card px-4 py-3 sm:grid-cols-[minmax(0,132px)_1fr] sm:items-start"
+          >
+            <FactImages images={item.images} />
+            <div>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="font-heading text-lg">{item.name}</p>
+                <span className="text-xs tabular-nums text-primary">{item.budget}</span>
+              </div>
+              <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
+              <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
+              <SourceLinks evidence={item.evidence} className="mt-3" />
             </div>
-            <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
-            <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
-            <SourceLinks evidence={item.evidence} className="mt-3" />
           </div>
         ))}
       </div>

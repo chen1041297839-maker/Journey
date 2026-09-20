@@ -26,6 +26,7 @@
     "url": "https://www.instagram.com/p/DP3zF6zEnOc/",
     "caption": "Xiaoqikong Scenic Area 小七孔景区",
     "quote": "古七孔石桥横跨香河碧水，68级瀑布和喀斯特森林同框。",
+    "imageSrc": "/evidence/ig-DP3zF6zEnOc-1.jpg",
     "partialRead": false,
     "collectedBy": "search"
   },
@@ -46,6 +47,7 @@
     "url": "https://www.instagram.com/reel/DVyBqtNCrwp/",
     "caption": "Zhaoxing Dong Village",
     "quote": "黔东南最大侗寨之一，纯木鼓楼不用钉。建议住一到两晚，把窄巷和鼓楼走完。",
+    "imageSrc": "/evidence/ig-DVyBqtNCrwp-1.jpg",
     "partialRead": false,
     "collectedBy": "search"
   },
@@ -60,7 +62,7 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["青云市集", "青云"],
+    "aliases": ["青云市集"],
     "slot": "photo",
     "platform": "douyin",
     "url": "https://www.douyin.com/video/7677809706693814351",

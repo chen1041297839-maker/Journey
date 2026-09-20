@@ -13,6 +13,14 @@ export const timeBlockLabel: Record<TimeBlock, string> = {
 
 export type Platform = "xiaohongshu" | "douyin" | "instagram"
 
+export type FactImage = {
+  src: string
+  alt: string
+  /** 这一张或这一组后续配图公开页读不到 */
+  missing?: boolean
+  missingCount?: number
+}
+
 export type Evidence = {
   id: string
   platform: Platform
@@ -35,6 +43,7 @@ export type Warning = {
   id: string
   text: string
   kind: "雷" | "注意"
+  images?: FactImage[]
 }
 
 export type Shop = {
@@ -45,6 +54,7 @@ export type Shop = {
   note: string
   whatToLookFor: string
   evidence: Evidence[]
+  images?: FactImage[]
 }
 
 export type MustBuy = {
@@ -54,6 +64,7 @@ export type MustBuy = {
   budget: string
   tip: string
   evidence: Evidence[]
+  images?: FactImage[]
 }
 
 export type ShotComposition = {
@@ -74,6 +85,7 @@ export type PhotoSpot = {
   avoid: string
   composition: ShotComposition
   evidence: Evidence[]
+  images?: FactImage[]
 }
 
 export type Outfit = {
@@ -85,6 +97,7 @@ export type Outfit = {
   colors: string[]
   avoid: string
   evidence: Evidence[]
+  images?: FactImage[]
 }
 
 export type Stop = {

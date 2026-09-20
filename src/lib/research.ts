@@ -1,8 +1,10 @@
 import researched from "@/data/research/guizhou-posts.json"
 import researchedSpots from "@/data/research/guizhou-spots.json"
 import researchedFacts from "@/data/research/guizhou-facts.json"
+import researchedImages from "@/data/research/guizhou-images.json"
 import type {
   Evidence,
+  FactImage,
   MustBuy,
   Outfit,
   PhotoSpot,
@@ -106,6 +108,95 @@ type FactPack = {
 const rows = researched as ResearchRow[]
 const packs = researchedSpots as SpotPack[]
 const factPacks = researchedFacts as FactPack[]
+const imagePacks = researchedImages as Record<
+  string,
+  { files: string[]; alt?: string; expected?: number }
+>
+
+function noteKey(url: string): string {
+  try {
+    const parsed = new URL(url)
+    const xhs = parsed.pathname.match(/\/(?:explore|discovery\/item)\/([a-f0-9]+)/i)
+    if (xhs) return xhs[1].slice(0, 8)
+    const ig = parsed.pathname.match(/\/(?:p|reel|tv)\/([^/]+)/i)
+    if (ig) return ig[1]
+    const dy = parsed.pathname.match(/(\d{15,})/)
+    if (dy) return dy[1]
+  } catch {
+    /* ignore */
+  }
+  const fallback = url.match(/(\d{15,})|[A-Za-z0-9_-]{10,}/)
+  return fallback?.[0] || url
+}
+
+function isStoredPhoto(src?: string): boolean {
+  return Boolean(src && src.startsWith("/evidence/") && !src.endsWith(".svg"))
+}
+
+export function imagesFromEvidence(list: Evidence[]): FactImage[] {
+  const images: FactImage[] = []
+  const seen = new Set<string>()
+  for (const item of uniqueByUrl(list)) {
+    const key = noteKey(item.url)
+    const pack = imagePacks[key]
+    const files = pack?.files?.length
+      ? pack.files
+      : isStoredPhoto(item.imageSrc)
+        ? [item.imageSrc]
+        : []
+    for (const src of files) {
+      if (seen.has(src)) continue
+      seen.add(src)
+      images.push({ src, alt: pack?.alt || item.imageAlt || item.caption })
+    }
+  }
+  return images
+}
+
+function attachFactImages(stop: Stop): Stop {
+  let flags = [...(stop.readFlags ?? [])]
+  const seenPacks = new Set<string>()
+  for (const item of realEvidenceOnStop(stop)) {
+    const key = noteKey(item.url)
+    if (seenPacks.has(key)) continue
+    seenPacks.add(key)
+    const pack = imagePacks[key]
+    if (!pack) {
+      if (!isStoredPhoto(item.imageSrc) && !item.isSample) {
+        flags = pushFlag(flags, "配图读不到")
+      }
+      continue
+    }
+    const missing = Math.max(0, (pack.expected ?? pack.files.length) - pack.files.length)
+    if (missing > 0) {
+      flags = pushFlag(
+        flags,
+        pack.files.length > 0
+          ? `配图读不到：${pack.alt || "原帖"}还差 ${missing} 张`
+          : "配图读不到"
+      )
+    }
+  }
+  const withImages = (evidence: Evidence[]): FactImage[] => {
+    const photos = imagesFromEvidence(evidence)
+    if (photos.length > 0) return photos
+    const real = uniqueByUrl(evidence)
+    if (real.length === 0) return []
+    return [{ src: "", alt: "", missing: true, missingCount: 1 }]
+  }
+  const warningImages = withImages(realEvidenceOnStop(stop)).filter((item) => item.src).slice(0, 1)
+  return {
+    ...stop,
+    readFlags: flags,
+    shops: stop.shops.map((shop) => ({ ...shop, images: withImages(shop.evidence) })),
+    mustBuys: stop.mustBuys.map((item) => ({ ...item, images: withImages(item.evidence) })),
+    photoSpots: stop.photoSpots.map((spot) => ({ ...spot, images: withImages(spot.evidence) })),
+    warnings: (stop.warnings ?? []).map((item) => ({
+      ...item,
+      images: warningImages,
+    })),
+  }
+}
 
 function matches(name: string, aliases: string[]): boolean {
   const isStay = /酒店|民宿|客栈|溪宿/.test(name)
@@ -453,7 +544,7 @@ function preferRealEvidence(stop: Stop): Stop {
 
 export function applyResearchedEvidence(stop: Stop): Stop {
   const withFacts = applyFactPacks({ ...stop, warnings: stop.warnings ?? [] })
-  return preferRealEvidence(attachRowSources(applyPhotoPacks(withFacts)))
+  return attachFactImages(preferRealEvidence(attachRowSources(applyPhotoPacks(withFacts))))
 }
 
 export function researchedOutfitEvidence(label: string, seed: string): Evidence[] {
@@ -470,7 +561,7 @@ export function applyResearchedOutfit(outfit: Outfit, label: string, seed: strin
     ...researchedOutfitEvidence(label, seed),
     ...outfit.evidence,
   ])
-  if (matched.length === 0) return { ...outfit, evidence }
+  if (matched.length === 0) return { ...outfit, evidence, images: imagesFromEvidence(evidence) }
   const pieces = Array.from(
     new Set(matched.flatMap((item) => item.outfit?.pieces ?? []))
   ).slice(0, 6)
@@ -488,5 +579,6 @@ export function applyResearchedOutfit(outfit: Outfit, label: string, seed: strin
     colors: colors.length > 0 ? colors : outfit.colors,
     avoid: avoids.join("；") || outfit.avoid,
     evidence,
+    images: imagesFromEvidence(evidence),
   }
 }

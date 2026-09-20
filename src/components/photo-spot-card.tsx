@@ -1,6 +1,7 @@
 "use client"
 
 import type { PhotoSpot } from "@/data/types"
+import { FactImages } from "@/components/fact-images"
 import { ShotFrame } from "@/components/shot-frame"
 import { SourceLinks } from "@/components/source-links"
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/card"
 
 export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number }) {
+  const photos = (spot.images ?? []).filter((item) => item.src)
   return (
     <Card className="bg-card">
       <CardHeader className="border-b">
@@ -23,7 +25,14 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
       </CardHeader>
       <CardContent className="grid gap-5">
         <div className="grid gap-5 sm:grid-cols-[minmax(0,180px)_1fr]">
-          <ShotFrame composition={spot.composition ?? undefined} />
+          {photos.length > 0 ? (
+            <FactImages images={spot.images} />
+          ) : (
+            <div className="grid gap-2">
+              <ShotFrame composition={spot.composition ?? undefined} />
+              <FactImages images={spot.images} />
+            </div>
+          )}
           <dl className="grid gap-3 text-sm">
             <Fact label="站在哪" value={spot.standWhere} />
             <Fact label="角度" value={spot.angle} />

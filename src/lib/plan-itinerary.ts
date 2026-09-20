@@ -450,7 +450,7 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
     {
       ...shared,
       importedOrder: true,
-      intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。默认按圆周旅迹原顺序。每一站先看抽出来的店、必买、机位、价格和避坑；原帖只留来源链接。规划建议要你确认后才会改这一天。`,
+      intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。默认按圆周旅迹原顺序。每一站先看抽出来的店、必买、机位、价格、避坑和对应配图；原帖只留来源链接。规划建议要你确认后才会改这一天。`,
       sourceNote: `从圆周旅迹导入：${result.meta.shareUrl}${
         result.meta.timeDescription ? ` · ${result.meta.timeDescription}` : ""
       }。导入顺序是准绳，不会悄悄重排。小红书 / 抖音 / Instagram 只抽要点，不把原帖当主界面。评论不在公开页就标「评论网页读不到」。不会登录，也不会走 App 接口。`,
