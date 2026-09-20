@@ -29,5 +29,5 @@ export function getDefaultDayId(): string | undefined {
 }
 
 export type { Trip, Day, Stop } from "./types"
-export { walkingLevelLabel } from "./types"
+export { walkingLevelLabel, timeBlockLabel } from "./types"
 export { formatDayDate } from "@/lib/format-date"

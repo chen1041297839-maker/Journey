@@ -1,5 +1,16 @@
 export type WalkingLevel = "light" | "moderate" | "heavy"
 
+export type TimeBlock = "morning" | "noon" | "afternoon" | "evening" | "night" | "optional"
+
+export const timeBlockLabel: Record<TimeBlock, string> = {
+  morning: "上午",
+  noon: "中午",
+  afternoon: "下午",
+  evening: "傍晚",
+  night: "晚上",
+  optional: "可选",
+}
+
 export type Platform = "xiaohongshu" | "douyin" | "instagram"
 
 export type Evidence = {
@@ -76,6 +87,8 @@ export type Stop = {
   duration: string
   vibe: string
   note: string
+  timeBlock?: TimeBlock
+  optional?: boolean
   shops: Shop[]
   mustBuys: MustBuy[]
   photoSpots: PhotoSpot[]
@@ -93,6 +106,8 @@ export type Day = {
   walkingNote: string
   neighborhoodStyle: string
   routeSummary: string[]
+  planNote?: string
+  rawStopNames?: string[]
   outfit: Outfit
   stops: Stop[]
 }
@@ -132,12 +147,16 @@ export type DraftStop = {
   category?: string
   note?: string
   imageSrc?: string
+  timeBlock?: TimeBlock
+  optional?: boolean
 }
 
 export type DraftDay = {
   dayNumber: number
   label: string
   stops: DraftStop[]
+  planNote?: string
+  rawStopNames?: string[]
 }
 
 export type DraftRoute = {

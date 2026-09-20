@@ -23,6 +23,7 @@ import { platformForSeed, sampleEvidence } from "@/lib/evidence"
 import { parseRouteText } from "@/lib/parse-routes"
 import type { PitravelImportResult } from "@/lib/pitravel"
 import { applyResearchedEvidence, researchedOutfitEvidence } from "@/lib/research"
+import { planWalkableDays } from "@/lib/plan-walk"
 import { stopFromDraft } from "@/lib/stop-templates"
 
 const TRAVELER = "Xenia"
@@ -248,7 +249,15 @@ function resolveStop(
     ? { ...fromCatalog(catalog, order, arrive), id: stableId }
     : stopFromDraft(draft, order, arrive, stableId)
   stop.arrive = arrive
-  const nextClock = clock + minutesFromDuration(stop.duration) + 15
+  const parts = arrive.split(":").map(Number)
+  const arriveMinutes =
+    Number.isFinite(parts[0]) && Number.isFinite(parts[1]) ? parts[0] * 60 + parts[1] : clock
+  const nextClock = arriveMinutes + minutesFromDuration(stop.duration) + 15
+  stop.timeBlock = draft.timeBlock
+  stop.optional = draft.optional
+  if (draft.optional) {
+    stop.note = `${stop.note} 这一站要打车，不排进主线步行。`.trim()
+  }
   return { stop: applyResearchedEvidence(stop), nextClock }
 }
 
@@ -288,9 +297,10 @@ function clusterUnlabeled(stops: DraftStop[]): DraftDay[] {
   return days
 }
 
-function walkingLevel(stopCount: number): WalkingLevel {
-  if (stopCount <= 2) return "light"
-  if (stopCount <= 4) return "moderate"
+function walkingLevel(stops: Stop[]): WalkingLevel {
+  const countable = stops.filter((stop) => !stop.optional && !/酒店|民宿|客栈|溪宿/.test(stop.name))
+  if (countable.length <= 2) return "light"
+  if (countable.length <= 4) return "moderate"
   return "heavy"
 }
 
@@ -315,7 +325,7 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
       ? catalogDayByNumber(tokyoHits[0]?.outfitFromDay || dayNumber)
       : undefined
   const refs = catalog?.stops.flatMap((stop) => stop.xhsRefs) ?? []
-  const level = walkingLevel(stops.length)
+  const level = walkingLevel(stops)
   const outfit = toOutfit(
     catalog?.outfit ?? outfitForDay(draft.label, uniqueAreas, level),
     `day-${dayNumber}`,
@@ -329,80 +339,29 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
     outfit.evidence = [...researched, ...outfit.evidence.filter((item) => !item.isSample)]
   }
 
+  const mainStops = stops.filter((stop) => !stop.optional)
+  const title =
+    draft.label && draft.label !== "待排期" ? draft.label : uniqueAreas[0] || `第${dayNumber}天`
+
   return {
     id: `d${dayNumber}`,
     dayNumber,
     date,
     weekday: weekdayLabel(date),
-    title: draft.label && draft.label !== "待排期" ? draft.label : uniqueAreas[0] || `第${dayNumber}天`,
-    theme: `${uniqueAreas.join(" → ") || "行程"}，按片区排好，少走回头路。`,
+    title,
+    theme: `${uniqueAreas.join(" → ") || "行程"} · 推荐排期，不是圆周旅迹原顺序。`,
     weatherVibe: catalog?.weatherVibe || "贵州天气善变，薄外套随身",
     walkingLevel: level,
     walkingNote:
       catalog?.walkingNote ||
-      (level === "heavy" ? "站点多，中午必须坐下来吃一顿。" : "节奏适中，给机位留出停留时间。"),
+      (level === "heavy" ? "主线站点多，按时间块走，可选点随时砍。" : "按片区排好，给机位留出停留。"),
     neighborhoodStyle: catalog?.neighborhoodStyle || uniqueAreas.join("、") || draft.label,
-    routeSummary: stops.map((stop) => stop.name),
+    routeSummary: mainStops.map((stop) => stop.name),
+    planNote: draft.planNote,
+    rawStopNames: draft.rawStopNames,
     outfit,
     stops,
   }
-}
-
-function isHotelDraft(stop: DraftStop): boolean {
-  return /酒店|民宿|客栈/.test(`${stop.category || ""}${stop.name}`)
-}
-
-function orderDayStops(stops: DraftStop[]): DraftStop[] {
-  if (stops.length <= 2) return stops
-  const hotels = stops.filter(isHotelDraft)
-  const others = stops.filter((stop) => !isHotelDraft(stop))
-  if (hotels.length === 0) return stops
-  const unique: DraftStop[] = []
-  const seen = new Set<string>()
-  for (const hotel of hotels) {
-    if (seen.has(hotel.name)) continue
-    seen.add(hotel.name)
-    unique.push(hotel)
-  }
-  const checkIn = unique[0]
-  const last = unique.at(-1) || checkIn
-  if (stops[0] && isHotelDraft(stops[0])) {
-    return [checkIn, ...others, last]
-  }
-  return [...others, last]
-}
-
-function regroupImportedDays(days: DraftDay[]): DraftDay[] {
-  const scheduled = days.filter((day) => !/待计划|备选/.test(day.label))
-  const wish = days.filter((day) => /待计划|备选/.test(day.label))
-  const ordered = scheduled.map((day) => ({ ...day, stops: orderDayStops(day.stops) }))
-  const extras: DraftDay[] = []
-  for (const day of wish) {
-    const buckets = new Map<string, DraftStop[]>()
-    for (const stop of day.stops) {
-      const area = stop.area || ""
-      const key = /安顺/.test(area)
-        ? "安顺备选"
-        : /黔东南|黎平/.test(area)
-          ? "黔东南备选"
-          : /毕节|织金/.test(area)
-            ? "毕节备选"
-            : /贵阳/.test(area)
-              ? "贵阳备选"
-              : area
-                ? `${area}备选`
-                : "其他备选"
-      const list = buckets.get(key) || []
-      list.push(stop)
-      buckets.set(key, list)
-    }
-    let number = ordered.length
-    for (const [label, stops] of buckets) {
-      number += 1
-      extras.push({ dayNumber: number, label: `待计划 · ${label}`, stops })
-    }
-  }
-  return [...ordered, ...extras]
 }
 
 export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
@@ -432,7 +391,7 @@ export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
     endDate,
     intro:
       options?.intro ||
-      "把圆周旅迹链接或路线贴进来，站点会按片区排好。每一站补上店、必买、机位和当天穿搭，并附上笔记证据（图 + 来源）。",
+      "把圆周旅迹链接贴进来当原料，再按片区排成可走的一天。每一站补上店、必买、机位和当天穿搭，并附上公开笔记证据。",
     sourceNote:
       options?.sourceNote ||
       "系统会公开检索小红书 / 抖音 / Instagram，并读取你粘贴的链接（公开页或 oEmbed）。打不开就标「网页读不全」。不会登录，也不会走 App 接口。",
@@ -448,7 +407,7 @@ export function planFromText(text: string, isSampleRoute = false): Trip {
 
 export function planFromPitravel(result: PitravelImportResult): Trip {
   return planItinerary(
-    { days: regroupImportedDays(result.draft.days) },
+    { days: planWalkableDays(result.draft.days) },
     {
     id: result.meta.id ? `xenia-pitravel-${result.meta.id}` : undefined,
     sourceText: result.sourceText,
@@ -457,10 +416,10 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
     destination: result.meta.destination,
     title: result.meta.name || "Xenia 的行程站",
     datesLabel: result.meta.timeDescription || undefined,
-    intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。按片区排好日程，待计划按城市拆开。店、必买、机位已挂上公开检索到的帖子；你也可以继续贴链接。`,
+    intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。圆周旅迹只提供原料；下面是按片区重排的推荐日计划（时间块、可步行顺序、合并回酒店）。每一站仍有店、必买、机位和穿搭，并挂上公开检索/粘贴的笔记。`,
     sourceNote: `从圆周旅迹导入：${result.meta.shareUrl}${
       result.meta.timeDescription ? ` · ${result.meta.timeDescription}` : ""
-    }。系统已公开检索笔记；你粘贴的小红书 / 抖音 / Instagram 链接会读公开页或 oEmbed，打不开就标「网页读不全」。不会登录，也不会走 App 接口。`,
+    }。导入 ≠ 规划：已按片区排成可走的一天，并去掉重复回酒店。笔记来自公开网页和 Instagram oEmbed，不是示例卡。打不开就标「网页读不全」。不会登录，也不会走 App 接口。`,
     }
   )
 }

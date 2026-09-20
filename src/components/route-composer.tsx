@@ -56,10 +56,10 @@ export function RouteComposer() {
       <div className="max-w-2xl">
         <p className="text-[11px] tracking-[0.2em] text-primary">圆周旅迹导入</p>
         <h2 className="mt-2 font-heading text-3xl leading-tight">
-          粘贴分享链接，生成可执行的行程
+          粘贴分享链接，生成推荐日计划
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          把圆周旅迹公开分享贴进来，站点会按片区排好。店、必买、机位、穿搭会先挂上系统公开检索到的帖子；你也可以继续粘贴小红书 / 抖音 / Instagram 链接，我们只读公开页和 oEmbed，打不开就标「网页读不全」。不会登录，也不会走 App 接口。
+          圆周旅迹链接只是原料。导入后会按片区重排成可走的一天：时间块、合并重复回酒店，并对照原顺序。店、必买、机位、穿搭会挂上公开检索和你粘贴的小红书 / 抖音 / Instagram 帖子（公开页或 oEmbed）。打不开就标「网页读不全」。不会登录，也不会走 App 接口。
         </p>
       </div>
 

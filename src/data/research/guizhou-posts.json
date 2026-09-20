@@ -10,7 +10,7 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["小七孔"],
+    "aliases": ["小七孔", "瑶家"],
     "slot": "photo",
     "platform": "douyin",
     "url": "https://www.douyin.com/shipin/7338332710718556197",
@@ -50,7 +50,7 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["堂安梯田", "堂安"],
+    "aliases": ["堂安梯田", "堂安", "牛棚"],
     "slot": "photo",
     "platform": "douyin",
     "url": "https://www.douyin.com/shipin/7400963133902342144",
@@ -100,7 +100,47 @@
     "collectedBy": "search"
   },
   {
-    "aliases": ["民生路", "好吃街", "堰塘街", "省府北街"],
+    "aliases": ["毛阿姨", "糯米饭"],
+    "slot": "shop",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/shipin/7517110241763428389",
+    "caption": "从小吃到大的味道！毛阿姨糯米饭",
+    "quote": "六广门毛阿姨糯米饭可以提前预留。脆哨要加在糯米饭团里。据说 9:30 左右就卖完。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["杨记烤肉"],
+    "slot": "shop",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/video/7650098380164851539",
+    "caption": "杨记烤肉自助丝娃娃",
+    "quote": "烤肉、烤鸭、丝娃娃，还有安顺裹卷、洋芋粑、盐菜脆哨饭。晚上从民生路走过来吃。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["花屿", "花果园"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/video/7666662250580600009",
+    "caption": "花果园白宫：欧式城堡拍照",
+    "quote": "花屿在花果园一期，假装在欧洲。同片区白宫可拍外景内景。这一站要打车，不排进青云/民生路步行。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["青云市集", "亨特", "广播电视"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/video/7671975959579004266",
+    "caption": "青云市集周末碎片",
+    "quote": "青云路一带夜市和打卡点，酒店、亨特、电视台地下通道都在南明这一片。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["民生路", "好吃街", "堰塘街", "省府北街", "电台街", "圆通街", "玉珍"],
     "slot": "shop",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a33e80a000000000f01d838",
@@ -212,7 +252,7 @@
     "collectedBy": "paste"
   },
   {
-    "aliases": ["肇兴侗寨", "鼓楼群", "堂安"],
+    "aliases": ["肇兴侗寨", "鼓楼群", "堂安", "牛棚"],
     "slot": "photo",
     "platform": "xiaohongshu",
     "url": "https://www.xiaohongshu.com/explore/6a7c864100000000220305f6",
