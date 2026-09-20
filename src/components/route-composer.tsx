@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/empty-state"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { PostPaste } from "@/components/post-paste"
 import { XENIA_SHARE_URL } from "@/lib/pitravel"
 import { countStops, draftToText, parseRouteText } from "@/lib/parse-routes"
 
@@ -58,7 +59,7 @@ export function RouteComposer() {
           粘贴分享链接，生成可执行的行程
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          只读取你贴进来的圆周旅迹公开页（pitravel.cn）。按天拆站后，自动补上店、必买、机位和当天穿搭，并带笔记证据卡片。不会去抓小红书、抖音或 Instagram。
+          把圆周旅迹公开分享贴进来，站点会按片区排好。店、必买、机位、穿搭会先挂上系统公开检索到的帖子；你也可以继续粘贴小红书 / 抖音 / Instagram 链接，我们只读公开页和 oEmbed，打不开就标「网页读不全」。不会登录，也不会走 App 接口。
         </p>
       </div>
 
@@ -103,6 +104,8 @@ export function RouteComposer() {
           </Button>
         </div>
       </section>
+
+      {!trip.isSampleRoute ? <PostPaste /> : null}
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)]">
         <section className="grid gap-3">

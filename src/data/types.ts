@@ -11,6 +11,9 @@ export type Evidence = {
   imageSrc: string
   imageAlt: string
   isSample: boolean
+  /** 公开页打不开或只有标题，链接仍保留 */
+  partialRead?: boolean
+  collectedBy?: "paste" | "search"
 }
 
 export type Shop = {

@@ -1,0 +1,242 @@
+[
+  {
+    "aliases": ["小七孔"],
+    "slot": "photo",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/67e8e431000000001201e5b8",
+    "caption": "3.30荔波小七孔实况",
+    "quote": "从大学时期就被收藏的景点。空景难拍，原相机直出。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["小七孔"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/shipin/7338332710718556197",
+    "caption": "荔波小七孔东门路线攻略",
+    "quote": "西门进东门出更省力：卧龙潭、鸳鸯湖、翠谷瀑布、68级瀑布、拉雅瀑布、小七孔古桥。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["小七孔"],
+    "slot": "outfit",
+    "platform": "instagram",
+    "url": "https://www.instagram.com/p/DP3zF6zEnOc/",
+    "caption": "Xiaoqikong Scenic Area 小七孔景区",
+    "quote": "古七孔石桥横跨香河碧水，68级瀑布和喀斯特森林同框。",
+    "partialRead": false,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼群", "鼓楼"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/shipin/7370322820401956890",
+    "caption": "肇兴侗寨旅游攻略",
+    "quote": "五座鼓楼仁义礼智信都要走。别只会走主街，小巷更像本地人。下午可上堂安看日落。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼"],
+    "slot": "photo",
+    "platform": "instagram",
+    "url": "https://www.instagram.com/reel/DVyBqtNCrwp/",
+    "caption": "Zhaoxing Dong Village",
+    "quote": "黔东南最大侗寨之一，纯木鼓楼不用钉。建议住一到两晚，把窄巷和鼓楼走完。",
+    "partialRead": false,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["堂安梯田", "堂安"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/shipin/7400963133902342144",
+    "caption": "肇兴侗寨两日：堂安看日落",
+    "quote": "下午包车去堂安梯田，观景台等日落。石板路湿，别穿高跟鞋。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["青云市集", "青云"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/video/7677809706693814351",
+    "caption": "青云市集比民生路好吃好玩好看",
+    "quote": "老针织厂改的夜市：霓虹、彩虹楼梯、「贵阳」发光字墙。傍晚去更出片。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["民生路", "好吃街"],
+    "slot": "buy",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/shipin/7303960546897004579",
+    "caption": "民生路好吃街：青岩猪脚",
+    "quote": "民生路好吃街能吃到青岩猪脚、豆腐圆子、洋芋粑。但家香酥鸭要趁热，凉了就硬。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["蒋家肠旺面", "肠旺面"],
+    "slot": "shop",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/video/7650464133829217577",
+    "caption": "贵阳肠旺面：全国只有这里能吃到",
+    "quote": "红油、血旺、肥肠、豆芽是标配。正宗店难找，认准还在煮面的老店，别只看地图分店名。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["翁布", "洞穴瀑布咖啡"],
+    "slot": "photo",
+    "platform": "douyin",
+    "url": "https://www.douyin.com/video/7528798503294209334",
+    "caption": "翁布悬崖瀑布咖啡",
+    "quote": "沿途有风景，眼前有瀑布。洞穴里喝咖啡，注意防滑。",
+    "partialRead": true,
+    "collectedBy": "search"
+  },
+  {
+    "aliases": ["民生路", "好吃街", "堰塘街", "省府北街"],
+    "slot": "shop",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a33e80a000000000f01d838",
+    "caption": "贵阳民生路📍对不起之前是我说话大声了",
+    "quote": "citywalk 不止民生路：中山西路地铁站→正新街→富水北路→省府北街→堰塘街→文昌阁→民生路。民生路可打包邮寄：丁家/徐家脆哨、徐记碗饵糕、香酥鸭（第一次建议微麻）、叶老五麻辣干丝、彭记卤味、董记炸洋芋片。打车别在民生路，穿过贵山苑到省府路石板街。空肚子、舒服鞋，辣度提前说。",
+    "imageSrc": "/evidence/xhs-6a33e80a.jpg",
+    "partialRead": false,
+    "collectedBy": "paste"
+  },
+  {
+    "aliases": ["民生路", "好吃街"],
+    "slot": "buy",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a33e80a000000000f01d838",
+    "caption": "贵阳民生路📍对不起之前是我说话大声了",
+    "quote": "民生路大多适合打包、邮寄。丁家脆哨、徐家脆哨、徐记碗饵糕、香酥鸭、叶老五麻辣干丝、彭记卤味、董记炸洋芋片。有搭子可以分开排队。",
+    "imageSrc": "/evidence/xhs-6a33e80a.jpg",
+    "partialRead": false,
+    "collectedBy": "paste",
+    "mustBuy": {
+      "name": "脆哨 / 碗饵糕 / 香酥鸭",
+      "reason": "一条街大部分是能带走、能邮寄的小吃，比只逛招牌更值。",
+      "budget": "按摊位称重",
+      "tip": "香酥鸭第一次吃建议微麻。打车去贵山苑对面石板街。"
+    }
+  },
+  {
+    "aliases": ["民生路", "好吃街", "青云市集", "亨特", "蒋家肠旺面"],
+    "slot": "buy",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6aad51cc0000000028031555",
+    "caption": "存一下下周去贵阳要吃要买的东西……",
+    "quote": "下周中秋来贵阳！半个本地人整理完整版美食清单。正文很短，小吃 / 伴手礼 / 烙锅 / 月饼清单在 8 张配图里。",
+    "imageSrc": "/evidence/xhs-6aad51cc.jpg",
+    "partialRead": false,
+    "collectedBy": "paste",
+    "mustBuy": {
+      "name": "贵阳要吃要买清单",
+      "reason": "半个本地人整理的完整版，覆盖小吃、伴手礼、烙锅和月饼。",
+      "budget": "按配图",
+      "tip": "清单在配图，不在正文。贵阳第 1–2 天逛街时对着图买。"
+    }
+  },
+  {
+    "aliases": ["民生路", "好吃街", "青云市集", "亨特"],
+    "slot": "buy",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6aa0e7c20000000011036fe7",
+    "caption": "贵阳的特色奶茶是啥",
+    "quote": "马上点！正文只有这一句，特色奶茶怎么点都在配图里。",
+    "imageSrc": "/evidence/xhs-6aa0e7c2.jpg",
+    "partialRead": false,
+    "collectedBy": "paste",
+    "mustBuy": {
+      "name": "贵阳特色奶茶",
+      "reason": "本地特色怎么点，一张图说完。",
+      "budget": "以门店为准",
+      "tip": "公开页读到标题和配图；点单看图，不要只搜品牌名。"
+    }
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "slot": "photo",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a72c3d70000000029031c47",
+    "caption": "贵州肇兴侗寨旅游攻略",
+    "quote": "公开页标题为空，正文只有「贵州肇兴侗寨旅游攻略」和话题。攻略细节在 2 张配图里。",
+    "imageSrc": "/evidence/xhs-6a72c3d7.jpg",
+    "partialRead": true,
+    "collectedBy": "paste"
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "slot": "outfit",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a72c3d70000000029031c47",
+    "caption": "贵州肇兴侗寨旅游攻略",
+    "quote": "穿搭细节在配图，网页正文几乎没有。点开原帖看图。",
+    "imageSrc": "/evidence/xhs-6a72c3d7.jpg",
+    "partialRead": true,
+    "collectedBy": "paste"
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼群", "堂安"],
+    "slot": "buy",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a7f037e000000000502bba9",
+    "caption": "拜托，去侗寨一定要多买两包松子酥",
+    "quote": "太好吃了！！正文就这一句。配图是松子酥。",
+    "imageSrc": "/evidence/xhs-6a7f037e.jpg",
+    "partialRead": false,
+    "collectedBy": "paste",
+    "mustBuy": {
+      "name": "松子酥",
+      "reason": "侗寨路过都香，笔记说一定要多买两包。",
+      "budget": "多买两包",
+      "tip": "一人行也点名好吃，但粘牙。"
+    }
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "slot": "photo",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a66bd41000000001102d491",
+    "caption": "用18张图分享我的肇兴侗寨拍照机位📸",
+    "quote": "天之逸民宿/礼团鼓楼、瞰肇兴山水美宿、有间小院（展示中心后门）、义团鼓楼桥面、礼团鼓楼巷口、佳杰蜡染、寨门、观光车售票点观景台、大观景台。高铁从江站→客运站景交车 ¥10，不要打车到寨外。门票含寨内景交车。蓝调约 19:30。",
+    "imageSrc": "/evidence/xhs-6a66bd41.jpg",
+    "partialRead": false,
+    "collectedBy": "paste"
+  },
+  {
+    "aliases": ["肇兴侗寨", "鼓楼群", "堂安"],
+    "slot": "photo",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a7c864100000000220305f6",
+    "caption": "肇兴侗寨一人行｜3天2夜｜有优有缺",
+    "quote": "寨子大半天能走完，想拍白天+夜晚再留一晚。堂安建议 17:00 后，电驴 30–40 分钟。吃：廖胖子脆皮猪肉惊艳；鱼王早餐不推荐；醉第一楼盗汗鸡踩雷；蓝头巾糯米饭包烤肉一般；一杯黔茶刺梨抢茶香；冰浆不如贵阳。松子酥好吃但粘牙。猎人部落旁巷巷里冰箱贴 9.9。",
+    "imageSrc": "/evidence/xhs-6a7c8641.jpg",
+    "partialRead": false,
+    "collectedBy": "paste"
+  },
+  {
+    "aliases": ["猎人部落"],
+    "slot": "buy",
+    "platform": "xiaohongshu",
+    "url": "https://www.xiaohongshu.com/explore/6a7c864100000000220305f6",
+    "caption": "肇兴侗寨一人行｜3天2夜｜有优有缺",
+    "quote": "猎人部落旁边巷子走进去，摄影师开的【巷巷里】，冰箱贴全场 9.9，还有画框、耳环、包。",
+    "imageSrc": "/evidence/xhs-6a7c8641.jpg",
+    "partialRead": false,
+    "collectedBy": "paste",
+    "mustBuy": {
+      "name": "巷巷里冰箱贴",
+      "reason": "猎人部落旁边巷子，全场 9.9，比景区摊位值。",
+      "budget": "¥9.9 起",
+      "tip": "别买早了后悔。还有画框、耳环、包。"
+    }
+  }
+]

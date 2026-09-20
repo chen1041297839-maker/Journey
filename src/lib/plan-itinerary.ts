@@ -22,6 +22,7 @@ import type {
 import { platformForSeed, sampleEvidence } from "@/lib/evidence"
 import { parseRouteText } from "@/lib/parse-routes"
 import type { PitravelImportResult } from "@/lib/pitravel"
+import { applyResearchedEvidence, researchedOutfitEvidence } from "@/lib/research"
 import { stopFromDraft } from "@/lib/stop-templates"
 
 const TRAVELER = "Xenia"
@@ -233,16 +234,22 @@ function fromCatalog(catalog: CatalogStop, order: number, arrive: string): Stop 
   }
 }
 
-function resolveStop(draft: DraftStop, order: number, clock: number): { stop: Stop; nextClock: number } {
+function resolveStop(
+  draft: DraftStop,
+  order: number,
+  clock: number,
+  dayNumber: number
+): { stop: Stop; nextClock: number } {
   const matched = matchPlace(draft.name)
   const catalog = matched?.stop
   const arrive = draft.time || formatArrive(clock)
+  const stableId = `d${dayNumber}-s${order}`
   const stop = catalog
-    ? fromCatalog(catalog, order, arrive)
-    : stopFromDraft(draft, order, arrive)
+    ? { ...fromCatalog(catalog, order, arrive), id: stableId }
+    : stopFromDraft(draft, order, arrive, stableId)
   stop.arrive = arrive
   const nextClock = clock + minutesFromDuration(stop.duration) + 15
-  return { stop, nextClock }
+  return { stop: applyResearchedEvidence(stop), nextClock }
 }
 
 function clusterUnlabeled(stops: DraftStop[]): DraftDay[] {
@@ -293,7 +300,7 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
   let clock = 8 * 60
   const stops: Stop[] = []
   for (const [stopIndex, draftStop] of draft.stops.entries()) {
-    const resolved = resolveStop(draftStop, stopIndex + 1, clock)
+    const resolved = resolveStop(draftStop, stopIndex + 1, clock, dayNumber)
     clock = resolved.nextClock
     stops.push(resolved.stop)
   }
@@ -314,6 +321,13 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
     `day-${dayNumber}`,
     refs
   )
+  const researched = researchedOutfitEvidence(
+    `${draft.label} ${stops.map((stop) => stop.name).join(" ")}`,
+    `day-${dayNumber}`
+  )
+  if (researched.length > 0) {
+    outfit.evidence = [...researched, ...outfit.evidence.filter((item) => !item.isSample)]
+  }
 
   return {
     id: `d${dayNumber}`,
@@ -332,6 +346,63 @@ function buildDay(draft: DraftDay, index: number, startDate: string): Day {
     outfit,
     stops,
   }
+}
+
+function isHotelDraft(stop: DraftStop): boolean {
+  return /酒店|民宿|客栈/.test(`${stop.category || ""}${stop.name}`)
+}
+
+function orderDayStops(stops: DraftStop[]): DraftStop[] {
+  if (stops.length <= 2) return stops
+  const hotels = stops.filter(isHotelDraft)
+  const others = stops.filter((stop) => !isHotelDraft(stop))
+  if (hotels.length === 0) return stops
+  const unique: DraftStop[] = []
+  const seen = new Set<string>()
+  for (const hotel of hotels) {
+    if (seen.has(hotel.name)) continue
+    seen.add(hotel.name)
+    unique.push(hotel)
+  }
+  const checkIn = unique[0]
+  const last = unique.at(-1) || checkIn
+  if (stops[0] && isHotelDraft(stops[0])) {
+    return [checkIn, ...others, last]
+  }
+  return [...others, last]
+}
+
+function regroupImportedDays(days: DraftDay[]): DraftDay[] {
+  const scheduled = days.filter((day) => !/待计划|备选/.test(day.label))
+  const wish = days.filter((day) => /待计划|备选/.test(day.label))
+  const ordered = scheduled.map((day) => ({ ...day, stops: orderDayStops(day.stops) }))
+  const extras: DraftDay[] = []
+  for (const day of wish) {
+    const buckets = new Map<string, DraftStop[]>()
+    for (const stop of day.stops) {
+      const area = stop.area || ""
+      const key = /安顺/.test(area)
+        ? "安顺备选"
+        : /黔东南|黎平/.test(area)
+          ? "黔东南备选"
+          : /毕节|织金/.test(area)
+            ? "毕节备选"
+            : /贵阳/.test(area)
+              ? "贵阳备选"
+              : area
+                ? `${area}备选`
+                : "其他备选"
+      const list = buckets.get(key) || []
+      list.push(stop)
+      buckets.set(key, list)
+    }
+    let number = ordered.length
+    for (const [label, stops] of buckets) {
+      number += 1
+      extras.push({ dayNumber: number, label: `待计划 · ${label}`, stops })
+    }
+  }
+  return [...ordered, ...extras]
 }
 
 export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
@@ -364,7 +435,7 @@ export function planItinerary(route: DraftRoute, options?: PlanOptions): Trip {
       "把圆周旅迹链接或路线贴进来，站点会按片区排好。每一站补上店、必买、机位和当天穿搭，并附上笔记证据（图 + 来源）。",
     sourceNote:
       options?.sourceNote ||
-      "不会登录或抓取小红书、抖音、Instagram。示例卡片带「示例」标记；真实出行请换成你自己的链接、配图或 Instagram 官方 embed。",
+      "系统会公开检索小红书 / 抖音 / Instagram，并读取你粘贴的链接（公开页或 oEmbed）。打不开就标「网页读不全」。不会登录，也不会走 App 接口。",
     sourceText: options?.sourceText ?? "",
     isSampleRoute: Boolean(options?.isSampleRoute),
     days: normalized,
@@ -376,7 +447,9 @@ export function planFromText(text: string, isSampleRoute = false): Trip {
 }
 
 export function planFromPitravel(result: PitravelImportResult): Trip {
-  return planItinerary(result.draft, {
+  return planItinerary(
+    { days: regroupImportedDays(result.draft.days) },
+    {
     id: result.meta.id ? `xenia-pitravel-${result.meta.id}` : undefined,
     sourceText: result.sourceText,
     isSampleRoute: false,
@@ -384,11 +457,12 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
     destination: result.meta.destination,
     title: result.meta.name || "Xenia 的行程站",
     datesLabel: result.meta.timeDescription || undefined,
-    intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。按圆周旅迹里的顺序排期，每一站补上店、必买、机位和当天穿搭。`,
+    intro: `${result.meta.destination} · ${result.meta.timeDescription || "已导入日程"}。按片区排好日程，待计划按城市拆开。店、必买、机位已挂上公开检索到的帖子；你也可以继续贴链接。`,
     sourceNote: `从圆周旅迹导入：${result.meta.shareUrl}${
       result.meta.timeDescription ? ` · ${result.meta.timeDescription}` : ""
-    }。店、必买、机位按地点类型生成；笔记证据标了示例。不会抓取小红书、抖音、Instagram。`,
-  })
+    }。系统已公开检索笔记；你粘贴的小红书 / 抖音 / Instagram 链接会读公开页或 oEmbed，打不开就标「网页读不全」。不会登录，也不会走 App 接口。`,
+    }
+  )
 }
 
 export function defaultSampleTrip(): Trip {

@@ -7,6 +7,7 @@ import { EvidenceRow } from "@/components/evidence-card"
 import { SectionEmpty } from "@/components/empty-state"
 import { OutfitCard } from "@/components/outfit-card"
 import { PhotoSpotCard } from "@/components/photo-spot-card"
+import { PostPaste } from "@/components/post-paste"
 import { useTrip } from "@/components/trip-provider"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
@@ -47,6 +48,8 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
       </header>
 
       <OutfitCard outfit={day.outfit} compact />
+
+      <PostPaste dayId={day.id} stopId={stop.id} />
 
       <Tabs defaultValue="spots">
         <TabsList variant="line" className="w-full max-w-full justify-start overflow-x-auto">

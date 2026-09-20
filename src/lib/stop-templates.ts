@@ -67,8 +67,13 @@ function photo(
   }
 }
 
-export function stopFromDraft(draft: DraftStop, order: number, arrive: string): Stop {
-  const seed = `${slug(draft.name)}-${order}`
+export function stopFromDraft(
+  draft: DraftStop,
+  order: number,
+  arrive: string,
+  id = `${slug(draft.name)}-${order}`
+): Stop {
+  const seed = id
   const kind = kindOf(draft.category || "", draft.name)
   const area = draft.area || "待归类"
   const image = draft.imageSrc

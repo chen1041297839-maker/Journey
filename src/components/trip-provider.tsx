@@ -10,11 +10,13 @@ import {
   type ReactNode,
 } from "react"
 import type { Evidence, Trip } from "@/data/types"
+import { attachPostsToTrip } from "@/lib/attach-evidence"
 import { isPitravelInput } from "@/lib/pitravel"
 import { countStops, parseRouteText } from "@/lib/parse-routes"
 import { defaultSampleTrip, planFromText } from "@/lib/plan-itinerary"
+import type { FetchedPost } from "@/lib/social-posts"
 
-const STORAGE_KEY = "xenia.trip.v2"
+const STORAGE_KEY = "xenia.trip.v5"
 
 type TripContextValue = {
   trip: Trip
@@ -23,6 +25,13 @@ type TripContextValue = {
   generating: boolean
   generate: (text: string, isSample?: boolean) => Promise<Trip | null>
   importShare: (url: string) => Promise<Trip | null>
+  importPosts: (
+    text: string,
+    target?: { stopId?: string; dayId?: string }
+  ) => Promise<{
+    attached: { url: string; stopName: string; partialRead: boolean }[]
+    unmatched: FetchedPost[]
+  } | null>
   resetToSample: () => Trip
   patchEvidence: (evidenceId: string, patch: Partial<Evidence>) => void
 }
@@ -136,6 +145,40 @@ export function TripProvider({
     [persist]
   )
 
+  const importPosts = useCallback(
+    async (text: string, target?: { stopId?: string; dayId?: string }) => {
+      setGenerating(true)
+      setError(null)
+      try {
+        const response = await fetch("/api/evidence/fetch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        })
+        const payload = (await response.json()) as {
+          posts?: FetchedPost[]
+          error?: string
+        }
+        if (!response.ok || !payload.posts) {
+          setError(payload.error || "公开页读取失败。")
+          return null
+        }
+        const result = attachPostsToTrip(trip, payload.posts, target, text)
+        persist(result.trip)
+        if (result.unmatched.length > 0 && !target?.stopId) {
+          setError("有的链接对不上当前行程里的站名。打开那一站再贴，或在链接旁边写上店名。")
+        }
+        return { attached: result.attached, unmatched: result.unmatched }
+      } catch {
+        setError("公开页读取失败，请检查链接。")
+        return null
+      } finally {
+        setGenerating(false)
+      }
+    },
+    [persist, trip]
+  )
+
   const generate = useCallback(
     async (text: string, isSample = false) => {
       if (!isSample && isPitravelInput(text)) {
@@ -184,10 +227,11 @@ export function TripProvider({
       generating,
       generate,
       importShare,
+      importPosts,
       resetToSample,
       patchEvidence,
     }),
-    [trip, ready, error, generating, generate, importShare, resetToSample, patchEvidence]
+    [trip, ready, error, generating, generate, importShare, importPosts, resetToSample, patchEvidence]
   )
 
   return <TripContext.Provider value={value}>{children}</TripContext.Provider>

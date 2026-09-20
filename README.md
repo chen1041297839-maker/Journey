@@ -4,9 +4,10 @@
 
 默认行程是 Xenia 的贵州路线（从分享链接导入），不是东京示例。
 
-- 只读取你贴入的 `pitravel.cn` 公开页，不会登录或抓取小红书、抖音、Instagram
-- 笔记证据默认标「示例」；可自行替换链接、上传配图，Instagram 真实帖走官方 embed
-- 东京四日只作为「填入示例」的演示，生成后也会标示例
+- 读取你贴入的 `pitravel.cn` 公开页，以及你粘贴的小红书 / 抖音 / Instagram **公开页**（或 Instagram oEmbed）
+- 不会登录，也不会走 App 接口。公开页打不开就保存链接并标「网页读不全」
+- 系统也会做一轮公开检索，预挂到对应贵州站点；你贴的链接会额外挂上
+- 东京四日只作为「填入示例」的演示，生成后会标示例
 
 ## 本地运行
 
@@ -32,7 +33,13 @@ npm start
 
 也可以在「手动粘贴地点」里按「第1天」分段，一行一个地点。
 
-默认导入快照在 [`src/data/imported/pitravel-7662387918598377796.json`](src/data/imported/pitravel-7662387918598377796.json)，规划逻辑在 [`src/lib/plan-itinerary.ts`](src/lib/plan-itinerary.ts)。
+## 粘贴笔记链接
+
+首页和每一站都可以贴一条或多条小红书 / 抖音 / Instagram 链接。服务端只请求公开 HTML（小红书会优先试手机版页面里的 `__INITIAL_STATE__`）和 Instagram oEmbed，抽出标题、摘录和配图，按店名挂到对应站点。
+
+如果页面跳登录或只有空壳，仍会保存原链接，证据卡标「网页读不全」。
+
+默认导入快照在 [`src/data/imported/pitravel-7662387918598377796.json`](src/data/imported/pitravel-7662387918598377796.json)，规划逻辑在 [`src/lib/plan-itinerary.ts`](src/lib/plan-itinerary.ts)，贴过的公开笔记在 [`src/data/research/guizhou-posts.json`](src/data/research/guizhou-posts.json)。
 
 ## 技术栈
 

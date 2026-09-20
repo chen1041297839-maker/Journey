@@ -49,6 +49,10 @@ export function EvidenceCard({
           <Badge>{platformLabel[evidence.platform]}</Badge>
           {evidence.isSample ? (
             <Badge variant="secondary">示例</Badge>
+          ) : evidence.partialRead ? (
+            <Badge variant="secondary">网页读不全</Badge>
+          ) : evidence.collectedBy === "search" ? (
+            <Badge variant="secondary">系统检索</Badge>
           ) : null}
         </div>
       </div>
@@ -97,17 +101,60 @@ export function EvidenceCard({
                 size="sm"
                 variant="secondary"
                 disabled={!urlDraft.trim()}
-                onClick={() => {
+                onClick={async () => {
                   const url = urlDraft.trim()
+                  try {
+                    const response = await fetch("/api/evidence/fetch", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ text: url }),
+                    })
+                    const payload = (await response.json()) as {
+                      posts?: Array<{
+                        canonicalUrl: string
+                        platform: Evidence["platform"]
+                        caption: string
+                        quote: string
+                        imageSrc: string
+                        imageAlt: string
+                        partialRead: boolean
+                      }>
+                    }
+                    const post = payload.posts?.[0]
+                    if (post) {
+                      onChange({
+                        url: post.canonicalUrl,
+                        platform: post.platform,
+                        caption: post.caption,
+                        quote: post.quote,
+                        imageSrc: post.imageSrc,
+                        imageAlt: post.imageAlt,
+                        isSample: false,
+                        partialRead: post.partialRead,
+                        collectedBy: "paste",
+                      })
+                      return
+                    }
+                  } catch {
+                    // fall through to URL-only save
+                  }
                   const platform = url.includes("instagram.com")
                     ? "instagram"
                     : url.includes("douyin.com") || url.includes("tiktok.com")
                       ? "douyin"
                       : "xiaohongshu"
-                  onChange({ url, platform, isSample: false })
+                  onChange({
+                    url,
+                    platform,
+                    isSample: false,
+                    partialRead: true,
+                    caption: "网页读不全",
+                    quote: "公开页打不开或需要 App。链接已保存。",
+                    collectedBy: "paste",
+                  })
                 }}
               >
-                保存链接
+                读取链接
               </Button>
             </div>
           </div>
