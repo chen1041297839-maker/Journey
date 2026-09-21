@@ -2,8 +2,10 @@
 
 import type { PhotoSpot } from "@/data/types"
 import { FactImages } from "@/components/fact-images"
+import { OcrLines } from "@/components/ocr-lines"
 import { ShotFrame } from "@/components/shot-frame"
 import { SourceLinks } from "@/components/source-links"
+import { Badge } from "@/components/ui/badge"
 import {
   Card,
   CardContent,
@@ -20,7 +22,14 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
         <p className="text-[11px] tracking-[0.18em] text-primary uppercase">
           机位 {String(index + 1).padStart(2, "0")}
         </p>
-        <CardTitle className="font-heading text-xl">{spot.title}</CardTitle>
+        <CardTitle className="font-heading text-xl">
+          {spot.title}
+          {spot.uncertain ? (
+            <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
+              识别不确定
+            </Badge>
+          ) : null}
+        </CardTitle>
         <CardDescription>最佳时段 {spot.bestTime}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-5">
@@ -41,6 +50,7 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
             <Fact label="避坑" value={spot.avoid} />
           </dl>
         </div>
+        <OcrLines lines={spot.ocrLines} />
         <SourceLinks evidence={spot.evidence} />
       </CardContent>
     </Card>

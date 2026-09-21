@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react"
 import type { Day, MustBuy, Shop, Stop, Warning } from "@/data/types"
 import { SectionEmpty } from "@/components/empty-state"
 import { FactImages } from "@/components/fact-images"
+import { OcrLines } from "@/components/ocr-lines"
 import { OutfitCard } from "@/components/outfit-card"
 import { PhotoSpotCard } from "@/components/photo-spot-card"
 import { PostPaste } from "@/components/post-paste"
@@ -63,6 +64,7 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
 
         <TabsContent value="facts" className="mt-4 grid gap-5">
           {warnings.length > 0 ? <WarningList warnings={warnings} /> : null}
+          <OcrExcerpt lines={stop.ocrLines} />
           <ShopList shops={stop.shops} />
           <BuyList items={stop.mustBuys} />
           {warnings.length === 0 && stop.shops.length === 0 && stop.mustBuys.length === 0 ? (
@@ -93,6 +95,18 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
 
       <PostPaste dayId={day.id} stopId={stop.id} />
     </article>
+  )
+}
+
+function OcrExcerpt({ lines }: { lines?: Stop["ocrLines"] }) {
+  if (!lines?.length) return null
+  return (
+    <section className="grid gap-2">
+      <p className="text-[11px] tracking-[0.16em] text-primary">配图 OCR</p>
+      <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-3">
+        <OcrLines lines={lines} className="mt-0" />
+      </div>
+    </section>
   )
 }
 
@@ -133,12 +147,20 @@ function ShopList({ shops }: { shops: Shop[] }) {
             <FactImages images={shop.images} />
             <div>
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p className="font-heading text-lg">{shop.name}</p>
+                <p className="font-heading text-lg">
+                  {shop.name}
+                  {shop.uncertain ? (
+                    <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
+                      识别不确定
+                    </Badge>
+                  ) : null}
+                </p>
                 <span className="text-xs tabular-nums text-muted-foreground">{shop.hours}</span>
               </div>
               <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
               <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
               <p className="mt-2 text-sm text-muted-foreground">找什么 · {shop.whatToLookFor}</p>
+              <OcrLines lines={shop.ocrLines} />
               <SourceLinks evidence={shop.evidence} className="mt-3" />
             </div>
           </div>
@@ -162,11 +184,19 @@ function BuyList({ items }: { items: MustBuy[] }) {
             <FactImages images={item.images} />
             <div>
               <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p className="font-heading text-lg">{item.name}</p>
+                <p className="font-heading text-lg">
+                  {item.name}
+                  {item.uncertain ? (
+                    <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
+                      识别不确定
+                    </Badge>
+                  ) : null}
+                </p>
                 <span className="text-xs tabular-nums text-primary">{item.budget}</span>
               </div>
               <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
               <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
+              <OcrLines lines={item.ocrLines} />
               <SourceLinks evidence={item.evidence} className="mt-3" />
             </div>
           </div>

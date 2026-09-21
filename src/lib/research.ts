@@ -2,10 +2,12 @@ import researched from "@/data/research/guizhou-posts.json"
 import researchedSpots from "@/data/research/guizhou-spots.json"
 import researchedFacts from "@/data/research/guizhou-facts.json"
 import researchedImages from "@/data/research/guizhou-images.json"
+import researchedOcr from "@/data/research/guizhou-ocr.json"
 import type {
   Evidence,
   FactImage,
   MustBuy,
+  OcrLine,
   Outfit,
   PhotoSpot,
   Platform,
@@ -60,6 +62,8 @@ type FactShop = {
   note: string
   whatToLookFor: string
   sourceNoteIds?: string[]
+  ocrLines?: OcrLine[]
+  uncertain?: boolean
 }
 
 type FactBuy = {
@@ -68,6 +72,8 @@ type FactBuy = {
   budget: string
   tip: string
   sourceNoteIds?: string[]
+  ocrLines?: OcrLine[]
+  uncertain?: boolean
 }
 
 type FactSpot = {
@@ -80,6 +86,20 @@ type FactSpot = {
   avoid: string
   palette: [string, string, string]
   sourceNoteIds?: string[]
+  ocrLines?: OcrLine[]
+  uncertain?: boolean
+}
+
+type OcrPack = {
+  noteId: string
+  file: string
+  aliases: string[]
+  unreadableNote?: string | null
+  lines?: OcrLine[]
+  shops?: FactShop[]
+  mustBuys?: FactBuy[]
+  photoSpots?: FactSpot[]
+  warnings?: { text: string; kind: "雷" | "注意"; ocrLines?: OcrLine[] }[]
 }
 
 type FactOutfit = {
@@ -108,6 +128,7 @@ type FactPack = {
 const rows = researched as ResearchRow[]
 const packs = researchedSpots as SpotPack[]
 const factPacks = researchedFacts as FactPack[]
+const ocrPacks = researchedOcr as OcrPack[]
 const imagePacks = researchedImages as Record<
   string,
   { files: string[]; alt?: string; expected?: number }
@@ -275,6 +296,16 @@ function sameName(a: string, b: string): boolean {
   return a === b || a.includes(b) || b.includes(a)
 }
 
+function mergeOcrLines(current?: OcrLine[], extra?: OcrLine[]): OcrLine[] | undefined {
+  if (!extra?.length) return current
+  const next = [...(current ?? [])]
+  for (const line of extra) {
+    if (next.some((item) => item.text === line.text)) continue
+    next.push(line)
+  }
+  return next
+}
+
 function upsertShop(stop: Stop, spec: FactShop, seed: string): Stop {
   const evidence = evidenceForIds(spec.sourceNoteIds, `${seed}-shop`)
   const created: Shop = {
@@ -285,6 +316,8 @@ function upsertShop(stop: Stop, spec: FactShop, seed: string): Stop {
     note: spec.note,
     whatToLookFor: spec.whatToLookFor,
     evidence,
+    ocrLines: spec.ocrLines,
+    uncertain: spec.uncertain,
   }
   const existing = stop.shops.find(
     (shop) => sameName(shop.name, spec.name) || sameName(shop.name, stop.name)
@@ -302,6 +335,8 @@ function upsertShop(stop: Stop, spec: FactShop, seed: string): Stop {
               note: spec.note,
               whatToLookFor: spec.whatToLookFor || shop.whatToLookFor,
               evidence: merge(shop.evidence, evidence),
+              ocrLines: mergeOcrLines(shop.ocrLines, spec.ocrLines),
+              uncertain: shop.uncertain || spec.uncertain,
             }
           : shop
       ),
@@ -325,6 +360,8 @@ function upsertMustBuy(stop: Stop, spec: FactBuy, seed: string): Stop {
               budget: spec.budget || item.budget,
               tip: spec.tip,
               evidence: merge(item.evidence, evidence),
+              ocrLines: mergeOcrLines(item.ocrLines, spec.ocrLines),
+              uncertain: item.uncertain || spec.uncertain,
             }
           : item
       ),
@@ -337,6 +374,8 @@ function upsertMustBuy(stop: Stop, spec: FactBuy, seed: string): Stop {
     budget: spec.budget,
     tip: spec.tip,
     evidence,
+    ocrLines: spec.ocrLines,
+    uncertain: spec.uncertain,
   }
   const kept = stop.mustBuys.filter((item) => !item.evidence.every((card) => card.isSample))
   return { ...stop, mustBuys: [...kept, created] }
@@ -360,6 +399,8 @@ function mergePhotoSpot(stop: Stop, spec: FactSpot, seed: string): Stop {
       palette: spec.palette,
     },
     evidence,
+    ocrLines: spec.ocrLines,
+    uncertain: spec.uncertain,
   }
   const existing = stop.photoSpots.find((spot) => sameName(spot.title, spec.title))
   if (existing) {
@@ -376,6 +417,8 @@ function mergePhotoSpot(stop: Stop, spec: FactSpot, seed: string): Stop {
               lens: spec.lens,
               avoid: spec.avoid,
               evidence: merge(spot.evidence, evidence),
+              ocrLines: mergeOcrLines(spot.ocrLines, spec.ocrLines),
+              uncertain: spot.uncertain || spec.uncertain,
             }
           : spot
       ),
@@ -428,6 +471,25 @@ function applyFactPacks(stop: Stop): Stop {
         (item) => !/招牌一份 \+ 一份素的|水 \+ 一件轻的手作|笔记里的必买/.test(item.name)
       ),
     }
+  }
+  return { ...next, readFlags: flags }
+}
+
+function applyOcrPacks(stop: Stop): Stop {
+  const hits = ocrPacks.filter((pack) => matches(stop.name, pack.aliases))
+  if (hits.length === 0) return stop
+  let next: Stop = { ...stop, ocrLines: [...(stop.ocrLines ?? [])] }
+  let flags = [...(stop.readFlags ?? [])]
+  for (const pack of hits) {
+    next = { ...next, ocrLines: mergeOcrLines(next.ocrLines, pack.lines) }
+    if (pack.unreadableNote) flags = pushFlag(flags, pack.unreadableNote)
+    if ((pack.lines ?? []).some((line) => line.uncertain) || pack.shops?.some((shop) => shop.uncertain)) {
+      flags = pushFlag(flags, "部分 OCR 识别不确定")
+    }
+    for (const shop of pack.shops ?? []) next = upsertShop(next, shop, `${stop.id}-ocr`)
+    for (const buy of pack.mustBuys ?? []) next = upsertMustBuy(next, buy, `${stop.id}-ocr`)
+    for (const spot of pack.photoSpots ?? []) next = mergePhotoSpot(next, spot, `${stop.id}-ocr`)
+    for (const warning of pack.warnings ?? []) next = mergeWarning(next, warning)
   }
   return { ...next, readFlags: flags }
 }
@@ -544,7 +606,8 @@ function preferRealEvidence(stop: Stop): Stop {
 
 export function applyResearchedEvidence(stop: Stop): Stop {
   const withFacts = applyFactPacks({ ...stop, warnings: stop.warnings ?? [] })
-  return attachFactImages(preferRealEvidence(attachRowSources(applyPhotoPacks(withFacts))))
+  const withOcr = applyOcrPacks(applyPhotoPacks(withFacts))
+  return attachFactImages(preferRealEvidence(attachRowSources(withOcr)))
 }
 
 export function researchedOutfitEvidence(label: string, seed: string): Evidence[] {

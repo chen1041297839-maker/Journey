@@ -13,6 +13,13 @@ export const timeBlockLabel: Record<TimeBlock, string> = {
 
 export type Platform = "xiaohongshu" | "douyin" | "instagram"
 
+export type OcrLine = {
+  text: string
+  confidence: number
+  uncertain: boolean
+  engine: "tesseract" | "vision" | "merged"
+}
+
 export type FactImage = {
   src: string
   alt: string
@@ -44,6 +51,7 @@ export type Warning = {
   text: string
   kind: "雷" | "注意"
   images?: FactImage[]
+  ocrLines?: OcrLine[]
 }
 
 export type Shop = {
@@ -55,6 +63,8 @@ export type Shop = {
   whatToLookFor: string
   evidence: Evidence[]
   images?: FactImage[]
+  ocrLines?: OcrLine[]
+  uncertain?: boolean
 }
 
 export type MustBuy = {
@@ -65,6 +75,8 @@ export type MustBuy = {
   tip: string
   evidence: Evidence[]
   images?: FactImage[]
+  ocrLines?: OcrLine[]
+  uncertain?: boolean
 }
 
 export type ShotComposition = {
@@ -86,6 +98,8 @@ export type PhotoSpot = {
   composition: ShotComposition
   evidence: Evidence[]
   images?: FactImage[]
+  ocrLines?: OcrLine[]
+  uncertain?: boolean
 }
 
 export type Outfit = {
@@ -121,6 +135,7 @@ export type Stop = {
   /** 配图清单网页读不全 */
   imageListPartial?: boolean
   readFlags?: string[]
+  ocrLines?: OcrLine[]
 }
 
 export type Day = {

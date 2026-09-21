@@ -1,0 +1,449 @@
+[
+  {
+    "noteId": "6aad51cc",
+    "file": "/evidence/xhs-6aad51cc.jpg",
+    "aliases": ["民生路", "好吃街", "青云市集"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "存一下下周去贵阳要买的东西",
+        "confidence": 89,
+        "uncertain": false,
+        "engine": "merged"
+      }
+    ],
+    "mustBuys": [
+      {
+        "name": "贵阳要吃要买清单",
+        "reason": "封面 OCR 只读到标题「存一下下周去贵阳要买的东西」，没有店名、菜单或价格。",
+        "budget": "按配图",
+        "tip": "另外 7 张清单图从未下载，配图读不到。没有去抓 App 门禁图。",
+        "sourceNoteIds": ["6aad51cc"],
+        "ocrLines": [
+          {
+            "text": "存一下下周去贵阳要买的东西",
+            "confidence": 89,
+            "uncertain": false,
+            "engine": "merged"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "noteId": "6aa0e7c2",
+    "file": "/evidence/xhs-6aa0e7c2.jpg",
+    "aliases": ["民生路", "好吃街", "青云市集"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "封面是表情包，没有奶茶菜单或价格可识",
+        "confidence": 90,
+        "uncertain": false,
+        "engine": "vision"
+      }
+    ],
+    "mustBuys": [
+      {
+        "name": "贵阳特色奶茶怎么点",
+        "reason": "封面 OCR 是表情包，没有点单。正文只有「马上点！」。",
+        "budget": "以门店为准",
+        "tip": "菜单在未下载的配图里，配图读不到。没有去抓 App 门禁图。",
+        "sourceNoteIds": ["6aa0e7c2"],
+        "ocrLines": [
+          {
+            "text": "封面是表情包，没有奶茶菜单或价格可识",
+            "confidence": 90,
+            "uncertain": false,
+            "engine": "vision"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "noteId": "6a33e80a",
+    "file": "/evidence/xhs-6a33e80a.jpg",
+    "aliases": ["民生路", "好吃街"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "摊位封面是现炒纸碗，没有店招或价目可识",
+        "confidence": 88,
+        "uncertain": false,
+        "engine": "vision"
+      }
+    ],
+    "warnings": [
+      {
+        "kind": "注意",
+        "text": "已存摊位封面没有店招或价目可 OCR，店名来自笔记正文。"
+      }
+    ]
+  },
+  {
+    "noteId": "6a72c3d7",
+    "file": "/evidence/xhs-6a72c3d7.jpg",
+    "aliases": ["堂安梯田", "堂安"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "马上离开贵州肇兴侗寨",
+        "confidence": 58,
+        "uncertain": true,
+        "engine": "merged"
+      },
+      {
+        "text": "安利一下这边吃吃喝喝不踩雷的店",
+        "confidence": 89,
+        "uncertain": false,
+        "engine": "merged"
+      },
+      {
+        "text": "1 堂安梯田一颗豆子奶茶店（茶叶加本地食材煮，超级香，没有平常科技奶茶的味道）",
+        "confidence": 70,
+        "uncertain": true,
+        "engine": "merged"
+      },
+      {
+        "text": "2 堂安梯田侗味集，用茅香煮出来的田螺闷土鸡味道很香，辣味可以按个人口味点，还不错",
+        "confidence": 55,
+        "uncertain": true,
+        "engine": "merged"
+      },
+      {
+        "text": "3 堂安梯田住宿落日余晖，房间环境很好，落地窗，拉开窗帘就可以看到梯田，老板态度很好",
+        "confidence": 79,
+        "uncertain": true,
+        "engine": "merged"
+      }
+    ],
+    "shops": [
+      {
+        "name": "一颗豆子奶茶",
+        "category": "喝茶",
+        "hours": "堂安梯田景区内",
+        "note": "茶叶加本地食材煮，超级香，没有平常科技奶茶的味道。封面清单 OCR。",
+        "whatToLookFor": "店名「一颗豆子」",
+        "sourceNoteIds": ["6a72c3d7"],
+        "ocrLines": [
+          {
+            "text": "1 堂安梯田一颗豆子奶茶店（茶叶加本地食材煮，超级香，没有平常科技奶茶的味道）",
+            "confidence": 70,
+            "uncertain": true,
+            "engine": "merged"
+          }
+        ]
+      },
+      {
+        "name": "侗味集",
+        "category": "吃喝",
+        "hours": "堂安梯田景区内",
+        "note": "茅香煮的田螺闷土鸡，味道很香；辣味可以按个人口味点，还不错。封面清单 OCR。",
+        "whatToLookFor": "田螺闷土鸡，辣度可调",
+        "sourceNoteIds": ["6a72c3d7"],
+        "ocrLines": [
+          {
+            "text": "2 堂安梯田侗味集，用茅香煮出来的田螺闷土鸡味道很香，辣味可以按个人口味点，还不错",
+            "confidence": 55,
+            "uncertain": true,
+            "engine": "merged"
+          }
+        ]
+      },
+      {
+        "name": "落日余晖（住宿）",
+        "category": "住宿",
+        "hours": "入住",
+        "note": "房间环境很好，落地窗，拉开窗帘就可以看到梯田，老板态度很好。攻略封面 OCR，不是行程里默认民宿。",
+        "whatToLookFor": "能看见梯田的落地窗",
+        "sourceNoteIds": ["6a72c3d7"],
+        "ocrLines": [
+          {
+            "text": "3 堂安梯田住宿落日余晖……看到梯田，老板态度很好",
+            "confidence": 79,
+            "uncertain": true,
+            "engine": "merged"
+          }
+        ]
+      }
+    ],
+    "mustBuys": [
+      {
+        "name": "一颗豆子奶茶",
+        "reason": "本地茶叶煮的，笔记说超级香、没有科技奶茶味。",
+        "budget": "以店内为准",
+        "tip": "在堂安，不是肇兴主街。封面清单 OCR。",
+        "sourceNoteIds": ["6a72c3d7"]
+      },
+      {
+        "name": "侗味集田螺闷土鸡",
+        "reason": "茅香煮，味道很香；辣味可以按个人口味点。",
+        "budget": "以店内为准",
+        "tip": "封面清单 OCR。辣度现场说。",
+        "sourceNoteIds": ["6a72c3d7"],
+        "ocrLines": [
+          {
+            "text": "用茅香煮出来的田螺闷土鸡……辣味可以按个人口味点，还不错",
+            "confidence": 55,
+            "uncertain": true,
+            "engine": "merged"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "noteId": "6a7f037e",
+    "file": "/evidence/xhs-6a7f037e.jpg",
+    "aliases": ["肇兴侗寨", "鼓楼群", "鼓楼"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "鱼爱牛 · 特产松子酥",
+        "confidence": 62,
+        "uncertain": true,
+        "engine": "vision"
+      },
+      {
+        "text": "保质期：28 天",
+        "confidence": 55,
+        "uncertain": true,
+        "engine": "merged"
+      },
+      {
+        "text": "配料表：松子、瓜子、麦芽糖",
+        "confidence": 50,
+        "uncertain": true,
+        "engine": "vision"
+      },
+      {
+        "text": "原生态 / 纯手工 / 无添加",
+        "confidence": 48,
+        "uncertain": true,
+        "engine": "vision"
+      },
+      {
+        "text": "侗乡传统特色美食",
+        "confidence": 64,
+        "uncertain": false,
+        "engine": "merged"
+      },
+      {
+        "text": "肇兴侗寨鱼爱牛土特产 / 正宗土特产经营店",
+        "confidence": 52,
+        "uncertain": true,
+        "engine": "vision"
+      },
+      {
+        "text": "包装印联系方式 19976977134",
+        "confidence": 63,
+        "uncertain": true,
+        "engine": "merged"
+      }
+    ],
+    "shops": [
+      {
+        "name": "鱼爱牛土特产",
+        "category": "伴手礼",
+        "hours": "保质期 28 天",
+        "note": "肇兴侗寨正宗土特产经营店。配料：松子、瓜子、麦芽糖。原生态 / 纯手工 / 无添加。包装写「侗乡传统特色美食」。包装 OCR。",
+        "whatToLookFor": "包装袋写「鱼爱牛」「松子酥」",
+        "sourceNoteIds": ["6a7f037e"],
+        "ocrLines": [
+          {
+            "text": "侗乡传统特色美食",
+            "confidence": 64,
+            "uncertain": false,
+            "engine": "merged"
+          },
+          {
+            "text": "保质期：28 天 · 配料松子、瓜子、麦芽糖",
+            "confidence": 55,
+            "uncertain": true,
+            "engine": "merged"
+          },
+          {
+            "text": "包装印联系方式 19976977134",
+            "confidence": 63,
+            "uncertain": true,
+            "engine": "merged"
+          }
+        ]
+      }
+    ],
+    "mustBuys": [
+      {
+        "name": "鱼爱牛松子酥",
+        "reason": "包装 OCR：特产松子酥，侗乡传统特色美食。配料松子、瓜子、麦芽糖，保质期 28 天。",
+        "budget": "多买两包",
+        "tip": "认准鱼爱牛包装。一人行也点名好吃，但粘牙。",
+        "sourceNoteIds": ["6a7f037e", "6a7c8641"]
+      }
+    ]
+  },
+  {
+    "noteId": "6a66bd41",
+    "file": "/evidence/xhs-6a66bd41.jpg",
+    "aliases": ["肇兴侗寨", "鼓楼群", "鼓楼"],
+    "unreadableNote": "18 机位后续配图未下载，配图读不到。封面没有机位文字清单。",
+    "lines": [
+      {
+        "text": "封面是窗框里的鼓楼和后山，没有机位文字可识",
+        "confidence": 86,
+        "uncertain": false,
+        "engine": "vision"
+      }
+    ],
+    "photoSpots": [
+      {
+        "title": "天之逸民宿 / 礼团鼓楼",
+        "standWhere": "封面 OCR/画面：从窗或廊看出去，鼓楼尖顶被木屋夹住，后山在上。文字清单在未下载的另外 17 张图。",
+        "angle": "窗框当前景，鼓楼居中。",
+        "shotLooksLike": "封面那种窗框里的鼓楼和后山。",
+        "bestTime": "白天到蓝调",
+        "lens": "手机 1x",
+        "avoid": "不要站在民宿客人房间门口",
+        "palette": ["#6B4B3E", "#C9B48A", "#1F1A16"],
+        "sourceNoteIds": ["6a66bd41"],
+        "ocrLines": [
+          {
+            "text": "封面是窗框里的鼓楼和后山，没有机位文字可识",
+            "confidence": 86,
+            "uncertain": false,
+            "engine": "vision"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "noteId": "DVyBqtNCrwp",
+    "file": "/evidence/ig-DVyBqtNCrwp-1.jpg",
+    "aliases": ["肇兴侗寨", "鼓楼群", "鼓楼"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "南若旅拍",
+        "confidence": 52,
+        "uncertain": true,
+        "engine": "vision"
+      },
+      {
+        "text": "益禾堂",
+        "confidence": 48,
+        "uncertain": true,
+        "engine": "vision"
+      },
+      {
+        "text": "三多合茶饮",
+        "confidence": 44,
+        "uncertain": true,
+        "engine": "vision"
+      }
+    ],
+    "shops": [
+      {
+        "name": "南若旅拍",
+        "category": "旅拍",
+        "hours": "主街招牌",
+        "note": "Instagram 主街自拍里的店招 OCR。同一段石板路有银饰租衣。",
+        "whatToLookFor": "门头「南若旅拍」",
+        "sourceNoteIds": ["DVyBqtNCrwp"],
+        "uncertain": true,
+        "ocrLines": [
+          {
+            "text": "南若旅拍",
+            "confidence": 52,
+            "uncertain": true,
+            "engine": "vision"
+          }
+        ]
+      },
+      {
+        "name": "益禾堂",
+        "category": "喝茶",
+        "hours": "主街招牌",
+        "note": "主街自拍店招 OCR。tesseract 没读出来，只靠画面，识别不确定。",
+        "whatToLookFor": "竖招「益禾堂」",
+        "sourceNoteIds": ["DVyBqtNCrwp"],
+        "uncertain": true,
+        "ocrLines": [
+          {
+            "text": "益禾堂",
+            "confidence": 48,
+            "uncertain": true,
+            "engine": "vision"
+          }
+        ]
+      },
+      {
+        "name": "三多合茶饮",
+        "category": "喝茶",
+        "hours": "主街招牌",
+        "note": "主街自拍悬挂招牌 OCR。字形小，识别不确定。",
+        "whatToLookFor": "悬挂「三多合茶饮」",
+        "sourceNoteIds": ["DVyBqtNCrwp"],
+        "uncertain": true,
+        "ocrLines": [
+          {
+            "text": "三多合茶饮",
+            "confidence": 44,
+            "uncertain": true,
+            "engine": "vision"
+          }
+        ]
+      }
+    ],
+    "photoSpots": [
+      {
+        "title": "肇兴主街石板路",
+        "standWhere": "主街石板路上，旅拍店和茶饮招牌在身后，银饰租衣在左侧。",
+        "angle": "自拍竖构图，人在下半，招牌在上半。",
+        "shotLooksLike": "南若旅拍、益禾堂、三多合茶饮招牌和石板路。店招 OCR 识别不确定。",
+        "bestTime": "白天",
+        "lens": "手机 1x",
+        "avoid": "不要堵店门口",
+        "palette": ["#C9B48A", "#2F4A3C", "#E7C56A"],
+        "sourceNoteIds": ["DVyBqtNCrwp"],
+        "uncertain": true,
+        "ocrLines": [
+          {
+            "text": "南若旅拍 / 益禾堂 / 三多合茶饮（店招，识别不确定）",
+            "confidence": 48,
+            "uncertain": true,
+            "engine": "vision"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "noteId": "6a7c8641",
+    "file": "/evidence/xhs-6a7c8641.jpg",
+    "aliases": ["肇兴侗寨", "鼓楼群"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "俯拍鼓楼群和梯田，没有店名或价目可识",
+        "confidence": 88,
+        "uncertain": false,
+        "engine": "vision"
+      }
+    ]
+  },
+  {
+    "noteId": "DP3zF6zEnOc",
+    "file": "/evidence/ig-DP3zF6zEnOc-1.jpg",
+    "aliases": ["小七孔", "瑶家"],
+    "unreadableNote": null,
+    "lines": [
+      {
+        "text": "古桥碧水风景照，没有店名或价目可识",
+        "confidence": 88,
+        "uncertain": false,
+        "engine": "vision"
+      }
+    ]
+  }
+]

@@ -7,6 +7,7 @@
 - 圆周旅迹公开分享的站点顺序是准绳。导入后默认按原顺序显示；规划建议只在确认框里，点「采用建议」才会改
 - 读取你粘贴的小红书 / 抖音 / Instagram **公开页**（或 Instagram oEmbed）；系统也会公开检索并预挂真实帖子链接
 - 不会登录，也不会走 App 接口。评论不在公开 HTML 里就标「评论网页读不到」。公开配图会存进 `public/evidence` 并贴在对应要点旁边；被拦的标「配图读不到」
+- 已保存的封面/包装/清单图会用本机 tesseract（`chi_sim+eng`）再加一次画面识字，抽店名、菜单、价格、机位写进要点；吃不准的行标「识别不确定」。没下载过的 App 图不会去抓
 - 东京四日只作为「填入示例」的演示，生成后会标示例
 
 ## 本地运行
@@ -39,7 +40,7 @@ npm start
 
 如果页面跳登录或只有空壳，仍会保存原链接，并标明读不到的部分。
 
-默认导入快照在 [`src/data/imported/pitravel-7662387918598377796.json`](src/data/imported/pitravel-7662387918598377796.json)，抽出的要点在 [`src/data/research/guizhou-facts.json`](src/data/research/guizhou-facts.json)，公开笔记在 [`src/data/research/guizhou-posts.json`](src/data/research/guizhou-posts.json)。
+默认导入快照在 [`src/data/imported/pitravel-7662387918598377796.json`](src/data/imported/pitravel-7662387918598377796.json)，抽出的要点在 [`src/data/research/guizhou-facts.json`](src/data/research/guizhou-facts.json)，公开笔记在 [`src/data/research/guizhou-posts.json`](src/data/research/guizhou-posts.json)，配图 OCR 在 [`src/data/research/guizhou-ocr.json`](src/data/research/guizhou-ocr.json)。本机可再跑 `npm run ocr`（需要 tesseract `chi_sim+eng`）。
 
 ## 技术栈
 
