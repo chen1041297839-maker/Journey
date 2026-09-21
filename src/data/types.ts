@@ -39,7 +39,7 @@ export type Evidence = {
   isSample: boolean
   /** 公开页打不开或只有标题，链接仍保留 */
   partialRead?: boolean
-  collectedBy?: "paste" | "search"
+  collectedBy?: "paste" | "search" | "upload"
   /** 评论不在公开 HTML 里（登录墙 / 仅 App） */
   commentsGated?: boolean
   /** 有用清单只在后续配图，公开页封面读不到 */

@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react"
 import type { Day, MustBuy, Shop, Stop, Warning } from "@/data/types"
 import { SectionEmpty } from "@/components/empty-state"
 import { FactImages } from "@/components/fact-images"
+import { ImageUpload } from "@/components/image-upload"
 import { OcrLines } from "@/components/ocr-lines"
 import { OutfitCard } from "@/components/outfit-card"
 import { PhotoSpotCard } from "@/components/photo-spot-card"
@@ -51,6 +52,8 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
         </div>
       </header>
 
+      <ImageUpload dayId={day.id} stopId={stop.id} />
+
       <ReadFlags flags={stop.readFlags} />
 
       <OutfitCard outfit={day.outfit} compact />
@@ -70,7 +73,7 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
           {warnings.length === 0 && stop.shops.length === 0 && stop.mustBuys.length === 0 ? (
             <SectionEmpty
               title="这一站还没有抽出要点"
-              hint="把小红书 / 抖音 / Instagram 公开链接贴进来，我们抽店、必买、价格和避坑；原帖只留来源。"
+              hint="把小红书清单截图拖到上面的上传区（不要发到聊天），或在页底贴公开链接。我们抽店、必买、价格和避坑；原帖只留来源。"
             />
           ) : null}
         </TabsContent>

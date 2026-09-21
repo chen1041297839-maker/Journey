@@ -45,10 +45,9 @@ export function PostPaste({
           {stopId ? "把这一站的链接贴进来" : "把笔记链接贴在这里"}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          不用发到聊天里。贴公开链接后自动：读公开页正文 → 下载能拿到的配图 → OCR 店名 / 菜单 / 价格 / 机位 → 写进要点。原帖只留小字「来源」。不会登录，也不会走 App。评论或后续配图网页读不到会标明。
           {stopId
-            ? ""
-            : ` 当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
+            ? "这里只贴公开链接。截图请用上面的上传区，不要发到聊天。贴链接后自动：读公开页正文 → 下载能拿到的配图 → OCR → 写进要点。原帖只留小字「来源」。不会登录，也不会走 App。"
+            : `这里只贴公开链接。清单截图请打开对应那一站，在网页上传区拖入或选择，不要发到聊天。贴链接后自动读公开页、存图、OCR。当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
         </p>
       </div>
       <Textarea

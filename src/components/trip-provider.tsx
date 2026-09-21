@@ -11,13 +11,13 @@ import {
 } from "react"
 import type { Day, Evidence, Trip } from "@/data/types"
 import { applySuggestedPlan, revertImportedPlan } from "@/lib/apply-plan"
-import { attachPostsToTrip } from "@/lib/attach-evidence"
+import { attachOcrPayloadToTrip, attachPostsToTrip } from "@/lib/attach-evidence"
 import { isPitravelInput } from "@/lib/pitravel"
 import { countStops, parseRouteText } from "@/lib/parse-routes"
 import { defaultSampleTrip, planFromText } from "@/lib/plan-itinerary"
 import type { FetchedPost } from "@/lib/social-posts"
 
-const STORAGE_KEY = "xenia.trip.v12"
+const STORAGE_KEY = "xenia.trip.v14"
 
 type TripContextValue = {
   trip: Trip
@@ -39,6 +39,10 @@ type TripContextValue = {
     }[]
     unmatched: FetchedPost[]
   } | null>
+  importUploads: (
+    files: File[],
+    target: { dayId: string; stopId: string }
+  ) => Promise<{ stopName: string; ocrCount: number; imageCount: number } | null>
   resetToSample: () => Trip
   patchEvidence: (evidenceId: string, patch: Partial<Evidence>) => void
   applyProposal: () => void
@@ -199,6 +203,54 @@ export function TripProvider({
     [persist, trip]
   )
 
+  const importUploads = useCallback(
+    async (files: File[], target: { dayId: string; stopId: string }) => {
+      setGenerating(true)
+      setError(null)
+      try {
+        const body = new FormData()
+        for (const file of files) body.append("images", file)
+        const response = await fetch("/api/evidence/ocr", { method: "POST", body })
+        const payload = (await response.json()) as {
+          images?: { src: string; alt: string }[]
+          ocrLines?: {
+            text: string
+            confidence: number
+            uncertain: boolean
+            engine: "tesseract" | "vision" | "merged"
+          }[]
+          facts?: import("@/lib/extract-facts").ExtractedFacts
+          error?: string
+        }
+        if (!response.ok || !payload.images || !payload.facts) {
+          setError(payload.error || "截图 OCR 失败。")
+          return null
+        }
+        const result = attachOcrPayloadToTrip(trip, target, {
+          images: payload.images,
+          ocrLines: payload.ocrLines ?? [],
+          facts: payload.facts,
+        })
+        if (!result) {
+          setError("找不到这一站。")
+          return null
+        }
+        persist(result.trip)
+        return {
+          stopName: result.stopName,
+          ocrCount: result.ocrCount,
+          imageCount: result.imageCount,
+        }
+      } catch {
+        setError("截图 OCR 失败。")
+        return null
+      } finally {
+        setGenerating(false)
+      }
+    },
+    [persist, trip]
+  )
+
   const generate = useCallback(
     async (text: string, isSample = false) => {
       if (!isSample && isPitravelInput(text)) {
@@ -256,6 +308,7 @@ export function TripProvider({
       generate,
       importShare,
       importPosts,
+      importUploads,
       resetToSample,
       patchEvidence,
       applyProposal,
@@ -269,6 +322,7 @@ export function TripProvider({
       generate,
       importShare,
       importPosts,
+      importUploads,
       resetToSample,
       patchEvidence,
       applyProposal,

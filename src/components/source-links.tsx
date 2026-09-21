@@ -14,19 +14,26 @@ export function SourceLinks({
   if (sources.length === 0) return null
   return (
     <ul className={cn("flex flex-wrap gap-x-3 gap-y-1", className)}>
-      {sources.map((item) => (
-        <li key={item.id}>
-          <a
-            href={item.url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
-          >
-            来源 · {platformLabel[item.platform]}
-            {item.imageListPartial ? " · 配图清单网页读不全" : item.partialRead ? " · 网页读不全" : ""}
-          </a>
-        </li>
-      ))}
+      {sources.map((item) => {
+          const uploaded = item.collectedBy === "upload" || item.url.startsWith("xenia://")
+          return (
+            <li key={item.id}>
+              {uploaded || !/^https?:/i.test(item.url) ? (
+                <span className="text-[11px] text-muted-foreground">来源 · 上传截图</span>
+              ) : (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[11px] text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+                >
+                  来源 · {platformLabel[item.platform]}
+                  {item.imageListPartial ? " · 配图清单网页读不全" : item.partialRead ? " · 网页读不全" : ""}
+                </a>
+              )}
+            </li>
+          )
+        })}
     </ul>
   )
 }

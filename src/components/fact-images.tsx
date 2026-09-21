@@ -32,7 +32,9 @@ export function FactImages({
       ) : null}
       {missingCount > 0 ? (
         <p className="text-[11px] leading-relaxed text-muted-foreground">
-          {visible.length > 0 ? `另有 ${missingCount} 张配图读不到` : "配图读不到"}
+          {visible.length > 0
+            ? `另有 ${missingCount} 张配图读不到，把清单截图拖到上面上传区`
+            : "配图读不到，把清单截图拖到上面上传区"}
         </p>
       ) : null}
     </div>

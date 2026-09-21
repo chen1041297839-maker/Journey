@@ -330,6 +330,107 @@ function factsFilled(post: FetchedPost): boolean {
   return facts.shops.length + facts.mustBuys.length + facts.photoSpots.length > 0
 }
 
+export function attachOcrPayloadToTrip(
+  trip: Trip,
+  target: { dayId: string; stopId: string },
+  payload: {
+    images: FactImage[]
+    ocrLines: OcrLine[]
+    facts: ExtractedFacts
+  }
+): { trip: Trip; stopName: string; ocrCount: number; imageCount: number } | null {
+  const day = trip.days.find((item) => item.id === target.dayId)
+  const stop = day?.stops.find((item) => item.id === target.stopId)
+  if (!day || !stop) return null
+
+  const hash = hashCode(payload.images.map((item) => item.src).join("|") || String(Date.now()))
+  const evidence: Evidence = {
+    id: `upload-${stop.id}-${hash}`,
+    platform: "xiaohongshu",
+    url: `xenia://upload/${stop.id}/${hash}`,
+    caption: "上传的清单截图",
+    quote: payload.ocrLines.map((line) => line.text).join("；").slice(0, 420) || "从上传截图 OCR。",
+    imageSrc: payload.images[0]?.src || "",
+    imageAlt: "上传的清单截图",
+    isSample: false,
+    collectedBy: "upload",
+    imageFiles: payload.images.map((item) => item.src).filter(Boolean),
+  }
+  const post: FetchedPost = {
+    url: evidence.url,
+    canonicalUrl: evidence.url,
+    platform: "xiaohongshu",
+    caption: evidence.caption,
+    quote: evidence.quote,
+    imageSrc: evidence.imageSrc,
+    imageAlt: evidence.imageAlt,
+    partialRead: false,
+    commentsGated: false,
+    imageListPartial: false,
+    storedImages: evidence.imageFiles,
+    ocrLines: payload.ocrLines,
+    facts: payload.facts,
+    expectedImageCount: payload.images.length,
+  }
+
+  let nextStop = withReadFlags(stop, evidence, post)
+  nextStop = applyFacts(nextStop, post, evidence)
+  nextStop = attachImagesToPartialLists(nextStop, evidence, payload.images, payload.ocrLines)
+  nextStop = {
+    ...nextStop,
+    readFlags: pushFlag(
+      nextStop.readFlags ?? [],
+      payload.ocrLines.length > 0
+        ? "清单已从上传截图 OCR"
+        : "截图已上传，但没读到可用文字"
+    ),
+  }
+
+  const nextTrip: Trip = {
+    ...trip,
+    days: trip.days.map((entry) =>
+      entry.id !== day.id
+        ? entry
+        : {
+            ...entry,
+            stops: entry.stops.map((item) => (item.id === stop.id ? nextStop : item)),
+          }
+    ),
+  }
+  return {
+    trip: nextTrip,
+    stopName: stop.name,
+    ocrCount: payload.ocrLines.length,
+    imageCount: payload.images.length,
+  }
+}
+
+function attachImagesToPartialLists(
+  stop: Stop,
+  evidence: Evidence,
+  images: FactImage[],
+  ocrLines: OcrLine[]
+): Stop {
+  if (images.length === 0 && ocrLines.length === 0) return stop
+  const patch = <T extends { evidence: Evidence[]; images?: FactImage[]; ocrLines?: OcrLine[] }>(
+    item: T
+  ): T => {
+    if (!item.evidence.some((card) => card.imageListPartial || card.partialRead)) return item
+    return {
+      ...item,
+      evidence: uniquePush(item.evidence, evidence),
+      images: mergePhotos(item.images, images),
+      ocrLines: mergeOcrLines(item.ocrLines, ocrLines),
+    }
+  }
+  return {
+    ...stop,
+    shops: stop.shops.map(patch),
+    mustBuys: stop.mustBuys.map(patch),
+    photoSpots: stop.photoSpots.map(patch),
+  }
+}
+
 export function attachPostsToTrip(
   trip: Trip,
   posts: FetchedPost[],

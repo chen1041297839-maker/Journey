@@ -168,7 +168,7 @@ function attachFactImages(stop: Stop): Stop {
     if (!pack) {
       const hasPhoto = isStoredPhoto(item.imageSrc) || Boolean(item.imageFiles?.some((src) => isStoredPhoto(src)))
       if (!hasPhoto && !item.isSample) {
-        flags = pushFlag(flags, "配图读不到")
+        flags = pushFlag(flags, "配图读不到，把清单截图拖到这一站网页上传区")
       }
       continue
     }
@@ -177,14 +177,24 @@ function attachFactImages(stop: Stop): Stop {
       flags = pushFlag(
         flags,
         pack.files.length > 0
-          ? `配图读不到：${pack.alt || "原帖"}还差 ${missing} 张`
-          : "配图读不到"
+          ? `配图读不到：${pack.alt || "原帖"}还差 ${missing} 张，把清单截图拖到这一站网页上传区`
+          : "配图读不到，把清单截图拖到这一站网页上传区"
       )
     }
   }
   const withImages = (evidence: Evidence[]): FactImage[] => {
     const photos = imagesFromEvidence(evidence)
-    if (photos.length > 0) return photos
+    let missing = 0
+    for (const item of uniqueByUrl(evidence)) {
+      const pack = imagePacks[noteKey(item.url)]
+      if (pack) missing += Math.max(0, (pack.expected ?? pack.files.length) - pack.files.length)
+      else if (!isStoredPhoto(item.imageSrc) && !item.imageFiles?.some((src) => isStoredPhoto(src)) && !item.isSample) {
+        missing += 1
+      }
+    }
+    const next = [...photos]
+    if (missing > 0) next.push({ src: "", alt: "", missing: true, missingCount: missing })
+    if (next.length > 0) return next
     const real = uniqueByUrl(evidence)
     if (real.length === 0) return []
     return [{ src: "", alt: "", missing: true, missingCount: 1 }]
