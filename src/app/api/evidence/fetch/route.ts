@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server"
+import { enrichFetchedPost } from "@/lib/enrich-post"
 import { detectPlatform, extractPostUrls, fetchPublicPost } from "@/lib/social-posts"
 
 export const runtime = "nodejs"
+export const maxDuration = 60
 
 export async function POST(request: Request) {
   let body: { urls?: string; text?: string } = {}
@@ -32,7 +34,8 @@ export async function POST(request: Request) {
 
   const posts = []
   for (const url of urls) {
-    posts.push(await fetchPublicPost(url))
+    const fetched = await fetchPublicPost(url)
+    posts.push(await enrichFetchedPost(fetched))
   }
 
   return NextResponse.json({ posts })

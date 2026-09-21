@@ -61,7 +61,7 @@ export function RouteComposer() {
           粘贴分享链接，按导入顺序打开
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          圆周旅迹的站点顺序是准绳，导入后不会悄悄重排。若规划认为某一天在片区之间折返、回酒店占站、或日落时机不合理，会弹出确认框：改什么、为什么、保持原顺序还是采用建议。每一站展示抽出的店、必买、机位、穿搭、价格和避坑，并把公开配图贴在要点旁边；小红书 / 抖音 / Instagram 原帖只留来源链接。评论网页读不到、配图读不到也会标明。不会登录，也不会走 App 接口。
+          圆周旅迹的站点顺序是准绳，导入后不会悄悄重排。若规划认为某一天在片区之间折返、回酒店占站、或日落时机不合理，会弹出确认框：改什么、为什么、保持原顺序还是采用建议。小红书链接请贴在本页下方输入框（或某一站里），不要发到聊天：公开页会自动读正文、下载能拿到的配图并 OCR，抽出店 / 必买 / 机位 / 价格，原帖只留来源。不会登录，也不会走 App。
         </p>
       </div>
 
@@ -129,7 +129,7 @@ export function RouteComposer() {
         </div>
       </section>
 
-      {!trip.isSampleRoute ? <PostPaste /> : null}
+      <PostPaste />
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)]">
         <section className="grid gap-3">

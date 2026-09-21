@@ -21,10 +21,13 @@ export function PostPaste({
     setLocalError(null)
     const result = await importPosts(text, { stopId, dayId })
     if (!result) return
-    const lines = result.attached.map(
-      (item) =>
-        `已挂到「${item.stopName}」${item.partialRead ? " · 网页读不全" : ""}`
-    )
+    const lines = result.attached.map((item) => {
+      const bits = [`已挂到「${item.stopName}」`]
+      if (item.imageCount > 0) bits.push(`存了 ${item.imageCount} 张公开图`)
+      if (item.ocrCount > 0) bits.push(`OCR ${item.ocrCount} 行`)
+      if (item.partialRead) bits.push("网页读不全")
+      return bits.join(" · ")
+    })
     if (result.unmatched.length > 0) {
       lines.push(
         `${result.unmatched.length} 条没有匹配到站点。打开对应那一站再贴一次，或在链接旁写上店名。`
@@ -37,12 +40,12 @@ export function PostPaste({
   return (
     <section className="grid gap-3 rounded-2xl border border-border bg-card p-4">
       <div>
-        <p className="text-[11px] tracking-[0.16em] text-primary">笔记链接</p>
+        <p className="text-[11px] tracking-[0.16em] text-primary">小红书 / 抖音 / Instagram</p>
         <h3 className="mt-1 font-heading text-lg">
-          {stopId ? "把这一站的帖子贴进来" : "粘贴小红书 / 抖音 / Instagram 链接"}
+          {stopId ? "把这一站的链接贴进来" : "把笔记链接贴在这里"}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          只读公开页和 Instagram oEmbed，不会登录、也不会走 App 接口。抽出店、必买、机位、价格和避坑；原帖只留来源。评论不在公开页就标「评论网页读不到」。
+          不用发到聊天里。贴公开链接后自动：读公开页正文 → 下载能拿到的配图 → OCR 店名 / 菜单 / 价格 / 机位 → 写进要点。原帖只留小字「来源」。不会登录，也不会走 App。评论或后续配图网页读不到会标明。
           {stopId
             ? ""
             : ` 当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
@@ -53,10 +56,11 @@ export function PostPaste({
         onChange={(event) => setText(event.target.value)}
         className="min-h-[120px] font-mono text-sm"
         placeholder={"https://www.xiaohongshu.com/explore/…\nhttps://www.douyin.com/video/…\nhttps://www.instagram.com/p/…"}
+        aria-label="小红书、抖音或 Instagram 公开链接"
       />
       <div className="flex flex-wrap gap-2">
         <Button type="button" onClick={() => void onSubmit()} disabled={generating || !text.trim()}>
-          {generating ? "正在读取公开页…" : "读取并抽出要点"}
+          {generating ? "正在读取、存图、OCR…" : "读取并抽出要点"}
         </Button>
       </div>
       {localError ? (

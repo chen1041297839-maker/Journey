@@ -44,6 +44,8 @@ export type Evidence = {
   commentsGated?: boolean
   /** 有用清单只在后续配图，公开页封面读不到 */
   imageListPartial?: boolean
+  /** 已下载到本机的公开配图 */
+  imageFiles?: string[]
 }
 
 export type Warning = {

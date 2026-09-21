@@ -36,6 +36,5 @@ yarn-error.log*
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# runtime downloads from pasted public posts
+/public/evidence/live-*

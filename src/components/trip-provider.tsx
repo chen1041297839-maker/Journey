@@ -30,7 +30,13 @@ type TripContextValue = {
     text: string,
     target?: { stopId?: string; dayId?: string }
   ) => Promise<{
-    attached: { url: string; stopName: string; partialRead: boolean }[]
+    attached: {
+      url: string
+      stopName: string
+      partialRead: boolean
+      ocrCount: number
+      imageCount: number
+    }[]
     unmatched: FetchedPost[]
   } | null>
   resetToSample: () => Trip

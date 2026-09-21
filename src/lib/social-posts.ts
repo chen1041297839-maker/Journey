@@ -1,4 +1,5 @@
-import type { Evidence, Platform, Stop, Trip } from "@/data/types"
+import type { Evidence, OcrLine, Platform, Stop, Trip } from "@/data/types"
+import type { ExtractedFacts } from "@/lib/extract-facts"
 
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
@@ -17,6 +18,11 @@ export type FetchedPost = {
   partialRead: boolean
   commentsGated: boolean
   imageListPartial: boolean
+  remoteImageUrls?: string[]
+  expectedImageCount?: number
+  storedImages?: string[]
+  ocrLines?: OcrLine[]
+  facts?: ExtractedFacts
 }
 
 const URL_RE =
@@ -174,6 +180,8 @@ function parseXhsNote(html: string): {
   title: string
   desc: string
   imageSrc: string
+  imageSrcs: string[]
+  expectedImageCount: number
   comments: string[]
   commentsGated: boolean
 } | null {
@@ -221,22 +229,31 @@ function parseXhsNote(html: string): {
     .replace(/\[[^\]]+[RH]\]/g, "")
     .trim()
   let imageSrc = ""
+  const imageSrcs: string[] = []
   const images = Array.isArray(best.imageList) ? best.imageList : []
   for (const img of images) {
     if (!img || typeof img !== "object") continue
     const rec = img as Record<string, unknown>
-    const direct = usableImage(String(rec.urlDefault || rec.urlPre || rec.url || ""))
-    if (direct) {
-      imageSrc = direct
-      break
-    }
+    const candidates = [
+      rec.urlDefault,
+      rec.urlPre,
+      rec.url,
+      rec.urlOriginal,
+      rec.masterUrl,
+    ]
     const info = rec.infoList
-    if (Array.isArray(info) && info[0] && typeof info[0] === "object") {
-      const nested = usableImage(String((info[0] as Record<string, unknown>).url || ""))
-      if (nested) {
-        imageSrc = nested
-        break
+    if (Array.isArray(info)) {
+      for (const entry of info) {
+        if (entry && typeof entry === "object") {
+          candidates.push((entry as Record<string, unknown>).url)
+        }
       }
+    }
+    for (const candidate of candidates) {
+      const direct = usableImage(String(candidate || ""))
+      if (!direct) continue
+      if (!imageSrc) imageSrc = direct
+      if (!imageSrcs.includes(direct)) imageSrcs.push(direct)
     }
   }
   if (!title && !desc && !imageSrc) return null
@@ -245,6 +262,8 @@ function parseXhsNote(html: string): {
     title: title || desc.slice(0, 42),
     desc,
     imageSrc,
+    imageSrcs,
+    expectedImageCount: Math.max(images.length, imageSrcs.length),
     comments,
     commentsGated: comments.length === 0,
   }
@@ -297,6 +316,8 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
     partialRead: true,
     commentsGated: true,
     imageListPartial: false,
+    remoteImageUrls: [],
+    expectedImageCount: 0,
   }
 
   try {
@@ -314,6 +335,8 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
           partialRead: !oembed.imageSrc || !oembed.caption,
           commentsGated: true,
           imageListPartial: false,
+          remoteImageUrls: oembed.imageSrc ? [oembed.imageSrc] : [],
+          expectedImageCount: oembed.imageSrc ? 1 : 0,
         }
       }
     }
@@ -340,7 +363,9 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
             imageAlt: caption,
             partialRead: !note.desc || !note.imageSrc,
             commentsGated: note.commentsGated,
-            imageListPartial: false,
+            imageListPartial: note.expectedImageCount > 1 && note.imageSrcs.length < note.expectedImageCount,
+            remoteImageUrls: note.imageSrcs,
+            expectedImageCount: note.expectedImageCount,
           }
         }
 
@@ -362,6 +387,8 @@ export async function fetchPublicPost(rawUrl: string): Promise<FetchedPost> {
           partialRead: gated || !ogDesc || !ogImage,
           commentsGated: true,
           imageListPartial: false,
+          remoteImageUrls: ogImage ? [ogImage] : [],
+          expectedImageCount: ogImage ? 1 : 0,
         }
       }
     }
@@ -385,6 +412,7 @@ export function fetchedToEvidence(post: FetchedPost, seed: string): Evidence {
     collectedBy: "paste",
     commentsGated: post.commentsGated,
     imageListPartial: post.imageListPartial,
+    imageFiles: post.storedImages,
   }
 }
 

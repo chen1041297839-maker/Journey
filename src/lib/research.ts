@@ -16,6 +16,7 @@ import type {
   Warning,
 } from "@/data/types"
 import { uniqueByUrl } from "@/lib/evidence"
+import { isStoredPhoto, noteKey } from "@/lib/note-key"
 
 export { uniqueByUrl }
 
@@ -134,26 +135,6 @@ const imagePacks = researchedImages as Record<
   { files: string[]; alt?: string; expected?: number }
 >
 
-function noteKey(url: string): string {
-  try {
-    const parsed = new URL(url)
-    const xhs = parsed.pathname.match(/\/(?:explore|discovery\/item)\/([a-f0-9]+)/i)
-    if (xhs) return xhs[1].slice(0, 8)
-    const ig = parsed.pathname.match(/\/(?:p|reel|tv)\/([^/]+)/i)
-    if (ig) return ig[1]
-    const dy = parsed.pathname.match(/(\d{15,})/)
-    if (dy) return dy[1]
-  } catch {
-    /* ignore */
-  }
-  const fallback = url.match(/(\d{15,})|[A-Za-z0-9_-]{10,}/)
-  return fallback?.[0] || url
-}
-
-function isStoredPhoto(src?: string): boolean {
-  return Boolean(src && src.startsWith("/evidence/") && !src.endsWith(".svg"))
-}
-
 export function imagesFromEvidence(list: Evidence[]): FactImage[] {
   const images: FactImage[] = []
   const seen = new Set<string>()
@@ -162,9 +143,11 @@ export function imagesFromEvidence(list: Evidence[]): FactImage[] {
     const pack = imagePacks[key]
     const files = pack?.files?.length
       ? pack.files
-      : isStoredPhoto(item.imageSrc)
-        ? [item.imageSrc]
-        : []
+      : item.imageFiles?.length
+        ? item.imageFiles.filter((src) => isStoredPhoto(src))
+        : isStoredPhoto(item.imageSrc)
+          ? [item.imageSrc]
+          : []
     for (const src of files) {
       if (seen.has(src)) continue
       seen.add(src)
@@ -183,7 +166,8 @@ function attachFactImages(stop: Stop): Stop {
     seenPacks.add(key)
     const pack = imagePacks[key]
     if (!pack) {
-      if (!isStoredPhoto(item.imageSrc) && !item.isSample) {
+      const hasPhoto = isStoredPhoto(item.imageSrc) || Boolean(item.imageFiles?.some((src) => isStoredPhoto(src)))
+      if (!hasPhoto && !item.isSample) {
         flags = pushFlag(flags, "配图读不到")
       }
       continue
