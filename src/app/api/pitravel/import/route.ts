@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import importedJourney from "@/data/imported/pitravel-7662387918598377796.json"
 import { planFromPitravel } from "@/lib/plan-itinerary"
+import { saveSharedTrip } from "@/lib/persist"
 import {
   extractJourneyId,
   officialDetailUrl,
@@ -11,6 +12,7 @@ import {
 } from "@/lib/pitravel"
 
 export const runtime = "nodejs"
+export const dynamic = "force-dynamic"
 
 async function fetchOfficial(journeyId: string): Promise<unknown> {
   const response = await fetch(officialDetailUrl(journeyId), {
@@ -53,8 +55,9 @@ export async function POST(request: Request) {
     if (typeof record.code === "number" && record.code !== 0) {
       if (journeyId === XENIA_JOURNEY_ID) {
         const fallback = parsePitravelPayload(importedJourney, shareUrl)
+        const trip = await saveSharedTrip(planFromPitravel(fallback))
         return NextResponse.json({
-          trip: planFromPitravel(fallback),
+          trip,
           meta: fallback.meta,
           sourceText: fallback.sourceText,
           usedSnapshot: true,
@@ -66,8 +69,9 @@ export async function POST(request: Request) {
       )
     }
     const imported = parsePitravelPayload(payload, shareUrl)
+    const trip = await saveSharedTrip(planFromPitravel(imported))
     return NextResponse.json({
-      trip: planFromPitravel(imported),
+      trip,
       meta: imported.meta,
       sourceText: imported.sourceText,
       usedSnapshot: false,
@@ -75,8 +79,9 @@ export async function POST(request: Request) {
   } catch (error) {
     if (journeyId === XENIA_JOURNEY_ID) {
       const fallback = parsePitravelPayload(importedJourney, shareUrl)
+      const trip = await saveSharedTrip(planFromPitravel(fallback))
       return NextResponse.json({
-        trip: planFromPitravel(fallback),
+        trip,
         meta: fallback.meta,
         sourceText: fallback.sourceText,
         usedSnapshot: true,

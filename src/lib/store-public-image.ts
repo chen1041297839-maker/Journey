@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto"
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs"
+import { existsSync, readdirSync } from "node:fs"
 import { join } from "node:path"
 import { noteKey } from "@/lib/note-key"
+import { listStoredImageUrls, putStoredImage } from "@/lib/persist"
 
 const EVIDENCE_DIR = join(process.cwd(), "public/evidence")
 
@@ -48,6 +49,12 @@ export function existingEvidenceFiles(url: string): string[] {
     .map((name) => `/evidence/${name}`)
 }
 
+export async function existingStoredFiles(url: string): Promise<string[]> {
+  const key = noteKey(url).toLowerCase()
+  if (key.length < 6) return []
+  return listStoredImageUrls(`live-${key}`)
+}
+
 export async function downloadPublicImage(
   imageUrl: string,
   pageUrl: string,
@@ -71,12 +78,10 @@ export async function downloadPublicImage(
     if (bytes.length < 800 || bytes.length > 6_000_000) return null
     const ext = extensionOf(bytes, response.headers.get("content-type") || "", imageUrl)
     if (!ext) return null
-    mkdirSync(EVIDENCE_DIR, { recursive: true })
-    const stem = `${noteKey(pageUrl)}-${index + 1}-${createHash("sha1").update(imageUrl).digest("hex").slice(0, 8)}`
-    const filename = `live-${stem}.${ext}`
-    const abs = join(EVIDENCE_DIR, filename)
-    if (!existsSync(abs)) writeFileSync(abs, bytes)
-    return { path: `/evidence/${filename}`, bytes }
+    const mime = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg"
+    const hint = `live-${noteKey(pageUrl).slice(0, 12)}-${index + 1}-${createHash("sha1").update(imageUrl).digest("hex").slice(0, 8)}`
+    const path = await putStoredImage(bytes, mime, ext, hint)
+    return { path, bytes }
   } catch {
     return null
   }

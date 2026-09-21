@@ -17,5 +17,7 @@ export function noteKey(url: string): string {
 export function isStoredPhoto(src?: string): boolean {
   if (!src) return false
   if (src.startsWith("data:image/")) return true
+  if (src.startsWith("/api/files/")) return true
+  if (src.startsWith("/uploads/") && !src.endsWith(".svg")) return true
   return src.startsWith("/evidence/") && !src.endsWith(".svg")
 }

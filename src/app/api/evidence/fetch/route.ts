@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server"
+import { attachPostsToTrip } from "@/lib/attach-evidence"
 import { enrichFetchedPost } from "@/lib/enrich-post"
-import { detectPlatform, extractPostUrls, fetchPublicPost } from "@/lib/social-posts"
+import { mutateSharedTrip } from "@/lib/persist"
+import { detectPlatform, extractPostUrls, fetchPublicPost, type FetchedPost } from "@/lib/social-posts"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
+export const dynamic = "force-dynamic"
 
 export async function POST(request: Request) {
-  let body: { urls?: string; text?: string } = {}
+  let body: { urls?: string; text?: string; dayId?: string; stopId?: string } = {}
   try {
-    body = (await request.json()) as { urls?: string; text?: string }
+    body = (await request.json()) as typeof body
   } catch {
     return NextResponse.json({ error: "请贴入笔记链接。" }, { status: 400 })
   }
@@ -26,17 +29,26 @@ export async function POST(request: Request) {
 
   const unsupported = urls.filter((url) => !detectPlatform(url))
   if (unsupported.length > 0) {
-    return NextResponse.json(
-      { error: `暂不读取这种链接：${unsupported[0]}` },
-      { status: 400 }
-    )
+    return NextResponse.json({ error: `暂不读取这种链接：${unsupported[0]}` }, { status: 400 })
   }
 
-  const posts = []
+  const posts: FetchedPost[] = []
   for (const url of urls) {
     const fetched = await fetchPublicPost(url)
     posts.push(await enrichFetchedPost(fetched))
   }
 
-  return NextResponse.json({ posts })
+  let attached: ReturnType<typeof attachPostsToTrip>["attached"] = []
+  let unmatched: ReturnType<typeof attachPostsToTrip>["unmatched"] = []
+  const trip = await mutateSharedTrip((current) => {
+    const result = attachPostsToTrip(current, posts, {
+      dayId: body.dayId,
+      stopId: body.stopId,
+    }, `${body.text || ""}\n${body.urls || ""}`)
+    attached = result.attached
+    unmatched = result.unmatched
+    return result.trip
+  })
+
+  return NextResponse.json({ trip, posts, attached, unmatched })
 }

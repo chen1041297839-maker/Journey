@@ -2,9 +2,14 @@ import { existsSync } from "node:fs"
 import { join } from "node:path"
 import type { OcrLine } from "@/data/types"
 import { extractFactsFromText, type ExtractedFacts } from "@/lib/extract-facts"
-import { ocrLocalImage } from "@/lib/ocr-local"
+import { ocrImageBuffer, ocrLocalImage } from "@/lib/ocr-local"
+import { getStoredImage } from "@/lib/persist"
 import type { FetchedPost } from "@/lib/social-posts"
-import { downloadPublicImage, existingEvidenceFiles } from "@/lib/store-public-image"
+import {
+  downloadPublicImage,
+  existingEvidenceFiles,
+  existingStoredFiles,
+} from "@/lib/store-public-image"
 
 function absEvidence(src: string): string {
   return join(process.cwd(), "public", src.replace(/^\//, ""))
@@ -19,8 +24,31 @@ function mergeLines(current: OcrLine[], extra: OcrLine[]): OcrLine[] {
   return next
 }
 
+function storedFileId(src: string): string | null {
+  const match = src.match(/\/api\/files\/([^/?#]+)/)
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+async function ocrStoredSrc(src: string): Promise<OcrLine[]> {
+  const id = storedFileId(src)
+  if (id) {
+    const file = await getStoredImage(id)
+    if (!file) return []
+    return ocrImageBuffer(file.bytes, file.ext)
+  }
+  if (src.startsWith("/evidence/") || src.startsWith("/uploads/")) {
+    const abs = absEvidence(src)
+    if (!existsSync(abs)) return []
+    return ocrLocalImage(abs)
+  }
+  return []
+}
+
 export async function enrichFetchedPost(post: FetchedPost): Promise<FetchedPost> {
-  const stored = new Set(existingEvidenceFiles(post.url))
+  const stored = new Set([
+    ...existingEvidenceFiles(post.url),
+    ...(await existingStoredFiles(post.url)),
+  ])
   const remote = post.remoteImageUrls?.length
     ? post.remoteImageUrls
     : post.imageSrc.startsWith("http")
@@ -35,18 +63,17 @@ export async function enrichFetchedPost(post: FetchedPost): Promise<FetchedPost>
   const files = [...stored]
   let ocrLines: OcrLine[] = []
   for (const src of files.slice(0, 4)) {
-    const abs = absEvidence(src)
-    if (!existsSync(abs)) continue
-    ocrLines = mergeLines(ocrLines, ocrLocalImage(abs))
+    ocrLines = mergeLines(ocrLines, await ocrStoredSrc(src))
   }
 
-  const facts: ExtractedFacts = extractFactsFromText(
-    `${post.caption}\n${post.quote}`,
-    ocrLines
-  )
+  const facts: ExtractedFacts = extractFactsFromText(`${post.caption}\n${post.quote}`, ocrLines)
   const expected = Math.max(post.expectedImageCount || 0, remote.length, files.length)
   const missing = Math.max(0, expected - files.length)
-  const localSrc = files[0] || (post.imageSrc.startsWith("/evidence/") ? post.imageSrc : "")
+  const localSrc =
+    files[0] ||
+    (post.imageSrc.startsWith("/evidence/") || post.imageSrc.startsWith("/api/files/")
+      ? post.imageSrc
+      : "")
 
   return {
     ...post,

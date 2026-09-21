@@ -415,7 +415,7 @@ function attachImagesToPartialLists(
   const patch = <T extends { evidence: Evidence[]; images?: FactImage[]; ocrLines?: OcrLine[] }>(
     item: T
   ): T => {
-    if (!item.evidence.some((card) => card.imageListPartial || card.partialRead)) return item
+    if (!item.evidence.some((card) => card.imageListPartial)) return item
     return {
       ...item,
       evidence: uniquePush(item.evidence, evidence),

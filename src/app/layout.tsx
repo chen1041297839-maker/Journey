@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { Geist_Mono, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google"
 import { AppProviders } from "@/components/app-providers"
 import { TripHeader } from "@/components/trip-header"
-import { getTrip } from "@/data"
+import { loadSharedTrip } from "@/lib/persist"
 import "./globals.css"
 
 const sans = Noto_Sans_SC({
@@ -28,8 +28,10 @@ export const metadata: Metadata = {
     "从圆周旅迹分享链接导入行程。每一站先看抽出的店铺、必买、机位、穿搭和避坑；原帖只留来源。",
 }
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  const trip = getTrip()
+export const dynamic = "force-dynamic"
+
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const trip = await loadSharedTrip()
   return (
     <html
       lang="zh-CN"

@@ -9,15 +9,9 @@ import {
   useState,
   type ReactNode,
 } from "react"
-import type { Day, Evidence, Trip } from "@/data/types"
-import { applySuggestedPlan, revertImportedPlan } from "@/lib/apply-plan"
-import { attachOcrPayloadToTrip, attachPostsToTrip } from "@/lib/attach-evidence"
+import type { Evidence, Trip } from "@/data/types"
 import { isPitravelInput } from "@/lib/pitravel"
-import { countStops, parseRouteText } from "@/lib/parse-routes"
-import { defaultSampleTrip, planFromText } from "@/lib/plan-itinerary"
 import type { FetchedPost } from "@/lib/social-posts"
-
-const STORAGE_KEY = "xenia.trip.v14"
 
 type TripContextValue = {
   trip: Trip
@@ -43,68 +37,16 @@ type TripContextValue = {
     files: File[],
     target: { dayId: string; stopId: string }
   ) => Promise<{ stopName: string; ocrCount: number; imageCount: number } | null>
-  resetToSample: () => Trip
-  patchEvidence: (evidenceId: string, patch: Partial<Evidence>) => void
-  applyProposal: () => void
-  revertImported: () => void
+  resetToSample: () => Promise<Trip | null>
+  patchEvidence: (evidenceId: string, patch: Partial<Evidence>) => Promise<void>
+  applyProposal: () => Promise<void>
+  revertImported: () => Promise<void>
 }
 
 const TripContext = createContext<TripContextValue | null>(null)
 
-function mapDays(days: Day[], mapList: (list: Evidence[]) => Evidence[]): Day[] {
-  return days.map((day) => ({
-    ...day,
-    outfit: { ...day.outfit, evidence: mapList(day.outfit.evidence) },
-    stops: day.stops.map((stop) => ({
-      ...stop,
-      shops: stop.shops.map((shop) => ({
-        ...shop,
-        evidence: mapList(shop.evidence),
-      })),
-      mustBuys: stop.mustBuys.map((item) => ({
-        ...item,
-        evidence: mapList(item.evidence),
-      })),
-      photoSpots: stop.photoSpots.map((spot) => ({
-        ...spot,
-        evidence: mapList(spot.evidence),
-      })),
-    })),
-  }))
-}
-
-function applyEvidencePatch(
-  trip: Trip,
-  evidenceId: string,
-  patch: Partial<Evidence>
-): Trip {
-  const mapList = (list: Evidence[]) =>
-    list.map((item) => (item.id === evidenceId ? { ...item, ...patch } : item))
-
-  return {
-    ...trip,
-    days: mapDays(trip.days, mapList),
-    proposal: trip.proposal
-      ? {
-          ...trip.proposal,
-          importedDays: mapDays(trip.proposal.importedDays, mapList),
-          suggestedDays: mapDays(trip.proposal.suggestedDays, mapList),
-        }
-      : trip.proposal,
-  }
-}
-
-async function requestImport(url: string): Promise<{ trip: Trip; sourceText?: string }> {
-  const response = await fetch("/api/pitravel/import", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url }),
-  })
-  const payload = (await response.json()) as { trip?: Trip; error?: string }
-  if (!response.ok || !payload.trip) {
-    throw new Error(payload.error || "导入失败")
-  }
-  return { trip: payload.trip }
+async function readJson(response: Response): Promise<{ trip?: Trip; error?: string } & Record<string, unknown>> {
+  return (await response.json()) as { trip?: Trip; error?: string } & Record<string, unknown>
 }
 
 export function TripProvider({
@@ -120,35 +62,32 @@ export function TripProvider({
   const [generating, setGenerating] = useState(false)
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
+    let cancelled = false
+    async function hydrate() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY)
-        if (raw) {
-          const parsed = JSON.parse(raw) as { trip?: Trip }
-          const stored = parsed.trip
-          if (
-            stored?.days?.length &&
-            stored.traveler !== "Hologrow" &&
-            stored.destination !== "东京"
-          ) {
-            setTrip(stored)
-          }
+        const response = await fetch("/api/journey", { cache: "no-store" })
+        const payload = (await response.json()) as { trip?: Trip; error?: string }
+        if (!cancelled && response.ok && payload.trip?.days?.length) {
+          setTrip(payload.trip)
+        } else if (!cancelled && !response.ok) {
+          setError(payload.error || "共享行程读不出来，先显示导入快照。")
         }
       } catch {
-        setError("本地保存的行程读不出来，已改用导入的贵州行程。")
+        if (!cancelled) setError("共享行程读不出来，先显示导入快照。")
+      } finally {
+        if (!cancelled) setReady(true)
       }
-      setReady(true)
-    }, 0)
-    return () => window.clearTimeout(timer)
+    }
+    void hydrate()
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  const persist = useCallback((next: Trip) => {
+  const applyServerTrip = useCallback((next: Trip | undefined) => {
+    if (!next?.days?.length) return false
     setTrip(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ trip: next }))
-    } catch {
-      setError("浏览器存不下这张配图，行程仍会显示，刷新可能丢失上传。")
-    }
+    return true
   }, [])
 
   const importShare = useCallback(
@@ -156,9 +95,17 @@ export function TripProvider({
       setGenerating(true)
       setError(null)
       try {
-        const result = await requestImport(url)
-        persist(result.trip)
-        return result.trip
+        const response = await fetch("/api/pitravel/import", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url }),
+        })
+        const payload = await readJson(response)
+        if (!response.ok || !applyServerTrip(payload.trip)) {
+          setError(payload.error || "导入失败，请检查链接是否公开。")
+          return null
+        }
+        return payload.trip as Trip
       } catch (caught) {
         setError(caught instanceof Error ? caught.message : "导入失败，请检查链接是否公开。")
         return null
@@ -166,7 +113,7 @@ export function TripProvider({
         setGenerating(false)
       }
     },
-    [persist]
+    [applyServerTrip]
   )
 
   const importPosts = useCallback(
@@ -177,22 +124,29 @@ export function TripProvider({
         const response = await fetch("/api/evidence/fetch", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text }),
+          body: JSON.stringify({ text, dayId: target?.dayId, stopId: target?.stopId }),
         })
         const payload = (await response.json()) as {
-          posts?: FetchedPost[]
+          trip?: Trip
           error?: string
+          attached?: {
+            url: string
+            stopName: string
+            partialRead: boolean
+            ocrCount: number
+            imageCount: number
+          }[]
+          unmatched?: FetchedPost[]
         }
-        if (!response.ok || !payload.posts) {
+        if (!response.ok || !payload.trip) {
           setError(payload.error || "公开页读取失败。")
           return null
         }
-        const result = attachPostsToTrip(trip, payload.posts, target, text)
-        persist(result.trip)
-        if (result.unmatched.length > 0 && !target?.stopId) {
+        applyServerTrip(payload.trip)
+        if ((payload.unmatched?.length || 0) > 0 && !target?.stopId) {
           setError("有的链接对不上当前行程里的站名。打开那一站再贴，或在链接旁边写上店名。")
         }
-        return { attached: result.attached, unmatched: result.unmatched }
+        return { attached: payload.attached ?? [], unmatched: payload.unmatched ?? [] }
       } catch {
         setError("公开页读取失败，请检查链接。")
         return null
@@ -200,7 +154,7 @@ export function TripProvider({
         setGenerating(false)
       }
     },
-    [persist, trip]
+    [applyServerTrip]
   )
 
   const importUploads = useCallback(
@@ -209,37 +163,26 @@ export function TripProvider({
       setError(null)
       try {
         const body = new FormData()
+        body.append("dayId", target.dayId)
+        body.append("stopId", target.stopId)
         for (const file of files) body.append("images", file)
         const response = await fetch("/api/evidence/ocr", { method: "POST", body })
         const payload = (await response.json()) as {
-          images?: { src: string; alt: string }[]
-          ocrLines?: {
-            text: string
-            confidence: number
-            uncertain: boolean
-            engine: "tesseract" | "vision" | "merged"
-          }[]
-          facts?: import("@/lib/extract-facts").ExtractedFacts
+          trip?: Trip
           error?: string
+          stopName?: string
+          ocrCount?: number
+          imageCount?: number
         }
-        if (!response.ok || !payload.images || !payload.facts) {
+        if (!response.ok || !payload.trip) {
           setError(payload.error || "截图 OCR 失败。")
           return null
         }
-        const result = attachOcrPayloadToTrip(trip, target, {
-          images: payload.images,
-          ocrLines: payload.ocrLines ?? [],
-          facts: payload.facts,
-        })
-        if (!result) {
-          setError("找不到这一站。")
-          return null
-        }
-        persist(result.trip)
+        applyServerTrip(payload.trip)
         return {
-          stopName: result.stopName,
-          ocrCount: result.ocrCount,
-          imageCount: result.imageCount,
+          stopName: payload.stopName || "",
+          ocrCount: payload.ocrCount ?? 0,
+          imageCount: payload.imageCount ?? files.length,
         }
       } catch {
         setError("截图 OCR 失败。")
@@ -248,7 +191,7 @@ export function TripProvider({
         setGenerating(false)
       }
     },
-    [persist, trip]
+    [applyServerTrip]
   )
 
   const generate = useCallback(
@@ -256,17 +199,20 @@ export function TripProvider({
       if (!isSample && isPitravelInput(text)) {
         return importShare(text)
       }
-      const draft = parseRouteText(text)
-      if (countStops(draft) === 0) {
-        setError("请先贴入至少一处地点，或按天把站点加到右侧列表。")
-        return null
-      }
       setGenerating(true)
       setError(null)
       try {
-        const next = planFromText(text, isSample)
-        persist(next)
-        return next
+        const response = await fetch("/api/journey/mutate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text, isSample }),
+        })
+        const payload = await readJson(response)
+        if (!response.ok || !applyServerTrip(payload.trip)) {
+          setError(payload.error || "排期失败，请检查粘贴格式后再试。")
+          return null
+        }
+        return payload.trip as Trip
       } catch {
         setError("排期失败，请检查粘贴格式后再试。")
         return null
@@ -274,29 +220,81 @@ export function TripProvider({
         setGenerating(false)
       }
     },
-    [importShare, persist]
+    [applyServerTrip, importShare]
   )
 
-  const resetToSample = useCallback(() => {
-    const next = defaultSampleTrip()
-    persist(next)
+  const resetToSample = useCallback(async () => {
+    setGenerating(true)
     setError(null)
-    return next
-  }, [persist])
+    try {
+      const response = await fetch("/api/journey/mutate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reset" }),
+      })
+      const payload = await readJson(response)
+      if (!response.ok || !applyServerTrip(payload.trip)) {
+        setError(payload.error || "无法重置示例行程。")
+        return null
+      }
+      return payload.trip as Trip
+    } catch {
+      setError("无法重置示例行程。")
+      return null
+    } finally {
+      setGenerating(false)
+    }
+  }, [applyServerTrip])
 
-  const revertImported = useCallback(() => {
-    persist(revertImportedPlan(trip))
-  }, [persist, trip])
+  const planAction = useCallback(
+    async (action: "apply" | "revert" | "keep") => {
+      setGenerating(true)
+      setError(null)
+      try {
+        const response = await fetch("/api/journey/plan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action }),
+        })
+        const payload = await readJson(response)
+        if (!response.ok || !applyServerTrip(payload.trip)) {
+          setError(payload.error || "规划选择没有保存。")
+        }
+      } catch {
+        setError("规划选择没有保存。")
+      } finally {
+        setGenerating(false)
+      }
+    },
+    [applyServerTrip]
+  )
 
-  const applyProposal = useCallback(() => {
-    persist(applySuggestedPlan(trip))
-  }, [persist, trip])
+  const revertImported = useCallback(async () => {
+    await planAction("revert")
+  }, [planAction])
+
+  const applyProposal = useCallback(async () => {
+    await planAction("apply")
+  }, [planAction])
 
   const patchEvidence = useCallback(
-    (evidenceId: string, patch: Partial<Evidence>) => {
-      persist(applyEvidencePatch(trip, evidenceId, patch))
+    async (evidenceId: string, patch: Partial<Evidence>) => {
+      setError(null)
+      try {
+        const response = await fetch("/api/journey/mutate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "patch-evidence", evidenceId, patch }),
+        })
+        const payload = await readJson(response)
+        if (!response.ok || !applyServerTrip(payload.trip)) {
+          setError(payload.error || "来源没有保存。")
+        }
+      } catch {
+        setError("来源没有保存。")
+      }
     },
-    [persist, trip]
+    [applyServerTrip]
   )
 
   const value = useMemo(
