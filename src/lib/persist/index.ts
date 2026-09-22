@@ -4,6 +4,7 @@ import { join } from "node:path"
 import type { Trip } from "@/data/types"
 import { getTrip } from "@/data"
 import { hydrateMappedTrip, mappedSignature } from "@/lib/map-insert"
+import { applyXeniaResearch, researchSignature } from "@/lib/research"
 import {
   isPostgresConfigured,
   isVercelRuntime,
@@ -59,8 +60,12 @@ export async function loadSharedTrip(): Promise<Trip> {
   return serialize("trip", async () => {
     const stored = await getAdapter().loadTrip()
     const seeded = stored || getTrip()
-    const next = hydrateMappedTrip(seeded)
-    if (!stored || mappedSignature(seeded) !== mappedSignature(next)) {
+    const next = applyXeniaResearch(hydrateMappedTrip(seeded))
+    if (
+      !stored ||
+      mappedSignature(seeded) !== mappedSignature(next) ||
+      researchSignature(seeded) !== researchSignature(next)
+    ) {
       await getAdapter().saveTrip(next)
     }
     return next
@@ -78,8 +83,10 @@ export async function mutateSharedTrip(
   mutator: (trip: Trip) => Trip | Promise<Trip>
 ): Promise<Trip> {
   return serialize("trip", async () => {
-    const current = hydrateMappedTrip((await getAdapter().loadTrip()) || getTrip())
-    const next = hydrateMappedTrip(await mutator(current))
+    const current = applyXeniaResearch(
+      hydrateMappedTrip((await getAdapter().loadTrip()) || getTrip())
+    )
+    const next = applyXeniaResearch(hydrateMappedTrip(await mutator(current)))
     await getAdapter().saveTrip(next)
     return next
   })

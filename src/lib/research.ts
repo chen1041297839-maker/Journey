@@ -4,6 +4,7 @@ import researchedFacts from "@/data/research/guizhou-facts.json"
 import researchedImages from "@/data/research/guizhou-images.json"
 import researchedOcr from "@/data/research/guizhou-ocr.json"
 import type {
+  Day,
   Evidence,
   FactImage,
   MustBuy,
@@ -13,6 +14,7 @@ import type {
   Platform,
   Shop,
   Stop,
+  Trip,
   Warning,
 } from "@/data/types"
 import { uniqueByUrl } from "@/lib/evidence"
@@ -116,6 +118,8 @@ type FactOutfit = {
 type FactPack = {
   aliases: string[]
   summary?: string
+  dayPlanNote?: string
+  dayWalkingNote?: string
   shops?: FactShop[]
   mustBuys?: FactBuy[]
   photoSpots?: FactSpot[]
@@ -404,6 +408,7 @@ function mergePhotoSpot(stop: Stop, spec: FactSpot, seed: string): Stop {
         spot.id === existing.id
           ? {
               ...spot,
+              title: spec.title,
               standWhere: spec.standWhere,
               angle: spec.angle,
               shotLooksLike: spec.shotLooksLike,
@@ -638,4 +643,78 @@ export function applyResearchedOutfit(outfit: Outfit, label: string, seed: strin
     evidence,
     images: imagesFromEvidence(evidence),
   }
+}
+
+function applyDayResearchNotes(day: Day): Day {
+  const hits = factPacks.filter(
+    (pack) =>
+      (pack.dayPlanNote || pack.dayWalkingNote) &&
+      day.stops.some((stop) => matches(stop.name, pack.aliases))
+  )
+  if (hits.length === 0) return day
+  const planNote = hits.map((item) => item.dayPlanNote).find(Boolean) || day.planNote
+  const walkingNote = hits.map((item) => item.dayWalkingNote).find(Boolean) || day.walkingNote
+  return { ...day, planNote, walkingNote }
+}
+
+function pruneStaleXiaoqikong(stop: Stop): Stop {
+  if (/小七孔/.test(stop.name) && !/瑶家|牛肉|板吉/.test(stop.name)) {
+    return {
+      ...stop,
+      photoSpots: stop.photoSpots.filter((spot) => /^P\d/.test(spot.title)),
+      warnings: (stop.warnings ?? []).filter((item) => !/西门进东门出更省力，别逆着走/.test(item.text)),
+    }
+  }
+  if (/瑶家土菜/.test(stop.name)) {
+    const parkTalk = /西门进东门出|东进东出|68\s*级瀑布|小七孔古桥|卧龙潭|鸳鸯湖/
+    const stripParkEvidence = (list: Evidence[]) =>
+      list.filter(
+        (item) =>
+          !parkTalk.test(`${item.quote || ""}${item.caption || ""}${item.url || ""}`) &&
+          !/67e8e431|7338332710718556197|DP3zF6zEnOc/.test(item.url || "")
+      )
+    return {
+      ...stop,
+      note: parkTalk.test(stop.note) ? "荔波当地，有贵州特色的虾酸牛肉" : stop.note,
+      photoSpots: stop.photoSpots.filter(
+        (spot) => !/小七孔古桥|68 级瀑布|^P\d|卧龙潭|皮划艇|湿地站|翠谷|石上森林|大七孔|烙锅/.test(spot.title)
+      ),
+      warnings: (stop.warnings ?? []).filter(
+        (item) => !/东进东出|西门进东门出|晕车：小七孔|枯水期：湿地|园内 P2/.test(item.text)
+      ),
+      shops: stop.shops.map((shop) => ({ ...shop, evidence: stripParkEvidence(shop.evidence) })),
+      mustBuys: stop.mustBuys.map((item) => ({ ...item, evidence: stripParkEvidence(item.evidence) })),
+    }
+  }
+  return stop
+}
+
+/** Merge researched 要点/机位 into the shared trip without changing imported stop order. */
+export function applyXeniaResearch(trip: Trip): Trip {
+  return {
+    ...trip,
+    days: trip.days.map((day) => {
+      const stops = day.stops.map((stop) => pruneStaleXiaoqikong(applyResearchedEvidence(stop)))
+      const label = `${day.title} ${stops.map((stop) => stop.name).join(" ")}`
+      return applyDayResearchNotes({
+        ...day,
+        stops,
+        outfit: applyResearchedOutfit(day.outfit, label, day.id),
+      })
+    }),
+  }
+}
+
+export function researchSignature(trip: Trip): string {
+  return trip.days
+    .map(
+      (day) =>
+        `${day.id}:${day.planNote || ""}:${day.walkingNote}:${day.stops
+          .map(
+            (stop) =>
+              `${stop.note}|${stop.photoSpots.map((spot) => spot.title).join(",")}|${(stop.warnings ?? []).map((item) => item.text).join(",")}`
+          )
+          .join(";")}`
+    )
+    .join("/")
 }
