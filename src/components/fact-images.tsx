@@ -20,7 +20,7 @@ export function FactImages({
     <div className={cn("flex w-full min-w-0 flex-col gap-2", className)}>
       {visible.length > 0 ? (
         <div className="flex w-full min-w-0 flex-col gap-2">
-          {visible.slice(0, compact ? 2 : 4).map((item) => (
+          {visible.slice(0, compact ? 1 : 4).map((item) => (
             // Local /evidence files and user data URLs are not run through next/image.
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -35,7 +35,7 @@ export function FactImages({
           ))}
         </div>
       ) : null}
-      {missingCount > 0 ? (
+      {missingCount > 0 && !compact ? (
         <p className="cjk-flow text-[11px] leading-6 text-muted-foreground">
           {visible.length > 0
             ? `另有 ${missingCount} 张配图读不到，把清单截图拖到上面上传区。`
