@@ -240,7 +240,9 @@ function preferBonus(stop: Stop, prefer: string[]): number {
   let score = 0
   for (const token of prefer) {
     if (!token) continue
-    if (blob.includes(token)) score += 1
+    if (blob.includes(token)) {
+      if (!(token === "青云" && /蒋家/.test(blob))) score += 1
+    }
     if (token === "夜宵" && /杨记|烤肉|市集/.test(blob)) score += 0.9
     if (token === "喷水池" && /玉珍|喷水池/.test(blob)) score += 0.9
     if (token === "八鸽岩" && /玉珍|喷水池/.test(blob)) score += 1
@@ -249,7 +251,7 @@ function preferBonus(stop: Stop, prefer: string[]): number {
     if (token === "友谊路" && /杨记|圆通|玉珍|民生/.test(blob)) score += 0.8
     if (token === "花果园" && /花屿|花果园/.test(blob)) score += 1.3
     if (token === "民生路" && /民生/.test(blob)) score += 1.3
-    if (token === "青云" && /青云/.test(blob)) score += 1.3
+    if (token === "青云" && /青云市集/.test(blob)) score += 1.3
     if (token === "陕西路" && /玉珍|民生|喷水池/.test(blob)) score += 0.7
     if (token === "亨特" && /亨特/.test(blob)) score += 1.3
     if (token === "小七孔" && /小七孔/.test(blob)) score += 1.4
