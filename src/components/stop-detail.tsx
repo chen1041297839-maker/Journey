@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
+import { visibleFactNames } from "@/lib/stop-facts"
 
 export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
   const warnings = stop.warnings ?? []
@@ -66,6 +67,7 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
         </TabsList>
 
         <TabsContent value="facts" className="mt-4 grid gap-5">
+          <HungFacts stop={stop} />
           {warnings.length > 0 ? <WarningList warnings={warnings} /> : null}
           <OcrExcerpt lines={stop.ocrLines} />
           <ShopList shops={stop.shops} />
@@ -98,6 +100,34 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
 
       <PostPaste dayId={day.id} stopId={stop.id} />
     </article>
+  )
+}
+
+function HungFacts({ stop }: { stop: Stop }) {
+  const names = visibleFactNames(stop)
+  const hung = stop.shops.filter((shop) => shop.mapPick?.why)
+  if (names.length === 0 && hung.length === 0) return null
+  return (
+    <section className="grid gap-2">
+      <p className="text-[11px] tracking-[0.16em] text-primary">这一站要点</p>
+      <div className="flex flex-wrap gap-2">
+        {names.map((name) => (
+          <span
+            key={name}
+            className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm"
+          >
+            {name}
+          </span>
+        ))}
+      </div>
+      {hung.map((shop) => (
+        <p key={shop.id} className="text-sm leading-relaxed text-primary">
+          {shop.name}
+          {shop.whatToLookFor ? ` · ${shop.whatToLookFor}` : ""}
+          {shop.mapPick?.why ? ` · ${shop.mapPick.why}` : ""}
+        </p>
+      ))}
+    </section>
   )
 }
 
@@ -162,6 +192,9 @@ function ShopList({ shops }: { shops: Shop[] }) {
               </div>
               <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
               <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
+              {shop.mapPick ? (
+                <p className="mt-2 text-sm text-primary">地图 · {shop.mapPick.why}</p>
+              ) : null}
               <p className="mt-2 text-sm text-muted-foreground">找什么 · {shop.whatToLookFor}</p>
               <OcrLines lines={shop.ocrLines} />
               <SourceLinks evidence={shop.evidence} className="mt-3" />
@@ -198,6 +231,9 @@ function BuyList({ items }: { items: MustBuy[] }) {
                 <span className="text-xs tabular-nums text-primary">{item.budget}</span>
               </div>
               <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
+              {item.mapPick ? (
+                <p className="mt-2 text-sm text-primary">地图 · {item.mapPick.why}</p>
+              ) : null}
               <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
               <OcrLines lines={item.ocrLines} />
               <SourceLinks evidence={item.evidence} className="mt-3" />

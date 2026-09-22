@@ -22,6 +22,7 @@ import type {
 import { platformForSeed, sampleEvidence } from "@/lib/evidence"
 import { parseRouteText } from "@/lib/parse-routes"
 import type { PitravelImportResult } from "@/lib/pitravel"
+import { hydrateMappedTrip } from "@/lib/map-insert"
 import { applyResearchedEvidence, applyResearchedOutfit, researchedOutfitEvidence } from "@/lib/research"
 import { describePlanChanges, planWalkableDays, preserveImportedDays } from "@/lib/plan-walk"
 import { uniqueStopId } from "@/lib/stop-id"
@@ -262,6 +263,14 @@ function resolveStop(
   if (draft.optional) {
     stop.note = `${stop.note} 这一站要打车，不排进主线步行。`.trim()
   }
+  if (draft.lat != null && draft.lng != null) {
+    stop.location = {
+      lat: draft.lat,
+      lng: draft.lng,
+      system: draft.coordType || "GCJ-02",
+      address: draft.address,
+    }
+  }
   return { stop: applyResearchedEvidence(stop), nextClock }
 }
 
@@ -466,9 +475,9 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
     }
   )
   const changes = describePlanChanges(importedDraft, suggestedDraft)
-  return {
+  const assembled = {
     ...importedTrip,
-    planMode: "imported",
+    planMode: "imported" as const,
     proposal:
       changes.length > 0
         ? {
@@ -479,6 +488,7 @@ export function planFromPitravel(result: PitravelImportResult): Trip {
           }
         : undefined,
   }
+  return hydrateMappedTrip(assembled)
 }
 
 export function defaultSampleTrip(): Trip {

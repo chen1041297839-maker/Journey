@@ -36,9 +36,12 @@ type SlimEvent = {
     name?: string
     address?: string
     image?: string
+    location?: { latitude?: string | number; longitude?: string | number }
     category?: { display_name?: string; level1?: string }[]
     political_info?: { name?: string; political_level?: number }[]
   }
+  location?: { latitude?: string | number; longitude?: string | number }
+  coordinate_type?: string
   transport_info?: unknown
 }
 
@@ -119,6 +122,17 @@ function eventName(event: SlimEvent): string {
   return (event.start_poi_info?.name || event.name || "").trim()
 }
 
+function eventLocation(event: SlimEvent): { lat?: number; lng?: number; address?: string } {
+  const loc = event.start_poi_info?.location || event.location
+  const lat = Number(loc?.latitude)
+  const lng = Number(loc?.longitude)
+  return {
+    lat: Number.isFinite(lat) ? lat : undefined,
+    lng: Number.isFinite(lng) ? lng : undefined,
+    address: event.start_poi_info?.address || event.address,
+  }
+}
+
 function isTransport(event: SlimEvent): boolean {
   if (event.is_transport) return true
   if (event.transport_info) return true
@@ -185,6 +199,7 @@ export function parsePitravelPayload(
       const name = eventName(event)
       if (!name || name === last) continue
       last = name
+      const loc = eventLocation(event)
       stops.push({
         raw: name,
         name,
@@ -192,6 +207,10 @@ export function parsePitravelPayload(
         category: categoryFromEvent(event),
         note: event.note || plan.remark || "",
         imageSrc: (event.image || event.start_poi_info?.image || "").split("?")[0] || undefined,
+        lat: loc.lat,
+        lng: loc.lng,
+        address: loc.address,
+        coordType: "GCJ-02",
       })
     }
     if (stops.length === 0) continue

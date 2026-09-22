@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import type { Trip } from "@/data/types"
 import { getTrip } from "@/data"
+import { hydrateMappedTrip, mappedSignature } from "@/lib/map-insert"
 import {
   isPostgresConfigured,
   isVercelRuntime,
@@ -57,10 +58,12 @@ function writePublicCopy(id: string, bytes: Buffer) {
 export async function loadSharedTrip(): Promise<Trip> {
   return serialize("trip", async () => {
     const stored = await getAdapter().loadTrip()
-    if (stored) return stored
-    const seeded = getTrip()
-    await getAdapter().saveTrip(seeded)
-    return seeded
+    const seeded = stored || getTrip()
+    const next = hydrateMappedTrip(seeded)
+    if (!stored || mappedSignature(seeded) !== mappedSignature(next)) {
+      await getAdapter().saveTrip(next)
+    }
+    return next
   })
 }
 
@@ -75,8 +78,8 @@ export async function mutateSharedTrip(
   mutator: (trip: Trip) => Trip | Promise<Trip>
 ): Promise<Trip> {
   return serialize("trip", async () => {
-    const current = (await getAdapter().loadTrip()) || getTrip()
-    const next = await mutator(current)
+    const current = hydrateMappedTrip((await getAdapter().loadTrip()) || getTrip())
+    const next = hydrateMappedTrip(await mutator(current))
     await getAdapter().saveTrip(next)
     return next
   })

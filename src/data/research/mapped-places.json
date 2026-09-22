@@ -1,0 +1,677 @@
+{
+  "places": [
+    {
+      "id": "zizi-tieban",
+      "name": "滋滋铁板烧",
+      "aliases": ["贵阳滋铁板烧", "滋铁板烧", "滋滋铁板烧(友谊路店)"],
+      "category": "吃喝",
+      "meal": "夜宵",
+      "prefer": ["友谊路", "夜宵", "杨记", "青云"],
+      "hours": "晚上到夜宵",
+      "note": "糯铁板无骨鸡爪。评论写就在友谊路（虎门巷 / 余家巷一带）。",
+      "whatToLookFor": "糯铁板无骨鸡爪",
+      "mustBuy": {
+        "name": "糯铁板无骨鸡爪",
+        "reason": "小红书截图要点：贵阳滋铁板烧 / 滋滋铁板烧，必点糯铁板无骨鸡爪。",
+        "budget": "以店内为准",
+        "tip": "友谊路店。评论网页读不到的部分已写在截图评论里：就在友谊路。"
+      },
+      "ocrLines": [
+        { "text": "贵阳滋铁板烧 / 滋滋铁板烧", "confidence": 90, "uncertain": false, "engine": "merged" },
+        { "text": "糯铁板无骨鸡爪", "confidence": 90, "uncertain": false, "engine": "merged" },
+        { "text": "评论：友谊路", "confidence": 80, "uncertain": false, "engine": "merged" }
+      ],
+      "sourceCaption": "小红书截图：贵阳滋铁板烧",
+      "branches": [
+        {
+          "name": "友谊路店",
+          "address": "贵阳市云岩区友谊路71号（虎门巷普陀社区 / 余家巷一带）",
+          "lat": 26.59138,
+          "lng": 106.715168,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "yitouniu",
+      "name": "一头牛红豆米牛肉锅",
+      "aliases": ["一头牛红豆米", "红豆米牛肉锅"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["喷水池", "八鸽岩", "玉珍", "落地"],
+      "hours": "以现场为准",
+      "note": "落地就吃，夯。",
+      "whatToLookFor": "红豆米牛肉锅",
+      "mustBuy": {
+        "name": "红豆米牛肉锅",
+        "reason": "测评：落地就吃，夯。",
+        "budget": "以店内为准",
+        "tip": "抵达当天正餐，挂在喷水池这条路上，不另开一站。"
+      },
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "yanjing-luoguo",
+      "name": "眼镜烙锅",
+      "aliases": ["眼镜烙锅店"],
+      "category": "吃喝",
+      "meal": "夜宵",
+      "prefer": ["喷水池", "八鸽岩", "杨记", "夜宵"],
+      "hours": "晚上",
+      "note": "等他加热才香，后面偏油。",
+      "whatToLookFor": "先加热再下筷",
+      "mustBuy": {
+        "name": "烙锅（等加热）",
+        "reason": "测评：等他加热才香，后面偏油。",
+        "budget": "以店内为准",
+        "tip": "别一上桌就夹。公开地址未钉死分店，先挂喷水池/夜宵段。"
+      },
+      "uncertain": true,
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "laziji",
+      "name": "现炒辣子鸡",
+      "aliases": ["辣子鸡", "黄杰辣子鸡"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["喷水池", "八鸽岩", "玉珍"],
+      "hours": "以现场为准",
+      "note": "夯，比上次贵阳辣子鸡好吃。",
+      "whatToLookFor": "现炒辣子鸡",
+      "mustBuy": {
+        "name": "辣子鸡",
+        "reason": "测评：夯，比上次贵阳辣子鸡好吃。",
+        "budget": "以店内为准",
+        "tip": "挂在喷水池正餐段，不新增站点。"
+      },
+      "uncertain": true,
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "hongpai",
+      "name": "红牌铁板烧",
+      "aliases": ["红牌铁板烧店"],
+      "category": "吃喝",
+      "meal": "夜宵",
+      "prefer": ["花果园", "花屿", "夜宵"],
+      "hours": "晚上，工作日也排队",
+      "note": "夯，工作日也排队，必点基围虾。三桥中坝路饮食一条街，偏离青云/民生路主线。",
+      "whatToLookFor": "基围虾",
+      "mustBuy": {
+        "name": "基围虾",
+        "reason": "测评：夯，工作日也排队，必点基围虾。",
+        "budget": "以店内为准",
+        "tip": "分店在三桥中坝路，最近的已定站是花果园花屿，绕路明显。"
+      },
+      "sourceCaption": "吃喝测评清单",
+      "branches": [
+        {
+          "name": "三桥中坝路店",
+          "address": "贵阳市云岩区三桥中坝路饮食一条街789号门面",
+          "lat": 26.583083,
+          "lng": 106.669568,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "malaiguo",
+      "name": "毛辣果虾酸",
+      "aliases": ["毛辣果虾酸店"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["青云", "民生路"],
+      "hours": "以现场为准",
+      "note": "雷，口味正常不建议。",
+      "whatToLookFor": "不必专门跑",
+      "attachShop": false,
+      "warning": { "kind": "雷", "text": "毛辣果虾酸：口味正常，不建议专门去。" },
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "fuqun",
+      "name": "富群烤肉",
+      "aliases": ["富群烤肉店"],
+      "category": "吃喝",
+      "meal": "夜宵",
+      "prefer": ["杨记", "夜宵"],
+      "hours": "晚上",
+      "note": "夯，折耳根蘸水必试。",
+      "whatToLookFor": "折耳根蘸水",
+      "mustBuy": {
+        "name": "折耳根蘸水",
+        "reason": "测评：夯，折耳根蘸水必试。",
+        "budget": "以店内为准",
+        "tip": "挂在当天夜宵杨记烤肉旁，不另开一站。"
+      },
+      "uncertain": true,
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "yumeixia",
+      "name": "余美霞肠旺面",
+      "aliases": ["余美霞", "余美霞肠旺面店"],
+      "category": "吃喝",
+      "meal": "早餐",
+      "prefer": ["蒋家", "青云"],
+      "hours": "早餐到上午",
+      "note": "贵阳肠旺面常被点名的另一家。挂在蒋家这一站对比，不另开站。",
+      "whatToLookFor": "余美霞门头，别和蒋家总店搞混成两站",
+      "mustBuy": {
+        "name": "余美霞肠旺面",
+        "reason": "和蒋家同属肠旺面早餐，只保留在蒋家这一站。",
+        "budget": "以店内为准",
+        "tip": "不新开站点、不改顺序。"
+      },
+      "sourceCaption": "贵阳肠旺面对比",
+      "branches": []
+    },
+    {
+      "id": "qiaobajiao",
+      "name": "巧八角冰浆",
+      "aliases": ["巧八角", "巧八角（特色冰酿）"],
+      "category": "喝茶",
+      "meal": "小吃",
+      "prefer": ["青云"],
+      "hours": "市集营业时",
+      "note": "青云市集里的特色冰酿。测评：天天喝会上瘾。圆周旅迹备注已写巧八角。",
+      "whatToLookFor": "巧八角摊位 / 冰浆",
+      "mustBuy": {
+        "name": "巧八角冰浆",
+        "reason": "测评：天天喝会上瘾。导入备注也写了特色冰酿。",
+        "budget": "以摊位为准",
+        "tip": "就在青云市集，不用另走。"
+      },
+      "sourceCaption": "吃喝测评清单",
+      "branches": [
+        {
+          "name": "青云市集摊",
+          "address": "贵阳市南明区青云路83号青云市集",
+          "lat": 26.564177,
+          "lng": 106.715094,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "duide-coffee",
+      "name": "对的咖啡",
+      "aliases": ["对的", "「对的」咖啡"],
+      "category": "喝茶",
+      "meal": "咖啡",
+      "prefer": ["亨特", "青云"],
+      "hours": "白天，周末易排队",
+      "note": "招牌反转橘朵。公开页没钉死分店坐标，先挂亨特这条已走路。",
+      "whatToLookFor": "反转橘朵",
+      "mustBuy": {
+        "name": "反转橘朵",
+        "reason": "测评：招牌反转橘朵。",
+        "budget": "以店内为准",
+        "tip": "分店坐标公开检索不到，识别不确定；不新增站点。"
+      },
+      "uncertain": true,
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "prefer": ["喷水池", "八鸽岩", "玉珍"],
+      "hours": "以现场为准",
+      "note": "夯，必点板筋。",
+      "whatToLookFor": "板筋",
+      "mustBuy": {
+        "name": "干锅牛肉板筋",
+        "reason": "测评：夯，必点板筋。",
+        "budget": "以店内为准",
+        "tip": "挂在喷水池正餐段。"
+      },
+      "uncertain": true,
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "duoduufen",
+      "name": "安顺夺夺粉锅",
+      "aliases": ["笔记安顺夺夺粉", "夺夺粉火锅", "安顺夺夺粉"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["喷水池", "玉珍", "民生路"],
+      "hours": "以现场为准，可能排队",
+      "note": "二刷最爱。",
+      "whatToLookFor": "酸汤夺夺粉",
+      "mustBuy": {
+        "name": "夺夺粉锅",
+        "reason": "测评：二刷最爱。",
+        "budget": "以店内为准",
+        "tip": "挂在喷水池/民生路已定路上，不另开一站。"
+      },
+      "uncertain": true,
+      "sourceCaption": "吃喝测评清单",
+      "branches": []
+    },
+    {
+      "id": "tianji",
+      "name": "田记合味豆豉锅",
+      "aliases": ["田记合味馆", "田记合味馆豆豉粑火锅", "豆豉锅"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["民生路", "省府", "喷水池"],
+      "hours": "店小，早点去",
+      "note": "二刷，埋头干饭。市府路72号，中山西路地铁站附近。",
+      "whatToLookFor": "豆豉粑火锅、酥肉",
+      "mustBuy": {
+        "name": "豆豉锅",
+        "reason": "测评：二刷，埋头干饭。",
+        "budget": "以店内为准",
+        "tip": "市府路店靠近民生路 citywalk，不改顺序。"
+      },
+      "sourceCaption": "吃喝测评清单",
+      "branches": [
+        {
+          "name": "市府路店",
+          "address": "贵阳市南明区市府路72号门市（中山西路地铁站C口步行约140米）",
+          "lat": 26.576573,
+          "lng": 106.708362,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "quchashan",
+      "name": "去茶山",
+      "aliases": ["去茶山荔星甲秀店", "去茶山(荔星甲秀店)"],
+      "category": "喝茶",
+      "meal": "咖啡",
+      "prefer": ["亨特"],
+      "hours": "商场营业时",
+      "note": "荔星甲秀店在文昌南路与西湖路交叉口，贴着亨特 CITY MALL，绕路最少。",
+      "whatToLookFor": "荔星甲秀店门头",
+      "mustBuy": {
+        "name": "去茶山（荔星甲秀店）",
+        "reason": "贵阳分店里这一家离亨特最近，几乎不用绕。",
+        "budget": "以店内为准",
+        "tip": "不要特地改去南国花锦或中北店。"
+      },
+      "sourceCaption": "奶茶连锁分店挑选",
+      "branches": [
+        {
+          "name": "荔星甲秀店",
+          "address": "贵阳市南明区文昌南路与西湖路交叉口（亨特 CITY MALL 附近）",
+          "lat": 26.5762,
+          "lng": 106.7194,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "gaoshan3",
+      "name": "高山3班",
+      "aliases": ["高山三班"],
+      "category": "喝茶",
+      "meal": "咖啡",
+      "prefer": ["亨特"],
+      "hours": "不明",
+      "note": "公开检索没有可靠的贵阳门店地址。",
+      "whatToLookFor": "先不要按地图找",
+      "mustBuy": {
+        "name": "高山3班",
+        "reason": "名单里有这家奶茶连锁。",
+        "budget": "以现场为准",
+        "tip": "贵阳分店坐标检索不到，识别不确定。"
+      },
+      "uncertain": true,
+      "sourceCaption": "奶茶连锁分店挑选",
+      "branches": []
+    },
+    {
+      "id": "yuannuonuo",
+      "name": "原糯糯",
+      "aliases": ["原糯糯酸奶"],
+      "category": "喝茶",
+      "meal": "咖啡",
+      "prefer": ["亨特"],
+      "hours": "不明",
+      "note": "公开检索到的是湘西/铜仁酸奶连锁，贵阳没有确认门店。去茶山菜单里有香禾糯糯，别和贵糯糯混。",
+      "whatToLookFor": "先不要按地图找",
+      "mustBuy": {
+        "name": "原糯糯",
+        "reason": "名单里有这家。",
+        "budget": "以现场为准",
+        "tip": "贵阳分店检索不到，识别不确定。"
+      },
+      "uncertain": true,
+      "sourceCaption": "奶茶连锁分店挑选",
+      "branches": []
+    },
+    {
+      "id": "yuainiu",
+      "name": "鱼爱牛土特产",
+      "aliases": ["鱼爱牛", "鱼爱牛松子酥", "松子酥", "鱼爱牛土特产店"],
+      "category": "伴手礼",
+      "meal": "伴手礼",
+      "prefer": ["鼓楼", "肇兴", "寨头"],
+      "hours": "保质期 28 天",
+      "note": "就在寨头，门头写第一家央视采访店。配料松子 / 瓜子 / 麦芽糖。加老板 V。不要和堂安摊位搞混。",
+      "whatToLookFor": "寨头、第一家央视采访店、鱼爱牛包装",
+      "mustBuy": {
+        "name": "鱼爱牛松子酥",
+        "reason": "保质期 28 天，配料松子 / 瓜子 / 麦芽糖。笔记说一定要多买两包。",
+        "budget": "多买两包",
+        "tip": "就在肇兴寨头，认门头「第一家央视采访店」，加老板 V。堂安那条松子酥也是回寨头买，不是梯田上。"
+      },
+      "ocrLines": [
+        { "text": "鱼爱牛松子酥", "confidence": 90, "uncertain": false, "engine": "merged" },
+        { "text": "保质期28天 松子/瓜子/麦芽糖", "confidence": 88, "uncertain": false, "engine": "merged" },
+        { "text": "就在寨头，上面写着第一家央视采访店，加老板V", "confidence": 80, "uncertain": false, "engine": "merged" }
+      ],
+      "sourceCaption": "小红书：肇兴侗寨瓜子酥 / 松子酥 + 评论截图",
+      "branches": [
+        {
+          "name": "肇兴寨头店",
+          "address": "肇兴侗寨寨头（门头写第一家央视采访店）",
+          "lat": 25.9072,
+          "lng": 109.1858,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "liaopangzi",
+      "name": "廖胖子脆皮猪肉",
+      "aliases": ["廖胖子"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["鼓楼", "肇兴", "花椒"],
+      "hours": "以现场为准",
+      "note": "肇兴评论：一人行说惊艳。",
+      "whatToLookFor": "脆皮还响的那一份",
+      "mustBuy": {
+        "name": "脆皮猪肉",
+        "reason": "肇兴评论里反复点名，一人行说惊艳。",
+        "budget": "以店内为准",
+        "tip": "挂在鼓楼主街，不另开一站。"
+      },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": [
+        {
+          "name": "肇兴主街",
+          "address": "肇兴侗寨内",
+          "lat": 25.906101,
+          "lng": 109.183632,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "yiqiancha",
+      "name": "一杯黔茶",
+      "aliases": ["一杯黔茶店"],
+      "category": "喝茶",
+      "meal": "咖啡",
+      "prefer": ["鼓楼", "肇兴"],
+      "hours": "以现场为准",
+      "note": "有间小院从「一杯黔茶」左侧巷子进。评论：刺梨会抢茶香。",
+      "whatToLookFor": "门头和左侧巷口「展示中心后门由此」",
+      "warning": { "kind": "注意", "text": "一杯黔茶的刺梨会抢茶香。" },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": [
+        {
+          "name": "肇兴主街",
+          "address": "肇兴侗寨主街，有间小院巷口",
+          "lat": 25.906101,
+          "lng": 109.183632,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "jiajie-laran",
+      "name": "佳杰蜡染",
+      "aliases": ["佳杰蜡染店"],
+      "category": "手作",
+      "meal": "伴手礼",
+      "prefer": ["鼓楼", "蜡染", "猎人"],
+      "hours": "随景区",
+      "note": "18 机位笔记里的拍照点，也是买蜡染小件的地方。",
+      "whatToLookFor": "有手作痕迹的小件，不要景区统一包装",
+      "mustBuy": {
+        "name": "蜡染小件",
+        "reason": "评论和机位笔记都点名佳杰蜡染。",
+        "budget": "能塞进背包的小件",
+        "tip": "挂在鼓楼这一站。"
+      },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": [
+        {
+          "name": "肇兴主街",
+          "address": "肇兴侗寨内",
+          "lat": 25.906101,
+          "lng": 109.183632,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "zui-diyilou",
+      "name": "醉第一楼",
+      "aliases": ["醉第一楼盗汗鸡"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["鼓楼", "肇兴"],
+      "hours": "以现场为准",
+      "note": "雷：盗汗鸡踩雷。",
+      "whatToLookFor": "不必专门去",
+      "attachShop": false,
+      "warning": { "kind": "雷", "text": "醉第一楼盗汗鸡踩雷。" },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": []
+    },
+    {
+      "id": "yuwang-breakfast",
+      "name": "鱼王早餐",
+      "aliases": ["鱼王"],
+      "category": "吃喝",
+      "meal": "早餐",
+      "prefer": ["鼓楼", "肇兴"],
+      "hours": "早",
+      "note": "雷：早餐不推荐。",
+      "whatToLookFor": "不必排队",
+      "attachShop": false,
+      "warning": { "kind": "雷", "text": "鱼王早餐不推荐。" },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": []
+    },
+    {
+      "id": "lantoujin",
+      "name": "蓝头巾糯米饭包烤肉",
+      "aliases": ["蓝头巾"],
+      "category": "吃喝",
+      "meal": "小吃",
+      "prefer": ["鼓楼", "肇兴"],
+      "hours": "以现场为准",
+      "note": "评论：一般。",
+      "whatToLookFor": "不必专门排",
+      "attachShop": false,
+      "warning": { "kind": "注意", "text": "蓝头巾糯米饭包烤肉一般。" },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": []
+    },
+    {
+      "id": "xiangxiangli",
+      "name": "巷巷里",
+      "aliases": ["巷巷里冰箱贴"],
+      "category": "手作",
+      "meal": "伴手礼",
+      "prefer": ["猎人"],
+      "hours": "全场 ¥9.9 起",
+      "note": "猎人部落旁边巷子，摄影师开的店。冰箱贴全场 9.9，还有画框、耳环、包。",
+      "whatToLookFor": "巷子里的「巷巷里」",
+      "mustBuy": {
+        "name": "巷巷里冰箱贴",
+        "reason": "全场 9.9，比景区摊位值。",
+        "budget": "¥9.9 起",
+        "tip": "别买早了后悔。挂在猎人部落这一站。"
+      },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": [
+        {
+          "name": "猎人部落旁巷子",
+          "address": "肇兴镇肇兴农商银行隔壁猎人部落旁巷子",
+          "lat": 25.90653,
+          "lng": 109.182737,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "yikedouzi",
+      "name": "一颗豆子奶茶",
+      "aliases": ["一颗豆子"],
+      "category": "喝茶",
+      "meal": "咖啡",
+      "prefer": ["堂安", "牛棚"],
+      "hours": "堂安梯田景区内",
+      "note": "茶叶加本地食材煮，没有平常科技奶茶味。在堂安，不是肇兴主街。",
+      "whatToLookFor": "店名「一颗豆子」",
+      "mustBuy": {
+        "name": "一颗豆子奶茶",
+        "reason": "堂安评论清单：超级香，没有科技奶茶味。",
+        "budget": "以店内为准",
+        "tip": "在堂安，不是寨头。"
+      },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": [
+        {
+          "name": "堂安梯田店",
+          "address": "黎平县肇兴镇堂安村堂安侗寨",
+          "lat": 25.900142,
+          "lng": 109.214237,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "dongweiji",
+      "name": "侗味集",
+      "aliases": ["侗味集田螺闷土鸡"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["堂安", "牛棚"],
+      "hours": "堂安梯田景区内",
+      "note": "茅香煮的田螺闷土鸡，辣度可调。",
+      "whatToLookFor": "田螺闷土鸡",
+      "mustBuy": {
+        "name": "侗味集田螺闷土鸡",
+        "reason": "堂安评论清单：味道很香，辣味可以按个人口味点。",
+        "budget": "以店内为准",
+        "tip": "在堂安，不是肇兴主街。"
+      },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": [
+        {
+          "name": "堂安梯田店",
+          "address": "黎平县肇兴镇堂安村堂安侗寨",
+          "lat": 25.900142,
+          "lng": 109.214237,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "zhaoxing-bingjiang",
+      "name": "肇兴冰浆",
+      "aliases": ["冰浆"],
+      "category": "喝茶",
+      "meal": "小吃",
+      "prefer": ["鼓楼", "肇兴"],
+      "hours": "以现场为准",
+      "note": "评论：冰浆不如贵阳。",
+      "whatToLookFor": "不必专门为冰浆排",
+      "attachShop": false,
+      "warning": { "kind": "注意", "text": "肇兴冰浆不如贵阳。" },
+      "sourceCaption": "肇兴侗寨评论清单",
+      "branches": []
+    },
+    {
+      "id": "guiyang-guide-shots",
+      "name": "本地人经验美食截图",
+      "aliases": ["贵阳本地人经验", "按街道美食清单"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["民生路"],
+      "hours": "打开这一站上传截图",
+      "note": "又传入 5 张贵阳美食攻略截图：本地人经验开头、火锅烧烤其他系列、夯/顶级备忘、火锅烤粉长名单、按街道（花果园/友谊路/陕西路/民生路/八鸽岩）。截图文件这次没落到磁盘。划掉和标雷的不要去。",
+      "whatToLookFor": "把 5 张清单拖进本站上传区 OCR",
+      "attachShop": false,
+      "mustBuy": {
+        "name": "本地人经验 / 按街道清单（待补截图）",
+        "reason": "5 张贵阳美食攻略截图路径为空，没法 OCR。已按之前抽出的夯/雷挂到民生路、友谊路、花果园、喷水池、青云。",
+        "budget": "以现场为准",
+        "tip": "打开民生路这一站，把截图拖进网页上传区即可补 OCR。陕西路不在圆周旅迹上，就近挂喷水池/民生路，不新开一站。"
+      },
+      "sourceCaption": "贵阳美食攻略截图（文件未落到磁盘）",
+      "branches": []
+    },
+    {
+      "id": "haoxinqing-fish",
+      "name": "好心情烤鱼",
+      "aliases": ["好心情烤鱼店"],
+      "category": "吃喝",
+      "meal": "夜宵",
+      "prefer": ["友谊路", "杨记", "夜宵"],
+      "hours": "晚上",
+      "note": "公开页：就在友谊路。江团没刺肉又多，辣香麻并存；配菜足，软糯馒头粉是碳水最爱。旁边 1950 里的冰奶茶安逸。必试蛋炒饭（糟辣椒刚好、鸡蛋炒得泡）和酸菜凉拌折耳根。评论网页读不到。",
+      "whatToLookFor": "友谊路店、江团、蛋炒饭、酸菜凉拌折耳根",
+      "mustBuy": {
+        "name": "江团烤鱼 + 蛋炒饭 + 折耳根",
+        "reason": "会带每一个外地朋友来吃。江团没刺肉多；蛋炒饭和酸菜凉拌折耳根是正文点名必试。",
+        "budget": "以店内为准",
+        "tip": "挂在当天夜宵杨记烤肉旁的友谊路，不绕去青云，不新开一站。"
+      },
+      "sourceCaption": "贵阳📍会带每一个外地朋友来吃的一家烤鱼店",
+      "sourceUrl": "https://www.xiaohongshu.com/explore/672cc419000000001b02bc40?xsec_token=CBnWnSSG25GTbRto7K1iqDUkQVD-zPGUx_3ovX8l7npJg=&xsec_source=app_share",
+      "branches": [
+        {
+          "name": "友谊路店",
+          "address": "贵阳市云岩区友谊路",
+          "lat": 26.59138,
+          "lng": 106.715168,
+          "system": "GCJ-02"
+        }
+      ]
+    },
+    {
+      "id": "xiaoqikong-beef",
+      "name": "板吉大拇指牛肉粉",
+      "aliases": ["小七孔牛肉粉", "小七孔东门牛肉粉", "小七孔板吉大拇指牛肉粉", "大拇指牛肉粉"],
+      "category": "吃喝",
+      "meal": "正餐",
+      "prefer": ["小七孔", "东门", "瑶家"],
+      "hours": "进出景区前后",
+      "note": "公开页标题：小七孔东门牛肉粉。店名板吉大拇指。进去前一碗、出来又炫一碗。香料自家、辣椒纯香，牛肉和牛肉丸扎实。评论网页读不到。",
+      "whatToLookFor": "小七孔东门 / 板吉大拇指",
+      "mustBuy": {
+        "name": "牛肉粉 + 牛肉丸",
+        "reason": "笔记说太好吃了，贵州行最好吃最舒服的一顿。",
+        "budget": "以店内为准",
+        "tip": "西门进东门出的话，出东门再吃，挂在小七孔这一站，不另开一站。"
+      },
+      "sourceCaption": "小七孔东门牛肉粉",
+      "sourceUrl": "https://www.xiaohongshu.com/explore/6996efb5000000001a02d35c?xsec_token=CBA6N3ymJaGaXjjRJkr7i2snC0VTDRzmMYnikxDPB_PmM=&xsec_source=app_share",
+      "branches": [
+        {
+          "name": "小七孔东门",
+          "address": "荔波县小七孔景区东门（板吉大拇指牛肉粉）",
+          "lat": 25.252959,
+          "lng": 107.705723,
+          "system": "GCJ-02"
+        }
+      ]
+    }
+  ]
+}

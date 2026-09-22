@@ -41,6 +41,11 @@ type TripContextValue = {
   patchEvidence: (evidenceId: string, patch: Partial<Evidence>) => Promise<void>
   applyProposal: () => Promise<void>
   revertImported: () => Promise<void>
+  applyMapped: (payload: {
+    query: string
+    dayId?: string
+    stopId?: string
+  }) => Promise<{ place: string; stopName: string; why: string } | null>
 }
 
 const TripContext = createContext<TripContextValue | null>(null)
@@ -297,6 +302,36 @@ export function TripProvider({
     [applyServerTrip]
   )
 
+  const applyMapped = useCallback(
+    async (payload: { query: string; dayId?: string; stopId?: string }) => {
+      setGenerating(true)
+      setError(null)
+      try {
+        const response = await fetch("/api/map/insert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+        const data = await readJson(response)
+        if (!response.ok || !applyServerTrip(data.trip)) {
+          setError(data.error || "没有沿路挂上分店。")
+          return null
+        }
+        return {
+          place: String(data.place || payload.query),
+          stopName: String(data.stopName || ""),
+          why: String(data.why || ""),
+        }
+      } catch {
+        setError("没有沿路挂上分店。")
+        return null
+      } finally {
+        setGenerating(false)
+      }
+    },
+    [applyServerTrip]
+  )
+
   const value = useMemo(
     () => ({
       trip,
@@ -311,6 +346,7 @@ export function TripProvider({
       patchEvidence,
       applyProposal,
       revertImported,
+      applyMapped,
     }),
     [
       trip,
@@ -325,6 +361,7 @@ export function TripProvider({
       patchEvidence,
       applyProposal,
       revertImported,
+      applyMapped,
     ]
   )
 

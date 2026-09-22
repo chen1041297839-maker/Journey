@@ -221,5 +221,14 @@ export function stopFromDraft(
     mustBuys,
     photoSpots,
     warnings: [],
+    location:
+      draft.lat != null && draft.lng != null
+        ? {
+            lat: draft.lat,
+            lng: draft.lng,
+            system: draft.coordType || "GCJ-02",
+            address: draft.address,
+          }
+        : undefined,
   }
 }

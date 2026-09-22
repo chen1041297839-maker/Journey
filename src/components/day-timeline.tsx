@@ -7,6 +7,7 @@ import { timeBlockLabel, walkingLevelLabel } from "@/data/types"
 import type { Day, Stop, TimeBlock } from "@/data/types"
 import { OutfitCard } from "@/components/outfit-card"
 import { PlanProposalDialog } from "@/components/plan-proposal-dialog"
+import { BranchFinder } from "@/components/branch-finder"
 import { useTrip } from "@/components/trip-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -83,6 +84,7 @@ export function DayTimeline({
       </div>
 
       <OutfitCard outfit={day.outfit} compact />
+      <BranchFinder dayId={day.id} />
 
       {day.stops.length === 0 ? (
         <p className="rounded-xl border border-dashed px-4 py-8 text-center text-sm text-muted-foreground">
@@ -130,7 +132,7 @@ export function DayTimeline({
                             {stop.arrive}
                           </span>
                         </div>
-                        <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                        <p className="mt-1 line-clamp-3 text-sm text-foreground">
                           {stopFactLine(stop)}
                         </p>
                         <div className="mt-2 flex flex-wrap gap-3 text-[11px] text-muted-foreground">

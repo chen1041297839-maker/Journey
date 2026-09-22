@@ -56,6 +56,23 @@ export type Warning = {
   ocrLines?: OcrLine[]
 }
 
+export type CoordSystem = "GCJ-02" | "WGS-84"
+
+export type GeoPoint = {
+  lat: number
+  lng: number
+  system: CoordSystem
+  address?: string
+}
+
+export type MapPick = {
+  branchName: string
+  extraKm: number
+  extraMin: number
+  nearStopName: string
+  why: string
+}
+
 export type Shop = {
   id: string
   name: string
@@ -67,6 +84,8 @@ export type Shop = {
   images?: FactImage[]
   ocrLines?: OcrLine[]
   uncertain?: boolean
+  location?: GeoPoint
+  mapPick?: MapPick
 }
 
 export type MustBuy = {
@@ -79,6 +98,7 @@ export type MustBuy = {
   images?: FactImage[]
   ocrLines?: OcrLine[]
   uncertain?: boolean
+  mapPick?: MapPick
 }
 
 export type ShotComposition = {
@@ -128,6 +148,7 @@ export type Stop = {
   note: string
   timeBlock?: TimeBlock
   optional?: boolean
+  location?: GeoPoint
   shops: Shop[]
   mustBuys: MustBuy[]
   photoSpots: PhotoSpot[]
@@ -213,6 +234,10 @@ export type DraftStop = {
   imageSrc?: string
   timeBlock?: TimeBlock
   optional?: boolean
+  lat?: number
+  lng?: number
+  address?: string
+  coordType?: CoordSystem
 }
 
 export type DraftDay = {
