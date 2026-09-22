@@ -12,7 +12,7 @@ export function BranchFinder({ dayId }: { dayId: string }) {
 
   return (
     <form
-      className="grid gap-2 rounded-2xl border border-border bg-card px-4 py-3"
+      className="grid min-w-0 gap-3 rounded-2xl border border-border bg-card p-4"
       onSubmit={async (event) => {
         event.preventDefault()
         const name = query.trim()
@@ -27,7 +27,7 @@ export function BranchFinder({ dayId }: { dayId: string }) {
         setQuery("")
       }}
     >
-      <p className="text-[11px] tracking-[0.16em] text-primary">选店 · 沿路挂到已有站</p>
+      <p className="text-[11px] font-medium text-primary">选店 · 沿路挂到已有站</p>
       <div className="flex flex-col gap-2 sm:flex-row">
         <Input
           value={query}
@@ -39,10 +39,10 @@ export function BranchFinder({ dayId }: { dayId: string }) {
           挂到当天路上
         </Button>
       </div>
-      <p className="text-xs leading-relaxed text-muted-foreground">
+      <p className="text-pretty text-xs leading-relaxed break-normal text-muted-foreground">
         只把店挂到绕路最少的已有站，不会重排圆周旅迹。选店结果写进下面时间线和站点要点。
       </p>
-      {message ? <p className="text-sm leading-relaxed">{message}</p> : null}
+      {message ? <p className="text-pretty text-sm leading-relaxed break-normal">{message}</p> : null}
     </form>
   )
 }

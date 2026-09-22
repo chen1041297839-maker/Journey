@@ -17,7 +17,7 @@ export function EmptyState({
       )}
     >
       <p className="font-heading text-lg text-foreground">{title}</p>
-      <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-2 max-w-sm text-pretty text-sm leading-relaxed break-normal text-muted-foreground">
         {description}
       </p>
     </div>

@@ -89,9 +89,9 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
       className="grid gap-3 rounded-2xl border-2 border-dashed border-primary bg-primary/5 p-4 sm:p-5"
     >
       <div>
-        <p className="text-[11px] tracking-[0.16em] text-primary">在网页这一站上传 · 不要发到聊天</p>
-        <h3 className="mt-1 font-heading text-xl">把清单截图拖进来 OCR</h3>
-        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+        <p className="text-[11px] font-medium text-primary">在网页这一站上传 · 不要发到聊天</p>
+        <h3 className="mt-1 font-heading text-xl leading-tight">把清单截图拖进来 OCR</h3>
+        <p className="mt-1 text-pretty text-sm leading-relaxed break-normal text-muted-foreground">
           {needsListPhotos
             ? "这一站封面只有标题或表情包，公开页读不到后面的清单。请打开这一站，点「选择截图」、拖进来，或 Ctrl+V / ⌘V 粘贴。识别后写进下面要点。"
             : "从相册选、拖进来，或直接粘贴截图。识别店名、菜单、价格、机位后写进要点。"}
@@ -151,7 +151,7 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
         ) : null}
       </div>
       {summary ? (
-        <p className="whitespace-pre-wrap text-sm text-muted-foreground">{summary}</p>
+        <p className="text-pretty whitespace-pre-wrap text-sm leading-relaxed break-normal text-muted-foreground">{summary}</p>
       ) : null}
     </section>
   )

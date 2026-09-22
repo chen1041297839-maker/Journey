@@ -55,7 +55,7 @@ export function PlanProposalDialog({
                   <p className="mt-1 text-sm leading-relaxed">{change.why}</p>
                   <div className="mt-3 grid gap-3 sm:grid-cols-2">
                     <div>
-                      <p className="mb-1 text-[11px] tracking-widest text-foreground">
+                      <p className="mb-1 text-[11px] text-foreground">
                         保持原顺序
                       </p>
                       {change.keep.length === 0 ? (
@@ -69,7 +69,7 @@ export function PlanProposalDialog({
                       )}
                     </div>
                     <div>
-                      <p className="mb-1 text-[11px] tracking-widest text-primary">采用建议</p>
+                      <p className="mb-1 text-[11px] text-primary">采用建议</p>
                       {change.apply.length === 0 ? (
                         <p className="text-xs text-muted-foreground">（建议去掉这一天）</p>
                       ) : (

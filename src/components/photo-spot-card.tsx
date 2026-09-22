@@ -19,10 +19,10 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
   return (
     <Card className="bg-card">
       <CardHeader className="border-b">
-        <p className="text-[11px] tracking-[0.18em] text-primary uppercase">
+        <p className="text-[11px] font-medium text-primary">
           机位 {String(index + 1).padStart(2, "0")}
         </p>
-        <CardTitle className="font-heading text-xl">
+        <CardTitle className="font-heading text-xl leading-tight break-normal">
           {spot.title}
           {spot.uncertain ? (
             <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
@@ -33,7 +33,7 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
         <CardDescription>最佳时段 {spot.bestTime}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-5">
-        <div className="grid gap-5 sm:grid-cols-[minmax(0,180px)_1fr]">
+        <div className="grid min-w-0 w-full gap-5 sm:grid-cols-[minmax(0,160px)_minmax(0,1fr)] sm:items-start">
           {photos.length > 0 ? (
             <FactImages images={spot.images} />
           ) : (
@@ -60,8 +60,8 @@ export function PhotoSpotCard({ spot, index }: { spot: PhotoSpot; index: number 
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[11px] tracking-widest text-muted-foreground">{label}</dt>
-      <dd className="mt-0.5 leading-relaxed text-foreground">{value}</dd>
+      <dt className="text-[11px] text-muted-foreground">{label}</dt>
+      <dd className="mt-0.5 text-pretty leading-relaxed break-normal text-foreground">{value}</dd>
     </div>
   )
 }

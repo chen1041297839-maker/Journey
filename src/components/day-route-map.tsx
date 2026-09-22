@@ -84,10 +84,10 @@ export function DayRouteMap({ day }: { day: Day }) {
   }, [day.id, located.length, hungShops.length])
 
   return (
-    <section className="grid gap-3 rounded-2xl border border-border bg-card px-4 py-4">
-      <div>
-        <p className="text-[11px] tracking-[0.16em] text-primary">当天路线 · 圆周旅迹顺序</p>
-        <p className="mt-1 text-sm leading-relaxed text-foreground">
+    <section className="grid min-w-0 gap-3 rounded-2xl border border-border bg-card p-4 sm:p-5">
+      <div className="min-w-0">
+        <p className="text-[11px] font-medium text-primary">当天路线 · 圆周旅迹顺序</p>
+        <p className="mt-1 text-pretty text-sm leading-relaxed break-normal text-foreground">
           棕线按导入顺序走，没有重排。青色点是挂在已有站上的店。
         </p>
       </div>
@@ -95,7 +95,7 @@ export function DayRouteMap({ day }: { day: Day }) {
         {day.stops.map((stop, index) => (
           <li
             key={stop.id}
-            className="rounded-full border border-border bg-background px-3 py-1 text-xs leading-relaxed"
+            className="max-w-full rounded-lg border border-border bg-background px-3 py-1 text-xs leading-relaxed break-normal"
           >
             <span className="tabular-nums text-primary">{String(index + 1).padStart(2, "0")}</span>{" "}
             {stop.name.replace(/[（(].*$/, "")}
@@ -114,12 +114,13 @@ export function DayRouteMap({ day }: { day: Day }) {
         />
       )}
       {hungShops.length > 0 ? (
-        <ul className="grid gap-1 text-sm leading-relaxed">
+        <ul className="grid min-w-0 gap-2">
           {hungShops.map(({ shop, stopName }) => (
-            <li key={`${shop.id}-${stopName}`}>
+            <li key={`${shop.id}-${stopName}`} className="text-pretty text-sm leading-relaxed break-normal">
               <span className="text-primary">{shop.name}</span>
-              {shop.whatToLookFor ? ` · ${shop.whatToLookFor}` : ""}
-              <span className="text-muted-foreground"> · 挂在{stopName}</span>
+              {shop.whatToLookFor ? `，${shop.whatToLookFor}` : ""}
+              <span className="text-muted-foreground">。挂在{stopName}。</span>
+              {shop.mapPick?.why ? ` ${shop.mapPick.why}` : ""}
             </li>
           ))}
         </ul>

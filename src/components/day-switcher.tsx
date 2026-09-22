@@ -28,13 +28,13 @@ export function DaySwitcher({
             >
               <p
                 className={cn(
-                  "text-[11px] tracking-[0.16em]",
+                    "text-[11px]",
                   active ? "text-primary-foreground/80" : "text-muted-foreground"
                 )}
               >
                 DAY {String(day.dayNumber).padStart(2, "0")} · {day.weekday}
               </p>
-              <p className="mt-1 font-heading text-lg leading-none">{day.title}</p>
+              <p className="mt-1 font-heading text-lg leading-tight">{day.title}</p>
               <p
                 className={cn(
                   "mt-1 text-xs",

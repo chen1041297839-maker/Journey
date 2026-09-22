@@ -3,6 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import type { OcrLine } from "@/data/types"
+import { cleanCjkText } from "@/lib/cjk-text"
 
 function tesseractAvailable(): boolean {
   const result = spawnSync("tesseract", ["--version"], { encoding: "utf8" })
@@ -25,7 +26,7 @@ function parseTsv(tsv: string): OcrLine[] {
   }
   return [...byLine.values()]
     .map((bucket) => {
-      const text = bucket.parts.join("").replace(/\s+/g, "").trim()
+      const text = cleanCjkText(bucket.parts.join("").replace(/\s+/g, "").trim())
       const confidence = Math.round(
         bucket.confs.reduce((sum, value) => sum + value, 0) / bucket.confs.length
       )

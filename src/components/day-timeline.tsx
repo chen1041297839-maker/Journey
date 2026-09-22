@@ -48,15 +48,15 @@ export function DayTimeline({
         </div>
         <h2 className="mt-3 font-heading text-2xl leading-tight">{day.theme}</h2>
         {day.planNote ? (
-          <p className="mt-2 text-sm leading-relaxed text-foreground/90">{day.planNote}</p>
+          <p className="mt-2 text-pretty text-sm leading-relaxed text-foreground/90">{day.planNote}</p>
         ) : null}
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground">
           {day.walkingNote}
         </p>
         <p className="mt-2 text-sm text-foreground/80">
           街区气质 · {day.neighborhoodStyle}
         </p>
-        <p className="mt-3 text-xs tracking-wide text-muted-foreground">
+        <p className="mt-3 text-pretty text-xs text-muted-foreground">
           {day.routeSummary.join(" → ")}
         </p>
         {proposal ? (
@@ -94,7 +94,7 @@ export function DayTimeline({
         <div className="grid gap-5">
           {groups.map((group) => (
             <section key={group.block}>
-              <p className="mb-2 text-[11px] tracking-[0.16em] text-primary">
+              <p className="mb-2 text-[11px] font-medium text-primary">
                 {group.block === "other" ? "行程" : timeBlockLabel[group.block]}
               </p>
               <ol className="relative flex flex-col gap-3 border-l border-primary/30 pl-5">
@@ -111,7 +111,7 @@ export function DayTimeline({
                       <Link
                         href={`/day/${day.id}/stop/${stop.id}`}
                         className={cn(
-                          "block rounded-2xl border bg-card px-4 py-3 transition-colors",
+                          "block min-w-0 rounded-2xl border bg-card px-4 py-3 transition-colors",
                           active
                             ? "border-primary ring-1 ring-primary/30"
                             : "border-border hover:border-primary/40"
@@ -119,11 +119,11 @@ export function DayTimeline({
                       >
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-[11px] tracking-[0.14em] text-muted-foreground">
+                            <p className="text-[11px] text-muted-foreground">
                               {String(stop.order).padStart(2, "0")} · {stop.area}
                               {stop.optional ? " · 可选" : ""}
                             </p>
-                            <p className="mt-0.5 font-heading text-lg leading-tight">
+                            <p className="mt-0.5 font-heading text-lg leading-tight break-normal">
                               {stop.name}
                             </p>
                           </div>
@@ -132,7 +132,7 @@ export function DayTimeline({
                             {stop.arrive}
                           </span>
                         </div>
-                        <p className="mt-1 line-clamp-3 text-sm text-foreground">
+                        <p className="mt-1 line-clamp-3 text-pretty text-sm leading-relaxed break-normal text-foreground">
                           {stopFactLine(stop)}
                         </p>
                         <div className="mt-2 flex flex-wrap gap-3 text-[11px] text-muted-foreground">

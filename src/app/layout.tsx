@@ -37,10 +37,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="zh-CN"
       className={`${sans.variable} ${serif.variable} ${mono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+      <body className="flex min-h-full min-w-0 flex-col bg-background text-foreground">
         <AppProviders initialTrip={trip}>
           <TripHeader />
-          <div className="flex flex-1 flex-col">{children}</div>
+          <div className="flex min-w-0 flex-1 flex-col">{children}</div>
         </AppProviders>
       </body>
     </html>

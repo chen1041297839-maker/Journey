@@ -56,7 +56,7 @@ export function RouteComposer() {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6">
       <div className="max-w-2xl">
-        <p className="text-[11px] tracking-[0.2em] text-primary">圆周旅迹导入</p>
+        <p className="text-[11px] font-medium text-primary">圆周旅迹导入</p>
         <h2 className="mt-2 font-heading text-3xl leading-tight">
           粘贴分享链接，按导入顺序打开
         </h2>
@@ -67,7 +67,7 @@ export function RouteComposer() {
 
       {!trip.isSampleRoute && trip.days.length > 0 ? (
         <section className="rounded-2xl border border-border bg-card px-4 py-4 sm:px-5">
-          <p className="text-[11px] tracking-[0.16em] text-muted-foreground">当前行程</p>
+          <p className="text-[11px] text-muted-foreground">当前行程</p>
           <p className="mt-1 font-heading text-xl">
             {trip.title} · {trip.destination}
           </p>
@@ -225,7 +225,7 @@ export function RouteComposer() {
                 key={`${day.dayNumber}-${dayIndex}`}
                 className="rounded-2xl border border-border bg-card p-4"
               >
-                <p className="text-[11px] tracking-[0.16em] text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground">
                   DAY {String(day.dayNumber || dayIndex + 1).padStart(2, "0")}
                 </p>
                 <Input

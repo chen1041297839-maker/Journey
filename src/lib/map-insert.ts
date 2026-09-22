@@ -12,6 +12,7 @@ import type {
   Trip,
   Warning,
 } from "@/data/types"
+import { cleanTripCopy } from "@/lib/cjk-text"
 import { detourKm, haversineKm, roundKm, walkMinutes, type LngLat } from "@/lib/geo"
 
 export type MappedBranch = {
@@ -685,8 +686,8 @@ export function mappedSignature(trip: Trip): string {
     .map((day) =>
       day.stops
         .map((stop) => {
-          const shops = stop.shops.map((shop) => `${shop.name}:${shop.mapPick?.branchName || ""}`).join(",")
-          const buys = stop.mustBuys.map((item) => item.name).join(",")
+          const shops = stop.shops.map((shop) => `${shop.name}:${shop.note}:${shop.mapPick?.why || ""}`).join(",")
+          const buys = stop.mustBuys.map((item) => `${item.name}:${item.reason}:${item.tip}`).join(",")
           const loc = stop.location ? `${stop.location.lat}` : ""
           return `${stop.id}:${loc}:${shops}:${buys}`
         })
@@ -696,8 +697,9 @@ export function mappedSignature(trip: Trip): string {
 }
 
 export function hydrateMappedTrip(trip: Trip): Trip {
-  if (!/贵州|贵阳|肇兴/.test(`${trip.destination} ${trip.title}`)) return trip
-  return applyMappedPlaces(hydrateStopLocations(trip))
+  const cleaned = cleanTripCopy(trip)
+  if (!/贵州|贵阳|肇兴/.test(`${cleaned.destination} ${cleaned.title}`)) return cleaned
+  return cleanTripCopy(applyMappedPlaces(hydrateStopLocations(cleaned)))
 }
 
 export function listedMappedPlaces(): MappedPlace[] {

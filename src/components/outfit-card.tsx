@@ -22,8 +22,8 @@ export function OutfitCard({
   if (compact) {
     return (
       <div className="rounded-xl border border-border bg-card px-4 py-3 ring-1 ring-foreground/5">
-        <p className="text-[11px] tracking-[0.16em] text-primary">当日穿搭</p>
-        <p className="mt-1 font-heading text-sm leading-snug">{outfit.summary}</p>
+        <p className="text-[11px] font-medium text-primary">当日穿搭</p>
+        <p className="mt-1 font-heading text-sm leading-snug break-normal">{outfit.summary}</p>
         <p className="mt-2 text-xs text-muted-foreground">鞋 · {outfit.shoes}</p>
       </div>
     )
@@ -32,8 +32,8 @@ export function OutfitCard({
   return (
     <Card className="bg-card">
       <CardHeader className="border-b">
-        <p className="text-[11px] tracking-[0.18em] text-primary">今日穿搭</p>
-        <CardTitle className="font-heading text-xl leading-snug">
+        <p className="text-[11px] font-medium text-primary">今日穿搭</p>
+        <CardTitle className="font-heading text-xl leading-snug break-normal">
           {outfit.summary}
         </CardTitle>
         <CardDescription>{outfit.why}</CardDescription>

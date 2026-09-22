@@ -13,7 +13,7 @@ export function SourceLinks({
   const sources = uniqueByUrl(evidence ?? [])
   if (sources.length === 0) return null
   return (
-    <ul className={cn("flex flex-wrap gap-x-3 gap-y-1", className)}>
+    <ul className={cn("flex min-w-0 flex-wrap gap-x-3 gap-y-1", className)}>
       {sources.map((item) => {
           const uploaded = item.collectedBy === "upload" || item.url.startsWith("xenia://")
           return (

@@ -1,4 +1,5 @@
 import type { OcrLine } from "@/data/types"
+import { cleanCjkText } from "@/lib/cjk-text"
 
 export type ExtractedShop = {
   name: string
@@ -44,12 +45,14 @@ function hasCjk(value: string): boolean {
 }
 
 function cleanName(raw: string): string {
-  return raw
-    .replace(/^[0-9０-９①②③④⑤⑥⑦⑧⑨⑩]+[.、．\s]*/u, "")
-    .replace(/[（(].*$/, "")
-    .replace(/[：:].*$/, "")
-    .replace(/封面|OCR|网页|配图|小红书|抖音/g, "")
-    .trim()
+  return cleanCjkText(
+    raw
+      .replace(/^[0-9０-９①②③④⑤⑥⑦⑧⑨⑩]+[.、．\s]*/u, "")
+      .replace(/[（(].*$/, "")
+      .replace(/[：:].*$/, "")
+      .replace(/封面|OCR|网页|配图|小红书|抖音/g, "")
+      .trim()
+  )
 }
 
 function isShopName(name: string): boolean {
@@ -191,9 +194,32 @@ export function extractFactsFromText(pageText: string, ocrLines: OcrLine[] = [])
   )
 
   return {
-    shops: shopsUnique.slice(0, 8),
-    mustBuys: uniqueByName(mustBuys, (item) => item.name).slice(0, 6),
-    photoSpots: uniqueByName(photoSpots, (item) => item.title).slice(0, 4),
-    warnings: uniqueByName(warnings, (item) => item.text).slice(0, 6),
+    shops: shopsUnique.slice(0, 8).map((shop) => ({
+      ...shop,
+      name: cleanCjkText(shop.name),
+      note: cleanCjkText(shop.note),
+      whatToLookFor: cleanCjkText(shop.whatToLookFor),
+    })),
+    mustBuys: uniqueByName(mustBuys, (item) => item.name)
+      .slice(0, 6)
+      .map((item) => ({
+        ...item,
+        name: cleanCjkText(item.name),
+        reason: cleanCjkText(item.reason),
+        tip: cleanCjkText(item.tip),
+      })),
+    photoSpots: uniqueByName(photoSpots, (item) => item.title)
+      .slice(0, 4)
+      .map((spot) => ({
+        ...spot,
+        title: cleanCjkText(spot.title),
+        standWhere: cleanCjkText(spot.standWhere),
+        angle: cleanCjkText(spot.angle),
+        shotLooksLike: cleanCjkText(spot.shotLooksLike),
+        avoid: cleanCjkText(spot.avoid),
+      })),
+    warnings: uniqueByName(warnings, (item) => item.text)
+      .slice(0, 6)
+      .map((item) => ({ ...item, text: cleanCjkText(item.text) })),
   }
 }

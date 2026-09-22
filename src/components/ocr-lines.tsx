@@ -1,5 +1,6 @@
 import type { OcrLine } from "@/data/types"
 import { Badge } from "@/components/ui/badge"
+import { cleanCjkText } from "@/lib/cjk-text"
 import { cn } from "@/lib/utils"
 
 export function OcrLines({
@@ -15,11 +16,11 @@ export function OcrLines({
       {lines.map((line, index) => (
         <li
           key={`${line.text}-${index}`}
-          className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-xs leading-relaxed text-muted-foreground"
+          className="text-pretty text-xs leading-relaxed break-normal text-muted-foreground"
         >
-          <span>{line.text}</span>
+          {cleanCjkText(line.text)}
           {line.uncertain ? (
-            <Badge variant="outline" className="font-normal">
+            <Badge variant="outline" className="ml-2 align-middle font-normal">
               识别不确定
             </Badge>
           ) : null}

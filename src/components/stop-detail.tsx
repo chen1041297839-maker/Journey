@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import type { Day, MustBuy, Shop, Stop, Warning } from "@/data/types"
 import { SectionEmpty } from "@/components/empty-state"
-import { FactImages } from "@/components/fact-images"
+import { FactBlock, Prose, SectionLabel } from "@/components/fact-block"
 import { ImageUpload } from "@/components/image-upload"
 import { OcrLines } from "@/components/ocr-lines"
 import { OutfitCard } from "@/components/outfit-card"
@@ -21,7 +21,7 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
   const warnings = stop.warnings ?? []
 
   return (
-    <article className="flex flex-col gap-6 pb-10">
+    <article className="flex min-w-0 flex-col gap-6 pb-10">
       <div className="flex items-start justify-between gap-3">
         <Link
           href={`/day/${day.id}`}
@@ -32,16 +32,16 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
         </Link>
       </div>
 
-      <header>
-        <p className="text-[11px] tracking-[0.18em] text-muted-foreground">
+      <header className="min-w-0">
+        <p className="text-[11px] text-muted-foreground">
           DAY {String(day.dayNumber).padStart(2, "0")} · {stop.area} · {stop.arrive} 抵达 ·{" "}
           {stop.duration}
         </p>
-        <h2 className="mt-2 font-heading text-3xl leading-none">{stop.name}</h2>
+        <h2 className="mt-2 font-heading text-2xl leading-tight sm:text-3xl">{stop.name}</h2>
         {stop.nameJa ? (
           <p className="mt-1 text-sm text-muted-foreground">{stop.nameJa}</p>
         ) : null}
-        <p className="mt-3 text-sm leading-relaxed">{stop.note}</p>
+        <Prose className="mt-3">{stop.note}</Prose>
         <div className="mt-3 flex flex-wrap gap-2">
           <Badge variant="secondary">{stop.vibe}</Badge>
           <Badge variant="outline">{stop.shops.length} 家店</Badge>
@@ -108,24 +108,24 @@ function HungFacts({ stop }: { stop: Stop }) {
   const hung = stop.shops.filter((shop) => shop.mapPick?.why)
   if (names.length === 0 && hung.length === 0) return null
   return (
-    <section className="grid gap-2">
-      <p className="text-[11px] tracking-[0.16em] text-primary">这一站要点</p>
+    <section className="grid min-w-0 gap-2">
+      <SectionLabel>这一站要点</SectionLabel>
       <div className="flex flex-wrap gap-2">
         {names.map((name) => (
           <span
             key={name}
-            className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm"
+            className="max-w-full rounded-lg border border-primary/30 bg-primary/10 px-2.5 py-1 text-sm break-normal"
           >
             {name}
           </span>
         ))}
       </div>
       {hung.map((shop) => (
-        <p key={shop.id} className="text-sm leading-relaxed text-primary">
+        <Prose key={shop.id} className="text-primary">
           {shop.name}
-          {shop.whatToLookFor ? ` · ${shop.whatToLookFor}` : ""}
-          {shop.mapPick?.why ? ` · ${shop.mapPick.why}` : ""}
-        </p>
+          {shop.whatToLookFor ? `，${shop.whatToLookFor}` : ""}
+          {shop.mapPick?.why ? `。${shop.mapPick.why}` : ""}
+        </Prose>
       ))}
     </section>
   )
@@ -134,9 +134,9 @@ function HungFacts({ stop }: { stop: Stop }) {
 function OcrExcerpt({ lines }: { lines?: Stop["ocrLines"] }) {
   if (!lines?.length) return null
   return (
-    <section className="grid gap-2">
-      <p className="text-[11px] tracking-[0.16em] text-primary">配图 OCR</p>
-      <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-3">
+    <section className="grid min-w-0 gap-2">
+      <SectionLabel>配图 OCR</SectionLabel>
+      <div className="rounded-2xl border border-dashed border-border bg-card p-4">
         <OcrLines lines={lines} className="mt-0" />
       </div>
     </section>
@@ -146,22 +146,18 @@ function OcrExcerpt({ lines }: { lines?: Stop["ocrLines"] }) {
 function WarningList({ warnings }: { warnings: Warning[] }) {
   const images = warnings.find((item) => item.images?.some((image) => image.src))?.images
   return (
-    <section className="grid gap-2">
-      <p className="text-[11px] tracking-[0.16em] text-primary">避坑</p>
-      <div className="grid gap-3 sm:grid-cols-[minmax(0,140px)_1fr] sm:items-start">
-        <FactImages images={images} />
+    <section className="grid min-w-0 gap-2">
+      <SectionLabel>避坑</SectionLabel>
+      <FactBlock images={images}>
         <ul className="grid gap-2">
           {warnings.map((item) => (
-            <li
-              key={item.id}
-              className="rounded-2xl border border-border bg-card px-4 py-3 text-sm leading-relaxed"
-            >
+            <li key={item.id} className="text-pretty text-sm leading-relaxed break-normal">
               <span className="mr-2 font-heading text-primary">{item.kind}</span>
               {item.text}
             </li>
           ))}
         </ul>
-      </div>
+      </FactBlock>
     </section>
   )
 }
@@ -169,37 +165,31 @@ function WarningList({ warnings }: { warnings: Warning[] }) {
 function ShopList({ shops }: { shops: Shop[] }) {
   if (shops.length === 0) return null
   return (
-    <section className="grid gap-2">
-      <p className="text-[11px] tracking-[0.16em] text-primary">店铺</p>
+    <section className="grid min-w-0 gap-3">
+      <SectionLabel>店铺</SectionLabel>
       <div className="grid gap-3">
         {shops.map((shop) => (
-          <div
-            key={shop.id}
-            className="grid gap-3 rounded-2xl border border-border bg-card px-4 py-3 sm:grid-cols-[minmax(0,132px)_1fr] sm:items-start"
-          >
-            <FactImages images={shop.images} />
-            <div>
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p className="font-heading text-lg">
-                  {shop.name}
-                  {shop.uncertain ? (
-                    <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
-                      识别不确定
-                    </Badge>
-                  ) : null}
-                </p>
-                <span className="text-xs tabular-nums text-muted-foreground">{shop.hours}</span>
-              </div>
-              <p className="mt-1 text-xs tracking-wide text-primary">{shop.category}</p>
-              <p className="mt-2 text-sm leading-relaxed">{shop.note}</p>
-              {shop.mapPick ? (
-                <p className="mt-2 text-sm text-primary">地图 · {shop.mapPick.why}</p>
-              ) : null}
-              <p className="mt-2 text-sm text-muted-foreground">找什么 · {shop.whatToLookFor}</p>
-              <OcrLines lines={shop.ocrLines} />
-              <SourceLinks evidence={shop.evidence} className="mt-3" />
+          <FactBlock key={shop.id} images={shop.images}>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <p className="font-heading text-lg leading-tight break-normal">
+                {shop.name}
+                {shop.uncertain ? (
+                  <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
+                    识别不确定
+                  </Badge>
+                ) : null}
+              </p>
+              <span className="text-xs text-muted-foreground">{shop.hours}</span>
             </div>
-          </div>
+            <p className="text-xs text-primary">{shop.category}</p>
+            <Prose>{shop.note}</Prose>
+            {shop.mapPick?.why ? <Prose className="text-primary">地图：{shop.mapPick.why}</Prose> : null}
+            {shop.whatToLookFor ? (
+              <Prose className="text-muted-foreground">找什么：{shop.whatToLookFor}</Prose>
+            ) : null}
+            <OcrLines lines={shop.ocrLines} />
+            <SourceLinks evidence={shop.evidence} className="mt-1" />
+          </FactBlock>
         ))}
       </div>
     </section>
@@ -209,36 +199,28 @@ function ShopList({ shops }: { shops: Shop[] }) {
 function BuyList({ items }: { items: MustBuy[] }) {
   if (items.length === 0) return null
   return (
-    <section className="grid gap-2">
-      <p className="text-[11px] tracking-[0.16em] text-primary">必买</p>
+    <section className="grid min-w-0 gap-3">
+      <SectionLabel>必买</SectionLabel>
       <div className="grid gap-3">
         {items.map((item) => (
-          <div
-            key={item.id}
-            className="grid gap-3 rounded-2xl border border-border bg-card px-4 py-3 sm:grid-cols-[minmax(0,132px)_1fr] sm:items-start"
-          >
-            <FactImages images={item.images} />
-            <div>
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p className="font-heading text-lg">
-                  {item.name}
-                  {item.uncertain ? (
-                    <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
-                      识别不确定
-                    </Badge>
-                  ) : null}
-                </p>
-                <span className="text-xs tabular-nums text-primary">{item.budget}</span>
-              </div>
-              <p className="mt-2 text-sm leading-relaxed">{item.reason}</p>
-              {item.mapPick ? (
-                <p className="mt-2 text-sm text-primary">地图 · {item.mapPick.why}</p>
-              ) : null}
-              <p className="mt-2 text-sm text-muted-foreground">提醒 · {item.tip}</p>
-              <OcrLines lines={item.ocrLines} />
-              <SourceLinks evidence={item.evidence} className="mt-3" />
+          <FactBlock key={item.id} images={item.images}>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+              <p className="font-heading text-lg leading-tight break-normal">
+                {item.name}
+                {item.uncertain ? (
+                  <Badge variant="outline" className="ml-2 align-middle text-[10px] font-normal">
+                    识别不确定
+                  </Badge>
+                ) : null}
+              </p>
+              <span className="text-xs text-primary">{item.budget}</span>
             </div>
-          </div>
+            <Prose>{item.reason}</Prose>
+            {item.mapPick?.why ? <Prose className="text-primary">地图：{item.mapPick.why}</Prose> : null}
+            {item.tip ? <Prose className="text-muted-foreground">提醒：{item.tip}</Prose> : null}
+            <OcrLines lines={item.ocrLines} />
+            <SourceLinks evidence={item.evidence} className="mt-1" />
+          </FactBlock>
         ))}
       </div>
     </section>

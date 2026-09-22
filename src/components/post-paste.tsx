@@ -40,11 +40,11 @@ export function PostPaste({
   return (
     <section className="grid gap-3 rounded-2xl border border-border bg-card p-4">
       <div>
-        <p className="text-[11px] tracking-[0.16em] text-primary">小红书 / 抖音 / Instagram</p>
-        <h3 className="mt-1 font-heading text-lg">
+        <p className="text-[11px] font-medium text-primary">小红书 / 抖音 / Instagram</p>
+        <h3 className="mt-1 font-heading text-lg leading-tight">
           {stopId ? "把这一站的链接贴进来" : "把笔记链接贴在这里"}
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-pretty text-sm leading-relaxed break-normal text-muted-foreground">
           {stopId
             ? "这里只贴公开链接。截图请用上面的上传区，不要发到聊天。贴链接后自动：读公开页正文 → 下载能拿到的配图 → OCR → 写进要点。原帖只留小字「来源」。不会登录，也不会走 App。"
             : `这里只贴公开链接。清单截图请打开对应那一站，在网页上传区拖入或选择，不要发到聊天。贴链接后自动读公开页、存图、OCR。当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
@@ -68,7 +68,7 @@ export function PostPaste({
         </p>
       ) : null}
       {summary ? (
-        <p className="whitespace-pre-wrap text-sm text-muted-foreground">{summary}</p>
+        <p className="text-pretty whitespace-pre-wrap text-sm leading-relaxed break-normal text-muted-foreground">{summary}</p>
       ) : null}
     </section>
   )

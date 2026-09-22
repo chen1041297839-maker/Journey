@@ -125,15 +125,43 @@
   html {
     @apply font-sans;
     color-scheme: light;
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-break: auto;
   }
   body {
     @apply bg-background text-foreground;
+    letter-spacing: 0;
+    word-break: normal;
+    overflow-wrap: break-word;
     background-image:
       radial-gradient(ellipse 80% 50% at 100% -10%, oklch(0.72 0.12 28 / 0.1), transparent),
       radial-gradient(ellipse 50% 40% at 0% 100%, oklch(0.55 0.05 150 / 0.08), transparent);
   }
+  p,
+  li,
+  dd,
+  dt,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  blockquote,
+  label,
+  td,
+  th,
+  figcaption {
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-break: auto;
+    text-wrap: pretty;
+    letter-spacing: 0;
+  }
   .font-heading {
     font-family: var(--font-heading), ui-serif, serif;
+    letter-spacing: 0;
   }
 }
 

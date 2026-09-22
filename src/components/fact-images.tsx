@@ -15,7 +15,7 @@ export function FactImages({
   if (visible.length === 0 && missingCount === 0) return null
 
   return (
-    <div className={cn("grid gap-1.5", className)}>
+    <div className={cn("grid min-w-0 gap-1.5", className)}>
       {visible.length > 0 ? (
         <div className={cn("grid gap-1.5", visible.length > 1 ? "grid-cols-2" : "grid-cols-1")}>
           {visible.slice(0, 4).map((item) => (
@@ -25,13 +25,13 @@ export function FactImages({
               key={item.src}
               src={item.src}
               alt={item.alt}
-              className="aspect-[4/5] w-full rounded-lg object-cover bg-muted"
+              className="aspect-[4/5] w-full max-w-full rounded-lg bg-muted object-cover"
             />
           ))}
         </div>
       ) : null}
       {missingCount > 0 ? (
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
+        <p className="text-pretty text-[11px] leading-relaxed break-normal text-muted-foreground">
           {visible.length > 0
             ? `另有 ${missingCount} 张配图读不到，把清单截图拖到上面上传区`
             : "配图读不到，把清单截图拖到上面上传区"}
