@@ -23,7 +23,7 @@ export function TripHeader() {
               Xenia 的行程站
             </h1>
           </Link>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+          <p className="cjk-flow mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
             {trip.intro}
           </p>
         </div>
@@ -53,7 +53,7 @@ export function TripHeader() {
 export function SourceNote({ className }: { className?: string }) {
   const { trip } = useTrip()
   return (
-    <p className={cn("text-xs leading-relaxed text-muted-foreground", className)}>
+    <p className={cn("cjk-flow text-xs leading-6 text-muted-foreground", className)}>
       {trip.sourceNote}
     </p>
   )

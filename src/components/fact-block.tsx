@@ -1,10 +1,11 @@
 import type { ReactNode } from "react"
 import type { FactImage } from "@/data/types"
 import { FactImages } from "@/components/fact-images"
+import { Copy, MediaRow, MetaLabel, Panel } from "@/components/layout-system"
 import { cn } from "@/lib/utils"
 
 export function SectionLabel({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn("text-[11px] font-medium text-primary", className)}>{children}</p>
+  return <MetaLabel className={className}>{children}</MetaLabel>
 }
 
 function hasMedia(images?: FactImage[]) {
@@ -12,7 +13,7 @@ function hasMedia(images?: FactImage[]) {
   return images.some((item) => Boolean(item.src && !item.missing) || Boolean(item.missing))
 }
 
-/** 店铺 / 必买 / 避坑共用：有图才两列，正文永不挤进窄列。 */
+/** 店铺 / 必买 / 避坑：有图才并排，正文始终占满卡片剩余宽度。 */
 export function FactBlock({
   images,
   children,
@@ -24,19 +25,14 @@ export function FactBlock({
 }) {
   const media = hasMedia(images)
   return (
-    <div
-      className={cn(
-        "grid w-full min-w-0 gap-3 rounded-2xl border border-border bg-card p-4 sm:p-5",
-        media && "sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-start",
-        className
-      )}
-    >
-      {media ? <FactImages images={images} className="min-w-0" /> : null}
-      <div className="min-w-0 max-w-full space-y-2">{children}</div>
-    </div>
+    <Panel className={className}>
+      <MediaRow media={media ? <FactImages images={images} compact /> : undefined}>
+        {children}
+      </MediaRow>
+    </Panel>
   )
 }
 
 export function Prose({ children, className }: { children: ReactNode; className?: string }) {
-  return <p className={cn("text-pretty text-sm leading-relaxed break-normal", className)}>{children}</p>
+  return <Copy className={cn(className)}>{children}</Copy>
 }

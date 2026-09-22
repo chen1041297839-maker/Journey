@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Copy, MetaLabel } from "@/components/layout-system"
 import { useTrip } from "@/components/trip-provider"
 
 export function BranchFinder({ dayId }: { dayId: string }) {
@@ -12,7 +13,7 @@ export function BranchFinder({ dayId }: { dayId: string }) {
 
   return (
     <form
-      className="grid min-w-0 gap-3 rounded-2xl border border-border bg-card p-4"
+      className="panel"
       onSubmit={async (event) => {
         event.preventDefault()
         const name = query.trim()
@@ -27,22 +28,22 @@ export function BranchFinder({ dayId }: { dayId: string }) {
         setQuery("")
       }}
     >
-      <p className="text-[11px] font-medium text-primary">选店 · 沿路挂到已有站</p>
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <MetaLabel>选店 · 沿路挂到已有站</MetaLabel>
+      <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-row">
         <Input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="店名，例如 滋铁板烧、好心情烤鱼、余美霞"
           disabled={generating}
         />
-        <Button type="submit" size="sm" disabled={generating || !query.trim()}>
+        <Button type="submit" size="sm" className="shrink-0" disabled={generating || !query.trim()}>
           挂到当天路上
         </Button>
       </div>
-      <p className="text-pretty text-xs leading-relaxed break-normal text-muted-foreground">
+      <Copy muted className="text-xs leading-6">
         只把店挂到绕路最少的已有站，不会重排圆周旅迹。选店结果写进下面时间线和站点要点。
-      </p>
-      {message ? <p className="text-pretty text-sm leading-relaxed break-normal">{message}</p> : null}
+      </Copy>
+      {message ? <Copy>{message}</Copy> : null}
     </form>
   )
 }

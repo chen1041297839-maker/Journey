@@ -6,6 +6,7 @@ import { SAMPLE_ROUTE_TEXT } from "@/data/sample-route"
 import type { DraftDay } from "@/data/types"
 import { useTrip } from "@/components/trip-provider"
 import { EmptyState } from "@/components/empty-state"
+import { Copy, Heading, MetaLabel, Panel } from "@/components/layout-system"
 import { PlanProposalDialog } from "@/components/plan-proposal-dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -54,28 +55,28 @@ export function RouteComposer() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6">
-      <div className="max-w-2xl">
-        <p className="text-[11px] font-medium text-primary">圆周旅迹导入</p>
-        <h2 className="mt-2 font-heading text-3xl leading-tight">
+    <main className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6">
+      <header className="flex w-full min-w-0 max-w-3xl flex-col gap-3">
+        <MetaLabel>圆周旅迹导入</MetaLabel>
+        <Heading as="h2" className="text-3xl">
           粘贴分享链接，按导入顺序打开
-        </h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+        </Heading>
+        <Copy muted>
           圆周旅迹的站点顺序是准绳，导入后不会悄悄重排。若规划认为某一天在片区之间折返、回酒店占站、或日落时机不合理，会弹出确认框：改什么、为什么、保持原顺序还是采用建议。清单截图请打开对应那一站，在网页上传区拖入或选择，不要发到聊天。小红书链接可贴在本页下方或某一站里：公开页会读正文、下载能拿到的配图并 OCR。不会登录，也不会走 App。
-        </p>
-      </div>
+        </Copy>
+      </header>
 
       {!trip.isSampleRoute && trip.days.length > 0 ? (
-        <section className="rounded-2xl border border-border bg-card px-4 py-4 sm:px-5">
+        <Panel>
           <p className="text-[11px] text-muted-foreground">当前行程</p>
-          <p className="mt-1 font-heading text-xl">
+          <Heading as="h3" className="text-xl">
             {trip.title} · {trip.destination}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          </Heading>
+          <Copy muted>
             {trip.datesLabel} · {trip.days.length} 天 ·{" "}
             {trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
+          </Copy>
+          <div className="flex flex-wrap gap-2">
             <Button type="button" onClick={() => router.push(`/day/${trip.days[0].id}`)}>
               打开行程
             </Button>
@@ -105,10 +106,10 @@ export function RouteComposer() {
               }}
             />
           ) : null}
-        </section>
+        </Panel>
       ) : null}
 
-      <section className="grid gap-3 rounded-2xl border border-primary/30 bg-card p-4 sm:p-5">
+      <Panel className="border-primary/30">
         <label className="text-sm font-medium" htmlFor="pitravel-url">
           圆周旅迹分享链接
         </label>
@@ -117,22 +118,22 @@ export function RouteComposer() {
           value={shareUrl}
           onChange={(event) => setShareUrl(event.target.value)}
           placeholder="https://www.pitravel.cn/web/journey/detail/…"
-          className="font-mono text-sm"
+          className="w-full min-w-0 font-mono text-sm"
         />
-        <p className="text-xs text-muted-foreground">
+        <Copy muted className="text-xs leading-6">
           在圆周旅迹打开行程 → 分享 → 复制链接。好友不登录也能打开的公开链接才能导入。
-        </p>
+        </Copy>
         <div className="flex flex-wrap gap-2">
           <Button type="button" onClick={onImport} disabled={generating || !shareUrl.trim()}>
             {generating ? "正在导入…" : "导入行程"}
           </Button>
         </div>
-      </section>
+      </Panel>
 
       <PostPaste />
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)]">
-        <section className="grid gap-3">
+      <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-row lg:items-start">
+        <section className="flex w-full min-w-0 flex-1 flex-col gap-3">
           <label className="text-sm font-medium" htmlFor="route-paste">
             或手动粘贴地点
           </label>
@@ -140,7 +141,7 @@ export function RouteComposer() {
             id="route-paste"
             value={text}
             onChange={(event) => syncFromText(event.target.value)}
-            className="min-h-[280px] font-mono text-sm"
+            className="min-h-[280px] w-full min-w-0 font-mono text-sm"
             placeholder={"第1天 贵阳\n谷莫尼酒店\n玉珍酸笋火锅"}
           />
           <div className="flex flex-wrap gap-2">
@@ -173,7 +174,7 @@ export function RouteComposer() {
             </Button>
           </div>
           {error ? (
-            <p className="text-sm text-destructive" role="alert">
+            <p className="cjk-flow text-sm leading-7 text-destructive" role="alert">
               {error}
             </p>
           ) : null}
@@ -184,16 +185,16 @@ export function RouteComposer() {
               description="优先粘贴圆周旅迹分享链接。也可以从备忘录复制一天或一整段路线，或在右侧按天添加地点。"
             />
           ) : (
-            <p className="text-xs text-muted-foreground">
+            <Copy muted className="text-xs leading-6">
               已识别 {parsed.days.length} 天 · {stopCount} 站
               {text.trim() === SAMPLE_ROUTE_TEXT.trim()
                 ? " · 当前是东京示例路线，生成后的笔记证据会标「示例」"
                 : ""}
-            </p>
+            </Copy>
           )}
         </section>
 
-        <section className="grid gap-4">
+        <section className="flex w-full min-w-0 flex-col gap-4 lg:w-[22rem] lg:shrink-0">
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-heading text-lg">按天整理</h3>
             <Button
@@ -215,21 +216,16 @@ export function RouteComposer() {
             </Button>
           </div>
           {structured.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              导入或粘贴之后会在这里拆成按天的列表，也可以手动加站。
-            </p>
+            <Copy muted>导入或粘贴之后会在这里拆成按天的列表，也可以手动加站。</Copy>
           ) : null}
-          <div className="grid gap-4">
+          <div className="flex w-full min-w-0 flex-col gap-4">
             {structured.map((day, dayIndex) => (
-              <div
-                key={`${day.dayNumber}-${dayIndex}`}
-                className="rounded-2xl border border-border bg-card p-4"
-              >
+              <Panel key={`${day.dayNumber}-${dayIndex}`}>
                 <p className="text-[11px] text-muted-foreground">
                   DAY {String(day.dayNumber || dayIndex + 1).padStart(2, "0")}
                 </p>
                 <Input
-                  className="mt-2"
+                  className="mt-1 w-full min-w-0"
                   value={day.label}
                   onChange={(event) => {
                     const next = structured.map((item, index) =>
@@ -238,13 +234,13 @@ export function RouteComposer() {
                     syncFromStructured(next)
                   }}
                 />
-                <ul className="mt-3 grid gap-1.5 text-sm">
+                <ul className="flex w-full min-w-0 flex-col gap-2 text-sm">
                   {day.stops.map((stop, stopIndex) => (
                     <li
                       key={`${stop.name}-${stopIndex}`}
-                      className="flex items-center justify-between gap-2 rounded-lg bg-muted/50 px-2 py-1.5"
+                      className="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg bg-muted/50 px-3 py-2"
                     >
-                      <span>
+                      <span className="min-w-0 flex-1 leading-6">
                         {stop.time ? (
                           <span className="mr-2 tabular-nums text-muted-foreground">
                             {stop.time}
@@ -254,7 +250,7 @@ export function RouteComposer() {
                       </span>
                       <button
                         type="button"
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="shrink-0 text-xs text-muted-foreground hover:text-foreground"
                         onClick={() => {
                           const next = structured.map((item, index) =>
                             index === dayIndex
@@ -273,7 +269,7 @@ export function RouteComposer() {
                   ))}
                 </ul>
                 <form
-                  className="mt-3 flex gap-2"
+                  className="flex w-full min-w-0 gap-2"
                   onSubmit={(event) => {
                     event.preventDefault()
                     const name = (stopDraft[dayIndex] || "").trim()
@@ -297,11 +293,11 @@ export function RouteComposer() {
                       }))
                     }
                   />
-                  <Button type="submit" size="sm" variant="secondary">
+                  <Button type="submit" size="sm" variant="secondary" className="shrink-0">
                     添加
                   </Button>
                 </form>
-              </div>
+              </Panel>
             ))}
           </div>
         </section>

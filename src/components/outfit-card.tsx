@@ -2,15 +2,9 @@
 
 import type { Outfit } from "@/data/types"
 import { FactImages } from "@/components/fact-images"
+import { Copy, Heading, MetaLabel, Panel } from "@/components/layout-system"
 import { SourceLinks } from "@/components/source-links"
 import { Badge } from "@/components/ui/badge"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 
 export function OutfitCard({
   outfit,
@@ -21,56 +15,58 @@ export function OutfitCard({
 }) {
   if (compact) {
     return (
-      <div className="rounded-xl border border-border bg-card px-4 py-3 ring-1 ring-foreground/5">
-        <p className="text-[11px] font-medium text-primary">当日穿搭</p>
-        <p className="mt-1 font-heading text-sm leading-snug break-normal">{outfit.summary}</p>
-        <p className="mt-2 text-xs text-muted-foreground">鞋 · {outfit.shoes}</p>
-      </div>
+      <Panel className="gap-2 py-4">
+        <MetaLabel>当日穿搭</MetaLabel>
+        <p className="cjk-flow font-heading text-sm leading-7">{outfit.summary}</p>
+        <Copy muted className="text-xs leading-6">
+          鞋 · {outfit.shoes}
+        </Copy>
+      </Panel>
     )
   }
 
   return (
-    <Card className="bg-card">
-      <CardHeader className="border-b">
-        <p className="text-[11px] font-medium text-primary">今日穿搭</p>
-        <CardTitle className="font-heading text-xl leading-snug break-normal">
-          {outfit.summary}
-        </CardTitle>
-        <CardDescription>{outfit.why}</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <ul className="grid gap-1.5 text-sm">
-          {outfit.pieces.map((piece) => (
-            <li key={piece} className="flex gap-2">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" />
-              <span>{piece}</span>
-            </li>
-          ))}
-        </ul>
-        <div className="flex flex-wrap gap-1.5">
-          {outfit.colors.map((color) => (
-            <Badge key={color} variant="secondary">
-              {color}
-            </Badge>
-          ))}
+    <Panel>
+      <MetaLabel>今日穿搭</MetaLabel>
+      <Heading as="h3">{outfit.summary}</Heading>
+      <Copy muted>{outfit.why}</Copy>
+      <ul className="flex w-full min-w-0 flex-col gap-2 text-sm leading-7">
+        {outfit.pieces.map((piece) => (
+          <li key={piece} className="flex w-full min-w-0 gap-2">
+            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+            <span className="min-w-0 flex-1">{piece}</span>
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-wrap gap-1.5">
+        {outfit.colors.map((color) => (
+          <Badge key={color} variant="secondary">
+            {color}
+          </Badge>
+        ))}
+      </div>
+      <dl className="flex w-full min-w-0 flex-col gap-3 text-sm">
+        <div className="w-full min-w-0">
+          <dt className="text-[11px] text-muted-foreground">鞋</dt>
+          <dd className="mt-1">
+            <Copy>{outfit.shoes}</Copy>
+          </dd>
         </div>
-        <dl className="grid gap-2 text-sm sm:grid-cols-2">
-          <div>
-            <dt className="text-muted-foreground">鞋</dt>
-            <dd>{outfit.shoes}</dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">包</dt>
-            <dd>{outfit.bag}</dd>
-          </div>
-          <div className="sm:col-span-2">
-            <dt className="text-muted-foreground">不要穿</dt>
-            <dd>{outfit.avoid}</dd>
-          </div>
-        </dl>
-        <SourceLinks evidence={outfit.evidence} />
-        <FactImages images={outfit.images} className="max-w-[180px]" />
-      </CardContent>
-    </Card>
+        <div className="w-full min-w-0">
+          <dt className="text-[11px] text-muted-foreground">包</dt>
+          <dd className="mt-1">
+            <Copy>{outfit.bag}</Copy>
+          </dd>
+        </div>
+        <div className="w-full min-w-0">
+          <dt className="text-[11px] text-muted-foreground">不要穿</dt>
+          <dd className="mt-1">
+            <Copy>{outfit.avoid}</Copy>
+          </dd>
+        </div>
+      </dl>
+      <SourceLinks evidence={outfit.evidence} />
+      <FactImages images={outfit.images} />
+    </Panel>
   )
 }

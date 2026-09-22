@@ -31,7 +31,7 @@ export function DayShell({
   }
 
   return (
-    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-6 px-4 py-6 sm:px-6">
+    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-7 px-4 py-6 sm:px-6">
       <DaySwitcher days={trip.days} activeDayId={day.id} />
       <DayWorkspace day={day}>{children}</DayWorkspace>
       <SourceNote className="pb-8" />

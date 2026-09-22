@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef } from "react"
 import "leaflet/dist/leaflet.css"
 import type { Day, GeoPoint } from "@/data/types"
+import { Copy, MetaLabel, Panel } from "@/components/layout-system"
 import { gcj02ToWgs84 } from "@/lib/geo"
 import { visibleFactNames } from "@/lib/stop-facts"
 
@@ -84,18 +85,14 @@ export function DayRouteMap({ day }: { day: Day }) {
   }, [day.id, located.length, hungShops.length])
 
   return (
-    <section className="grid min-w-0 gap-3 rounded-2xl border border-border bg-card p-4 sm:p-5">
-      <div className="min-w-0">
-        <p className="text-[11px] font-medium text-primary">当天路线 · 圆周旅迹顺序</p>
-        <p className="mt-1 text-pretty text-sm leading-relaxed break-normal text-foreground">
-          棕线按导入顺序走，没有重排。青色点是挂在已有站上的店。
-        </p>
-      </div>
-      <ol className="flex flex-wrap gap-2 text-sm">
+    <Panel>
+      <MetaLabel>当天路线 · 圆周旅迹顺序</MetaLabel>
+      <Copy>棕线按导入顺序走，没有重排。青色点是挂在已有站上的店。</Copy>
+      <ol className="flex w-full min-w-0 flex-wrap gap-2">
         {day.stops.map((stop, index) => (
           <li
             key={stop.id}
-            className="max-w-full rounded-lg border border-border bg-background px-3 py-1 text-xs leading-relaxed break-normal"
+            className="max-w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm leading-6"
           >
             <span className="tabular-nums text-primary">{String(index + 1).padStart(2, "0")}</span>{" "}
             {stop.name.replace(/[（(].*$/, "")}
@@ -103,20 +100,20 @@ export function DayRouteMap({ day }: { day: Day }) {
         ))}
       </ol>
       {located.length === 0 ? (
-        <p className="rounded-xl border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
+        <p className="cjk-flow rounded-xl border border-dashed px-4 py-6 text-center text-sm leading-7 text-muted-foreground">
           这一天还没有坐标。导入圆周旅迹后会按原顺序画路线。
         </p>
       ) : (
         <div
           id={`day-map-${hostId}`}
           ref={mapRef}
-          className="h-[320px] w-full overflow-hidden rounded-2xl border border-border bg-muted sm:h-[380px]"
+          className="h-[280px] w-full overflow-hidden rounded-2xl border border-border bg-muted sm:h-[380px]"
         />
       )}
       {hungShops.length > 0 ? (
-        <ul className="grid min-w-0 gap-2">
+        <ul className="flex w-full min-w-0 flex-col gap-2">
           {hungShops.map(({ shop, stopName }) => (
-            <li key={`${shop.id}-${stopName}`} className="text-pretty text-sm leading-relaxed break-normal">
+            <li key={`${shop.id}-${stopName}`} className="cjk-flow text-sm leading-7">
               <span className="text-primary">{shop.name}</span>
               {shop.whatToLookFor ? `，${shop.whatToLookFor}` : ""}
               <span className="text-muted-foreground">。挂在{stopName}。</span>
@@ -125,8 +122,10 @@ export function DayRouteMap({ day }: { day: Day }) {
           ))}
         </ul>
       ) : (
-        <p className="text-xs text-muted-foreground">这一天还没有沿路挂上的店。</p>
+        <Copy muted className="text-xs leading-6">
+          这一天还没有沿路挂上的店。
+        </Copy>
       )}
-    </section>
+    </Panel>
   )
 }

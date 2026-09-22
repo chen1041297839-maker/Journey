@@ -20,7 +20,7 @@ export function ShotFrame({
   return (
     <div
       className={cn(
-        "relative aspect-[4/5] overflow-hidden rounded-lg ring-1 ring-foreground/10",
+        "relative aspect-[16/7] w-full min-w-0 overflow-hidden rounded-lg ring-1 ring-foreground/10",
         className
       )}
       aria-hidden
@@ -33,18 +33,18 @@ export function ShotFrame({
       />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Ccircle cx=%222%22 cy=%222%22 r=%220.6%22 fill=%22white%22 fill-opacity=%220.18%22/%3E%3C/svg%3E')] opacity-70" />
       <div className="absolute inset-x-0 top-0 h-[28%] border-b border-white/20 bg-white/10">
-        <span className="absolute top-2 left-2 text-[10px] tracking-widest text-white/80">
-          SKY · {sky}
+        <span className="absolute top-2 left-3 right-3 text-[11px] leading-5 text-white/90">
+          天空 · {sky}
         </span>
       </div>
-      <div className="absolute inset-x-[18%] top-[22%] bottom-[32%] border border-white/35">
-        <span className="absolute top-1/2 left-1/2 w-[80%] -translate-x-1/2 -translate-y-1/2 text-center text-[10px] leading-snug text-white/90">
+      <div className="absolute inset-x-[12%] top-[24%] bottom-[30%] border border-white/35">
+        <span className="absolute top-1/2 left-1/2 w-[90%] -translate-x-1/2 -translate-y-1/2 text-center text-[12px] leading-6 text-white/90">
           {subject}
         </span>
       </div>
-      <div className="absolute inset-x-0 bottom-0 h-[30%] bg-black/25">
-        <span className="absolute bottom-2 left-2 right-2 text-[10px] text-white/80">
-          FG · {foreground}
+      <div className="absolute inset-x-0 bottom-0 h-[28%] bg-black/25">
+        <span className="absolute right-3 bottom-2 left-3 text-[11px] leading-5 text-white/85">
+          前景 · {foreground}
         </span>
       </div>
     </div>

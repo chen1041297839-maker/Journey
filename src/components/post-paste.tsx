@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useTrip } from "@/components/trip-provider"
+import { Copy, Heading, MetaLabel, Panel } from "@/components/layout-system"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 
@@ -38,22 +39,20 @@ export function PostPaste({
   }
 
   return (
-    <section className="grid gap-3 rounded-2xl border border-border bg-card p-4">
-      <div>
-        <p className="text-[11px] font-medium text-primary">小红书 / 抖音 / Instagram</p>
-        <h3 className="mt-1 font-heading text-lg leading-tight">
-          {stopId ? "把这一站的链接贴进来" : "把笔记链接贴在这里"}
-        </h3>
-        <p className="mt-1 text-pretty text-sm leading-relaxed break-normal text-muted-foreground">
-          {stopId
-            ? "这里只贴公开链接。截图请用上面的上传区，不要发到聊天。贴链接后自动：读公开页正文 → 下载能拿到的配图 → OCR → 写进要点。原帖只留小字「来源」。不会登录，也不会走 App。"
-            : `这里只贴公开链接。清单截图请打开对应那一站，在网页上传区拖入或选择，不要发到聊天。贴链接后自动读公开页、存图、OCR。当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
-        </p>
-      </div>
+    <Panel>
+      <MetaLabel>小红书 / 抖音 / Instagram</MetaLabel>
+      <Heading as="h3" className="text-lg">
+        {stopId ? "把这一站的链接贴进来" : "把笔记链接贴在这里"}
+      </Heading>
+      <Copy muted>
+        {stopId
+          ? "这里只贴公开链接。截图请用上面的上传区，不要发到聊天。贴链接后自动：读公开页正文 → 下载能拿到的配图 → OCR → 写进要点。原帖只留小字「来源」。不会登录，也不会走 App。"
+          : `这里只贴公开链接。清单截图请打开对应那一站，在网页上传区拖入或选择，不要发到聊天。贴链接后自动读公开页、存图、OCR。当前行程 ${trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站，能对上店名的会自动挂上。`}
+      </Copy>
       <Textarea
         value={text}
         onChange={(event) => setText(event.target.value)}
-        className="min-h-[120px] font-mono text-sm"
+        className="min-h-[132px] w-full min-w-0 font-mono text-sm"
         placeholder={"https://www.xiaohongshu.com/explore/…\nhttps://www.douyin.com/video/…\nhttps://www.instagram.com/p/…"}
         aria-label="小红书、抖音或 Instagram 公开链接"
       />
@@ -63,13 +62,13 @@ export function PostPaste({
         </Button>
       </div>
       {localError ? (
-        <p className="text-sm text-destructive" role="alert">
+        <p className="cjk-flow text-sm leading-7 text-destructive" role="alert">
           {localError}
         </p>
       ) : null}
       {summary ? (
-        <p className="text-pretty whitespace-pre-wrap text-sm leading-relaxed break-normal text-muted-foreground">{summary}</p>
+        <p className="cjk-flow whitespace-pre-wrap text-sm leading-7 text-muted-foreground">{summary}</p>
       ) : null}
-    </section>
+    </Panel>
   )
 }

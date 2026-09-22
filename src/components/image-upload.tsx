@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ImagePlus } from "lucide-react"
 import { uniqueByUrl } from "@/lib/evidence"
+import { Copy, Heading, MetaLabel } from "@/components/layout-system"
 import { useTrip } from "@/components/trip-provider"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -86,23 +87,23 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
   return (
     <section
       id="stop-upload"
-      className="grid gap-3 rounded-2xl border-2 border-dashed border-primary bg-primary/5 p-4 sm:p-5"
+      className="flex w-full min-w-0 flex-col gap-4 rounded-2xl border-2 border-dashed border-primary bg-primary/5 p-5"
     >
-      <div>
-        <p className="text-[11px] font-medium text-primary">在网页这一站上传 · 不要发到聊天</p>
-        <h3 className="mt-1 font-heading text-xl leading-tight">把清单截图拖进来 OCR</h3>
-        <p className="mt-1 text-pretty text-sm leading-relaxed break-normal text-muted-foreground">
-          {needsListPhotos
-            ? "这一站封面只有标题或表情包，公开页读不到后面的清单。请打开这一站，点「选择截图」、拖进来，或 Ctrl+V / ⌘V 粘贴。识别后写进下面要点。"
-            : "从相册选、拖进来，或直接粘贴截图。识别店名、菜单、价格、机位后写进要点。"}
-          不会登录，也不会走 App。
-        </p>
-      </div>
+      <MetaLabel>在网页这一站上传 · 不要发到聊天</MetaLabel>
+      <Heading as="h3" className="text-xl">
+        把清单截图拖进来 OCR
+      </Heading>
+      <Copy muted>
+        {needsListPhotos
+          ? "这一站封面只有标题或表情包，公开页读不到后面的清单。请打开这一站，点「选择截图」、拖进来，或 Ctrl+V / ⌘V 粘贴。识别后写进下面要点。"
+          : "从相册选、拖进来，或直接粘贴截图。识别店名、菜单、价格、机位后写进要点。"}
+        不会登录，也不会走 App。
+      </Copy>
       <div
         role="button"
         tabIndex={0}
         className={cn(
-          "grid cursor-pointer place-items-center rounded-xl border-2 border-dashed px-4 py-10 text-center outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/50",
+          "flex min-h-[9rem] w-full min-w-0 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-5 py-8 text-center outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/50",
           dragging ? "border-primary bg-card" : "border-primary/50 bg-card/80"
         )}
         onClick={() => inputRef.current?.click()}
@@ -135,8 +136,10 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
           }}
         />
         <ImagePlus className="size-8 text-primary" aria-hidden />
-        <span className="mt-3 font-heading text-base text-foreground">点这里选图，或把截图拖进来</span>
-        <span className="mt-1 text-xs text-muted-foreground">
+        <span className="cjk-flow mt-3 font-heading text-base text-foreground">
+          点这里选图，或把截图拖进来
+        </span>
+        <span className="cjk-flow mt-1 text-xs leading-6 text-muted-foreground">
           也可在这一站直接粘贴 · jpg / png / webp · 一次最多 12 张
         </span>
       </div>
@@ -151,7 +154,7 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
         ) : null}
       </div>
       {summary ? (
-        <p className="text-pretty whitespace-pre-wrap text-sm leading-relaxed break-normal text-muted-foreground">{summary}</p>
+        <p className="cjk-flow whitespace-pre-wrap text-sm leading-7 text-muted-foreground">{summary}</p>
       ) : null}
     </section>
   )

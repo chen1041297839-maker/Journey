@@ -20,7 +20,7 @@ export function DaySwitcher({
               key={day.id}
               href={`/day/${day.id}`}
               className={cn(
-                "min-w-[148px] shrink-0 rounded-2xl border px-4 py-3 transition-colors",
+                "w-[11.5rem] shrink-0 rounded-2xl border px-4 py-3 transition-colors",
                 active
                   ? "border-primary bg-primary text-primary-foreground"
                   : "border-border bg-card hover:border-primary/40 hover:bg-accent"
@@ -34,7 +34,7 @@ export function DaySwitcher({
               >
                 DAY {String(day.dayNumber).padStart(2, "0")} · {day.weekday}
               </p>
-              <p className="mt-1 font-heading text-lg leading-tight">{day.title}</p>
+              <p className="cjk-flow mt-1 font-heading text-lg leading-snug">{day.title}</p>
               <p
                 className={cn(
                   "mt-1 text-xs",

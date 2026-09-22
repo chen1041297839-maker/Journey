@@ -125,12 +125,14 @@
   html {
     @apply font-sans;
     color-scheme: light;
+    min-width: 0;
     word-break: normal;
     overflow-wrap: break-word;
     line-break: auto;
   }
   body {
     @apply bg-background text-foreground;
+    min-width: 0;
     letter-spacing: 0;
     word-break: normal;
     overflow-wrap: break-word;
@@ -153,16 +155,93 @@
   td,
   th,
   figcaption {
+    min-width: 0;
+    max-width: 100%;
     word-break: normal;
     overflow-wrap: break-word;
     line-break: auto;
     text-wrap: pretty;
     letter-spacing: 0;
+    hyphens: none;
   }
   .font-heading {
     font-family: var(--font-heading), ui-serif, serif;
     letter-spacing: 0;
   }
+}
+
+@layer components {
+  /* 中文按卡片全宽排成句子，绝不挤进 1em / 132px 窄列。 */
+  .cjk-flow {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: normal;
+    line-break: auto;
+    text-wrap: pretty;
+    letter-spacing: 0;
+    hyphens: none;
+  }
+
+  .panel {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--card);
+    padding: 1.25rem;
+  }
+
+  .media-row {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .media-aside {
+    width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .media-body {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .media-row:has(> .media-aside) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+
+    .media-row:has(> .media-aside) > .media-aside {
+      width: 9rem;
+      max-width: 9rem;
+    }
+  }
+}
+
+.leaflet-popup-content {
+  min-width: 12rem;
+  margin: 0.75rem 1rem;
+  font-size: 13px;
+  line-height: 1.7;
+  word-break: normal;
+  overflow-wrap: break-word;
+  letter-spacing: 0;
 }
 
 .seal {

@@ -4,6 +4,7 @@ import { useRef, useState } from "react"
 import type { Evidence } from "@/data/types"
 import { platformLabel } from "@/data/types"
 import { canEmbedInstagram, InstagramEmbed } from "@/components/instagram-embed"
+import { Copy, Heading, Panel } from "@/components/layout-system"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,6 +20,7 @@ export function EvidenceCard({
   const fileRef = useRef<HTMLInputElement>(null)
   const [urlDraft, setUrlDraft] = useState(evidence.isSample ? "" : evidence.url)
   const showEmbed = canEmbedInstagram(evidence.url, evidence.isSample)
+  const hasPhoto = Boolean(evidence.imageSrc) || showEmbed
 
   function onUpload(file: File | undefined) {
     if (!file || !onChange) return
@@ -32,39 +34,49 @@ export function EvidenceCard({
   }
 
   return (
-    <figure className="overflow-hidden rounded-xl border border-border bg-muted/30">
-      <div className="relative aspect-[4/5] bg-muted">
-        {showEmbed ? (
-          <InstagramEmbed url={evidence.url} isSample={evidence.isSample} />
-        ) : (
-          // User-supplied URLs / data URLs are not run through next/image.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={evidence.imageSrc}
-            alt={evidence.imageAlt}
-            className="size-full object-cover"
-          />
-        )}
-        <div className="absolute top-2 left-2 flex gap-1">
-          <Badge>{platformLabel[evidence.platform]}</Badge>
-          {evidence.isSample ? (
-            <Badge variant="secondary">示例</Badge>
-          ) : evidence.partialRead ? (
-            <Badge variant="secondary">网页读不全</Badge>
-          ) : evidence.collectedBy === "search" ? (
-            <Badge variant="secondary">系统检索</Badge>
-          ) : null}
+    <Panel className="p-0 gap-0 overflow-hidden">
+      {hasPhoto ? (
+        <div className="relative w-full bg-muted">
+          {showEmbed ? (
+            <InstagramEmbed url={evidence.url} isSample={evidence.isSample} />
+          ) : (
+            // User-supplied URLs / data URLs are not run through next/image.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={evidence.imageSrc}
+              alt={evidence.imageAlt}
+              className="max-h-64 w-full object-cover"
+            />
+          )}
+          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+            <Badge>{platformLabel[evidence.platform]}</Badge>
+            {evidence.isSample ? (
+              <Badge variant="secondary">示例</Badge>
+            ) : evidence.partialRead ? (
+              <Badge variant="secondary">网页读不全</Badge>
+            ) : evidence.collectedBy === "search" ? (
+              <Badge variant="secondary">系统检索</Badge>
+            ) : null}
+          </div>
         </div>
-      </div>
-      <figcaption className="grid gap-2 px-3 py-3 text-sm">
-        <p className="font-heading leading-snug">{evidence.caption}</p>
-        <p className="text-muted-foreground leading-relaxed">{evidence.quote}</p>
+      ) : null}
+      <div className="flex w-full min-w-0 flex-col gap-2 p-5">
+        {!hasPhoto ? (
+          <div className="flex flex-wrap gap-1">
+            <Badge>{platformLabel[evidence.platform]}</Badge>
+            {evidence.isSample ? <Badge variant="secondary">示例</Badge> : null}
+          </div>
+        ) : null}
+        <Heading as="h3" className="text-lg">
+          {evidence.caption}
+        </Heading>
+        <Copy muted>{evidence.quote}</Copy>
         <a
           href={evidence.url}
           target="_blank"
           rel="noreferrer"
           className={cn(
-            "truncate text-xs text-primary underline-offset-4 hover:underline",
+            "cjk-flow text-xs leading-6 text-primary underline-offset-4 hover:underline",
             evidence.isSample && "opacity-80"
           )}
         >
@@ -72,7 +84,7 @@ export function EvidenceCard({
           {platformLabel[evidence.platform]}
         </a>
         {onChange ? (
-          <div className="grid gap-2 pt-1">
+          <div className="flex w-full min-w-0 flex-col gap-2 pt-1">
             <div className="flex flex-wrap gap-2">
               <Button
                 type="button"
@@ -90,7 +102,7 @@ export function EvidenceCard({
                 onChange={(event) => onUpload(event.target.files?.[0])}
               />
             </div>
-            <div className="flex gap-2">
+            <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-row">
               <Input
                 value={urlDraft}
                 placeholder="粘贴小红书 / 抖音 / Instagram 链接"
@@ -100,6 +112,7 @@ export function EvidenceCard({
                 type="button"
                 size="sm"
                 variant="secondary"
+                className="shrink-0"
                 disabled={!urlDraft.trim()}
                 onClick={async () => {
                   const url = urlDraft.trim()
@@ -159,8 +172,8 @@ export function EvidenceCard({
             </div>
           </div>
         ) : null}
-      </figcaption>
-    </figure>
+      </div>
+    </Panel>
   )
 }
 
@@ -173,15 +186,14 @@ export function EvidenceRow({
 }) {
   if (!evidence?.length) return null
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="flex w-full min-w-0 flex-col gap-4 lg:flex-row lg:flex-wrap">
       {evidence.map((item, index) => (
-        <EvidenceCard
-          key={item.id}
-          evidence={item}
-          onChange={
-            onChangeAt ? (patch) => onChangeAt(index, patch) : undefined
-          }
-        />
+        <div key={item.id} className="w-full min-w-0 lg:w-[calc(50%-0.5rem)]">
+          <EvidenceCard
+            evidence={item}
+            onChange={onChangeAt ? (patch) => onChangeAt(index, patch) : undefined}
+          />
+        </div>
       ))}
     </div>
   )

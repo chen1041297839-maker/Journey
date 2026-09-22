@@ -20,13 +20,13 @@ export function DayWorkspace({
   const onStop = Boolean(activeStopId)
 
   return (
-    <div className="grid min-w-0 gap-6">
+    <div className="flex w-full min-w-0 flex-col gap-8">
       <DayRouteMap day={day} />
-      <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:items-start">
-        <aside className={cn("min-w-0", onStop ? "hidden lg:block" : "block")}>
+      <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-row lg:items-start">
+        <aside className={cn("w-full min-w-0 lg:w-[22rem] lg:shrink-0", onStop ? "hidden lg:block" : "block")}>
           <DayTimeline day={day} activeStopId={activeStopId} />
         </aside>
-        <div className={cn("min-w-0", onStop ? "block" : "hidden lg:block")}>{children}</div>
+        <div className={cn("w-full min-w-0 flex-1", onStop ? "block" : "hidden lg:block")}>{children}</div>
       </div>
     </div>
   )

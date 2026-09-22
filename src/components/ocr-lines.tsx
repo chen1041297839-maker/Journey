@@ -12,12 +12,9 @@ export function OcrLines({
 }) {
   if (!lines?.length) return null
   return (
-    <ul className={cn("mt-2 grid gap-1.5", className)}>
+    <ul className={cn("flex w-full min-w-0 flex-col gap-2", className)}>
       {lines.map((line, index) => (
-        <li
-          key={`${line.text}-${index}`}
-          className="text-pretty text-xs leading-relaxed break-normal text-muted-foreground"
-        >
+        <li key={`${line.text}-${index}`} className="cjk-flow text-xs leading-6 text-muted-foreground">
           {cleanCjkText(line.text)}
           {line.uncertain ? (
             <Badge variant="outline" className="ml-2 align-middle font-normal">
