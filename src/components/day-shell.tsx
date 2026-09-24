@@ -5,7 +5,6 @@ import { DaySwitcher } from "@/components/day-switcher"
 import { DayWorkspace } from "@/components/day-workspace"
 import { JournalSkeleton } from "@/components/journal-skeleton"
 import { EmptyState } from "@/components/empty-state"
-import { SourceNote } from "@/components/trip-header"
 import { useTrip } from "@/components/trip-provider"
 
 export function DayShell({
@@ -31,10 +30,9 @@ export function DayShell({
   }
 
   return (
-    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-7 px-4 py-6 sm:px-6">
+    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-8 px-4 pb-16 sm:px-6">
       <DaySwitcher days={trip.days} activeDayId={day.id} />
       <DayWorkspace day={day}>{children}</DayWorkspace>
-      <SourceNote className="pb-8" />
     </div>
   )
 }

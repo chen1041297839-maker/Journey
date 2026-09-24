@@ -33,7 +33,7 @@ export function OutfitCard({
       <ul className="flex w-full min-w-0 flex-col gap-2 text-sm leading-7">
         {outfit.pieces.map((piece) => (
           <li key={piece} className="flex w-full min-w-0 gap-2">
-            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-foreground/40" />
             <span className="min-w-0 flex-1">{piece}</span>
           </li>
         ))}

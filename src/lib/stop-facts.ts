@@ -61,6 +61,25 @@ export function stopFactLine(stop: Stop): string {
   return stop.note
 }
 
+function compact(text: string) {
+  return text.replace(/[\s，。；、：,.!！?？]/g, "")
+}
+
+/** 两段说明是否在讲同一件事，用来避免同一要点在页面上出现多次。 */
+export function repeats(a: string, b: string) {
+  const left = compact(a)
+  const right = compact(b)
+  if (left.length < 8 || right.length < 8) return false
+  if (left.includes(right) || right.includes(left)) return true
+  let hit = 0
+  let total = 0
+  for (let index = 0; index < left.length - 3; index += 4) {
+    total += 1
+    if (right.includes(left.slice(index, index + 4))) hit += 1
+  }
+  return total > 0 && hit / total >= 0.6
+}
+
 export function stopFactChips(stop: Stop): string[] {
   const chips: string[] = []
   const leiCount = (stop.warnings ?? []).filter((item) => item.kind === "雷").length

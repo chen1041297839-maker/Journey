@@ -26,6 +26,7 @@ export function RouteComposer() {
     parseRouteText(trip.isSampleRoute ? SAMPLE_ROUTE_TEXT : trip.sourceText || "").days
   )
   const [proposalOpen, setProposalOpen] = useState(false)
+  const [editing, setEditing] = useState(false)
   const [stopDraft, setStopDraft] = useState<Record<number, string>>({})
   const parsed = useMemo(() => parseRouteText(text), [text])
   const stopCount = countStops(parsed)
@@ -54,40 +55,49 @@ export function RouteComposer() {
     if (result?.days[0]) router.push(`/day/${result.days[0].id}`)
   }
 
-  return (
-    <main className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6">
-      <header className="flex w-full min-w-0 max-w-3xl flex-col gap-3">
-        <MetaLabel>圆周旅迹导入</MetaLabel>
-        <Heading as="h2" className="text-3xl">
-          粘贴分享链接，按导入顺序打开
-        </Heading>
-        <Copy muted>
-          圆周旅迹的站点顺序是准绳，导入后不会悄悄重排。若规划认为某一天在片区之间折返、回酒店占站、或日落时机不合理，会弹出确认框：改什么、为什么、保持原顺序还是采用建议。清单截图请打开对应那一站，在网页上传区拖入或选择，不要发到聊天。小红书链接可贴在本页下方或某一站里：公开页会读正文、下载能拿到的配图并 OCR。不会登录，也不会走 App。
-        </Copy>
-      </header>
+  const hasTrip = !trip.isSampleRoute && trip.days.length > 0
 
-      {!trip.isSampleRoute && trip.days.length > 0 ? (
-        <Panel>
-          <p className="text-[11px] text-muted-foreground">当前行程</p>
-          <Heading as="h3" className="text-xl">
-            {trip.title} · {trip.destination}
-          </Heading>
-          <Copy muted>
+  return (
+    <main className="mx-auto flex w-full min-w-0 max-w-3xl flex-1 flex-col gap-10 px-4 py-8 sm:px-6">
+      {hasTrip ? (
+        <section className="flex flex-col">
+          <p className="text-sm text-muted-foreground">
             {trip.datesLabel} · {trip.days.length} 天 ·{" "}
             {trip.days.reduce((sum, day) => sum + day.stops.length, 0)} 站
-          </Copy>
-          <div className="flex flex-wrap gap-2">
+          </p>
+          <Heading as="h2" className="mt-2 text-3xl">
+            {trip.destination}
+          </Heading>
+          <ol className="mt-8">
+            {trip.days.map((day) => (
+              <li key={day.id} className="border-t border-border">
+                <button
+                  type="button"
+                  onClick={() => router.push(`/day/${day.id}`)}
+                  className="grid w-full grid-cols-[3rem_minmax(0,1fr)] items-baseline gap-4 py-5 text-left transition-colors hover:bg-muted/70"
+                >
+                  <span className="text-sm tabular-nums text-primary">
+                    {String(day.dayNumber).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="cjk-flow block text-lg leading-7 font-medium">{day.title}</span>
+                    <span className="cjk-flow mt-1 block text-sm leading-6 text-muted-foreground">
+                      {day.stops.length} 站
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-6 flex flex-wrap gap-2">
             <Button type="button" onClick={() => router.push(`/day/${trip.days[0].id}`)}>
-              打开行程
+              从第一天开始
             </Button>
             {trip.proposal ? (
               <Button type="button" variant="outline" onClick={() => setProposalOpen(true)}>
                 {(trip.planMode || "imported") === "imported" ? "查看规划建议" : "规划建议 / 恢复原顺序"}
               </Button>
             ) : null}
-            <Button type="button" variant="outline" onClick={onImport} disabled={generating}>
-              {generating ? "正在导入…" : "重新导入当前链接"}
-            </Button>
           </div>
           {trip.proposal ? (
             <PlanProposalDialog
@@ -106,10 +116,27 @@ export function RouteComposer() {
               }}
             />
           ) : null}
-        </Panel>
-      ) : null}
+        </section>
+      ) : (
+        <header className="flex w-full min-w-0 flex-col gap-3">
+          <MetaLabel>圆周旅迹导入</MetaLabel>
+          <Heading as="h2" className="text-3xl">
+            粘贴分享链接，按导入顺序打开
+          </Heading>
+        </header>
+      )}
 
-      <Panel className="border-primary/30">
+      {hasTrip && !editing ? (
+        <button
+          type="button"
+          className="w-fit text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+          onClick={() => setEditing(true)}
+        >
+          修改导入或手动粘贴
+        </button>
+      ) : (
+        <div id="route-editor" className="flex flex-col gap-8 border-t border-border pt-6">
+      <Panel>
         <label className="text-sm font-medium" htmlFor="pitravel-url">
           圆周旅迹分享链接
         </label>
@@ -302,6 +329,8 @@ export function RouteComposer() {
           </div>
         </section>
       </div>
+        </div>
+      )}
     </main>
   )
 }

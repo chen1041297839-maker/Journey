@@ -17,48 +17,35 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
-import { visibleFactNames } from "@/lib/stop-facts"
+import { repeats } from "@/lib/stop-facts"
 
 export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
-  const warnings = stop.warnings ?? []
+  const covered = [day.planNote, day.walkingNote, stop.note].filter(Boolean).join("\n")
+  const warnings = (stop.warnings ?? []).filter((item) => !repeats(item.text, covered))
+  const showNote = Boolean(stop.note) && !repeats(stop.note, `${day.planNote}\n${day.walkingNote}`)
 
   return (
     <article className="flex w-full min-w-0 flex-col gap-8 pb-12">
-      <div className="flex items-start justify-between gap-3">
-        <Link
-          href={`/day/${day.id}`}
-          className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
-        >
-          <ArrowLeft data-icon="inline-start" />
-          返回 {day.title}
-        </Link>
-      </div>
+      <Link
+        href={`/day/${day.id}`}
+        className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "w-fit lg:hidden")}
+      >
+        <ArrowLeft data-icon="inline-start" />
+        返回这一天
+      </Link>
 
-      <header className="flex w-full min-w-0 flex-col gap-3">
-        <p className="cjk-flow text-[11px] leading-6 text-muted-foreground">
-          DAY {String(day.dayNumber).padStart(2, "0")} · {stop.area} · {stop.arrive} 抵达 · {stop.duration}
+      <header className="flex w-full min-w-0 flex-col gap-2">
+        <p className="cjk-flow text-sm text-muted-foreground">
+          {stop.arrive} · {stop.duration}
         </p>
-        <Heading as="h2" className="text-2xl sm:text-3xl">
+        <Heading as="h2" className="text-2xl">
           {stop.name}
         </Heading>
         {stop.nameJa ? <PlaceLine className="text-muted-foreground">{stop.nameJa}</PlaceLine> : null}
-        <Copy>{stop.note}</Copy>
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">{stop.vibe}</Badge>
-          <Badge variant="outline">{stop.shops.length} 家店</Badge>
-          <Badge variant="outline">{stop.mustBuys.length} 件必买</Badge>
-          <Badge variant="outline">{stop.photoSpots.length} 个机位</Badge>
-          {warnings.length > 0 ? (
-            <Badge variant="outline">{warnings.length} 条避坑</Badge>
-          ) : null}
-        </div>
+        {showNote ? <Copy>{stop.note}</Copy> : null}
       </header>
 
-      <ImageUpload dayId={day.id} stopId={stop.id} />
-
-      <ReadFlags flags={stop.readFlags} />
-
-      <OutfitCard outfit={day.outfit} compact />
+      <ReadFlags flags={(stop.readFlags ?? []).filter((flag) => !/上传|拖到|拖入/.test(flag))} />
 
       <Tabs defaultValue="facts" className="w-full min-w-0">
         <TabsList variant="line" className="h-auto w-full max-w-full justify-start overflow-x-auto">
@@ -75,11 +62,10 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
 
         <TabsContent value="facts" className="mt-6">
           <Stack gap="lg">
-            <HungFacts stop={stop} />
             {warnings.length > 0 ? <WarningList warnings={warnings} /> : null}
-            <OcrExcerpt lines={stop.ocrLines} />
+            <OcrExcerpt lines={linesNotInChildren(stop)} />
             <ShopList shops={stop.shops} />
-            <BuyList items={stop.mustBuys} />
+            <BuyList items={stop.mustBuys} shops={stop.shops} />
             {warnings.length === 0 && stop.shops.length === 0 && stop.mustBuys.length === 0 ? (
               <SectionEmpty
                 title="这一站还没有抽出要点"
@@ -109,37 +95,19 @@ export function StopDetail({ day, stop }: { day: Day; stop: Stop }) {
         </TabsContent>
       </Tabs>
 
+      <ImageUpload dayId={day.id} stopId={stop.id} />
       <PostPaste dayId={day.id} stopId={stop.id} />
     </article>
   )
 }
 
-function HungFacts({ stop }: { stop: Stop }) {
-  const names = visibleFactNames(stop)
-  const hung = stop.shops.filter((shop) => shop.mapPick?.why)
-  if (names.length === 0 && hung.length === 0) return null
-  return (
-    <section className="flex w-full min-w-0 flex-col gap-3">
-      <SectionLabel>这一站要点</SectionLabel>
-      <div className="flex flex-wrap gap-2">
-        {names.map((name) => (
-          <span
-            key={name}
-            className="inline-block max-w-full rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm leading-6"
-          >
-            {name}
-          </span>
-        ))}
-      </div>
-      {hung.map((shop) => (
-        <Copy key={shop.id} className="text-primary">
-          {shop.name}
-          {shop.whatToLookFor ? `，${shop.whatToLookFor}` : ""}
-          {shop.mapPick?.why ? `。${shop.mapPick.why}` : ""}
-        </Copy>
-      ))}
-    </section>
+function linesNotInChildren(stop: Stop) {
+  const covered = new Set(
+    [...stop.shops, ...stop.mustBuys]
+      .flatMap((item) => item.ocrLines ?? [])
+      .map((line) => line.text)
   )
+  return (stop.ocrLines ?? []).filter((line) => !covered.has(line.text))
 }
 
 function OcrExcerpt({ lines }: { lines?: Stop["ocrLines"] }) {
@@ -163,7 +131,7 @@ function WarningList({ warnings }: { warnings: Warning[] }) {
         <ul className="flex w-full min-w-0 flex-col gap-3">
           {warnings.map((item) => (
             <li key={item.id} className="cjk-flow text-sm leading-7">
-              <span className="mr-2 font-heading text-primary">{item.kind}</span>
+              <span className="mr-2 font-medium">{item.kind}</span>
               {item.text}
             </li>
           ))}
@@ -194,7 +162,7 @@ function ShopList({ shops }: { shops: Shop[] }) {
               {shop.hours ? ` · ${shop.hours}` : ""}
             </PlaceLine>
             <Copy>{shop.note}</Copy>
-            {shop.mapPick?.why ? <Copy className="text-primary">地图：{shop.mapPick.why}</Copy> : null}
+            {shop.mapPick?.why ? <Copy muted>地图：{shop.mapPick.why}</Copy> : null}
             {shop.whatToLookFor ? <Copy muted>找什么：{shop.whatToLookFor}</Copy> : null}
             <OcrLines lines={shop.ocrLines} />
             <SourceLinks evidence={shop.evidence} />
@@ -205,8 +173,9 @@ function ShopList({ shops }: { shops: Shop[] }) {
   )
 }
 
-function BuyList({ items }: { items: MustBuy[] }) {
+function BuyList({ items, shops }: { items: MustBuy[]; shops: Shop[] }) {
   if (items.length === 0) return null
+  const said = new Set(shops.map((shop) => shop.mapPick?.why).filter(Boolean))
   return (
     <section className="flex w-full min-w-0 flex-col gap-4">
       <SectionLabel>必买</SectionLabel>
@@ -223,7 +192,9 @@ function BuyList({ items }: { items: MustBuy[] }) {
             </MetaBits>
             {item.budget ? <PlaceLine>{item.budget}</PlaceLine> : null}
             <Copy>{item.reason}</Copy>
-            {item.mapPick?.why ? <Copy className="text-primary">地图：{item.mapPick.why}</Copy> : null}
+            {item.mapPick?.why && !said.has(item.mapPick.why) ? (
+              <Copy muted>地图：{item.mapPick.why}</Copy>
+            ) : null}
             {item.tip ? <Copy muted>提醒：{item.tip}</Copy> : null}
             <OcrLines lines={item.ocrLines} />
             <SourceLinks evidence={item.evidence} />

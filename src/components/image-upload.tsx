@@ -87,7 +87,7 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
   return (
     <section
       id="stop-upload"
-      className="flex w-full min-w-0 flex-col gap-4 rounded-2xl border-2 border-dashed border-primary bg-primary/5 p-5"
+      className="flex w-full min-w-0 flex-col gap-4 border-t border-border pt-6"
     >
       <MetaLabel>在网页这一站上传 · 不要发到聊天</MetaLabel>
       <Heading as="h3" className="text-xl">
@@ -103,8 +103,8 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
         role="button"
         tabIndex={0}
         className={cn(
-          "flex min-h-[9rem] w-full min-w-0 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-5 py-8 text-center outline-none focus-visible:border-primary focus-visible:ring-3 focus-visible:ring-ring/50",
-          dragging ? "border-primary bg-card" : "border-primary/50 bg-card/80"
+          "flex min-h-[9rem] w-full min-w-0 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed px-5 py-8 text-center outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+          dragging ? "border-foreground bg-secondary" : "border-border"
         )}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(event) => {
@@ -135,7 +135,7 @@ export function ImageUpload({ dayId, stopId }: { dayId: string; stopId: string }
             event.target.value = ""
           }}
         />
-        <ImagePlus className="size-8 text-primary" aria-hidden />
+        <ImagePlus className="size-6 text-foreground" aria-hidden />
         <span className="cjk-flow mt-3 font-heading text-base text-foreground">
           点这里选图，或把截图拖进来
         </span>

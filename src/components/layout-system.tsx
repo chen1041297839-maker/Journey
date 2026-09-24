@@ -18,7 +18,7 @@ export function MetaLabel({
   children: ReactNode
   className?: string
 }) {
-  return <p className={cn("text-[11px] font-medium text-primary", className)}>{children}</p>
+  return <p className={cn("text-[11px] font-medium text-muted-foreground", className)}>{children}</p>
 }
 
 export function Heading({
@@ -44,7 +44,7 @@ export function PlaceLine({
   children: ReactNode
   className?: string
 }) {
-  return <p className={cn("cjk-flow text-sm leading-7 text-primary", className)}>{children}</p>
+  return <p className={cn("cjk-flow text-sm leading-7 text-foreground", className)}>{children}</p>
 }
 
 export function Copy({

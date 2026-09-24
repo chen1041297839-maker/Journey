@@ -28,7 +28,7 @@ export function BranchFinder({ dayId }: { dayId: string }) {
         setQuery("")
       }}
     >
-      <MetaLabel>选店 · 沿路挂到已有站</MetaLabel>
+      <MetaLabel>沿路加一家店</MetaLabel>
       <div className="flex w-full min-w-0 flex-col gap-2 sm:flex-row">
         <Input
           value={query}
@@ -40,9 +40,6 @@ export function BranchFinder({ dayId }: { dayId: string }) {
           挂到当天路上
         </Button>
       </div>
-      <Copy muted className="text-xs leading-6">
-        只把店挂到绕路最少的已有站，不会重排圆周旅迹。选店结果写进下面时间线和站点要点。
-      </Copy>
       {message ? <Copy>{message}</Copy> : null}
     </form>
   )

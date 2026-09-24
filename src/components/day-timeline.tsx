@@ -2,17 +2,14 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Camera, Clock3, ShoppingBag } from "lucide-react"
-import { timeBlockLabel, walkingLevelLabel } from "@/data/types"
+import { timeBlockLabel } from "@/data/types"
 import type { Day, Stop, TimeBlock } from "@/data/types"
-import { Copy, Heading, PlaceLine } from "@/components/layout-system"
-import { OutfitCard } from "@/components/outfit-card"
+import { Copy } from "@/components/layout-system"
+import { repeats } from "@/lib/stop-facts"
 import { PlanProposalDialog } from "@/components/plan-proposal-dialog"
 import { BranchFinder } from "@/components/branch-finder"
 import { useTrip } from "@/components/trip-provider"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { stopFactChips, stopFactLine } from "@/lib/stop-facts"
 import { cn } from "@/lib/utils"
 
 function groupedStops(stops: Stop[]): { block: TimeBlock | "other"; items: Stop[] }[] {
@@ -26,125 +23,111 @@ function groupedStops(stops: Stop[]): { block: TimeBlock | "other"; items: Stop[
   return groups
 }
 
+export function DayIntro({ day }: { day: Day }) {
+  const { trip, applyProposal, revertImported } = useTrip()
+  const [proposalOpen, setProposalOpen] = useState(false)
+  const imported = (trip.planMode || "imported") === "imported"
+  const proposal = trip.proposal
+  const note = day.planNote || day.walkingNote
+  const extra =
+    day.planNote && day.walkingNote && !repeats(day.walkingNote, day.planNote)
+      ? day.walkingNote
+      : ""
+
+  if (!note && !proposal) return null
+
+  return (
+    <div className="flex flex-col gap-3">
+      {note ? <Copy>{note}</Copy> : null}
+      {extra ? <Copy muted>{extra}</Copy> : null}
+      {proposal ? (
+        <div>
+          <Button type="button" size="sm" variant="outline" onClick={() => setProposalOpen(true)}>
+            {imported ? "查看规划建议" : "规划建议 / 恢复原顺序"}
+          </Button>
+          <PlanProposalDialog
+            open={proposalOpen}
+            onOpenChange={setProposalOpen}
+            proposal={proposal}
+            planMode={trip.planMode || "imported"}
+            onKeep={() => setProposalOpen(false)}
+            onApply={() => {
+              applyProposal()
+              setProposalOpen(false)
+            }}
+            onRevert={() => {
+              revertImported()
+              setProposalOpen(false)
+            }}
+          />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 export function DayTimeline({
   day,
   activeStopId,
+  compact = false,
 }: {
   day: Day
   activeStopId?: string
+  compact?: boolean
 }) {
-  const { trip, applyProposal, revertImported } = useTrip()
-  const [proposalOpen, setProposalOpen] = useState(false)
   const groups = groupedStops(day.stops)
-  const imported = (trip.planMode || "imported") === "imported"
-  const proposal = trip.proposal
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-6">
-      <header className="flex w-full min-w-0 flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge>{imported ? "圆周旅迹原顺序" : "已采用规划建议"}</Badge>
-          <Badge variant="secondary">{walkingLevelLabel[day.walkingLevel]}</Badge>
-          <Badge variant="outline">{day.weatherVibe.split("，")[0]}</Badge>
-        </div>
-        <Heading as="h2" className="text-2xl">
-          {day.theme}
-        </Heading>
-        {day.planNote ? <Copy>{day.planNote}</Copy> : null}
-        <Copy muted>{day.walkingNote}</Copy>
-        <PlaceLine className="text-foreground/80">街区气质 · {day.neighborhoodStyle}</PlaceLine>
-        <Copy muted className="text-xs leading-6">
-          {day.routeSummary.join(" → ")}
-        </Copy>
-        {proposal ? (
-          <div>
-            <Button type="button" size="sm" variant={imported ? "outline" : "secondary"} onClick={() => setProposalOpen(true)}>
-              {imported ? "查看规划建议" : "规划建议 / 恢复原顺序"}
-            </Button>
-            <PlanProposalDialog
-              open={proposalOpen}
-              onOpenChange={setProposalOpen}
-              proposal={proposal}
-              planMode={trip.planMode || "imported"}
-              onKeep={() => setProposalOpen(false)}
-              onApply={() => {
-                applyProposal()
-                setProposalOpen(false)
-              }}
-              onRevert={() => {
-                revertImported()
-                setProposalOpen(false)
-              }}
-            />
-          </div>
-        ) : null}
-      </header>
-
-      <OutfitCard outfit={day.outfit} compact />
-      <BranchFinder dayId={day.id} />
-
       {day.stops.length === 0 ? (
-        <p className="cjk-flow rounded-xl border border-dashed px-4 py-8 text-center text-sm leading-7 text-muted-foreground">
+        <p className="cjk-flow border-t border-border px-1 py-8 text-sm leading-7 text-muted-foreground">
           这一天还没有站点。回到首页粘贴圆周旅迹链接，或按天把地点加进去。
         </p>
       ) : (
         <div className="flex w-full min-w-0 flex-col gap-6">
           {groups.map((group) => (
             <section key={group.block} className="flex w-full min-w-0 flex-col">
-              <p className="mb-3 text-[11px] font-medium text-primary">
+              <p className="mb-1 text-[11px] font-medium text-muted-foreground">
                 {group.block === "other" ? "行程" : timeBlockLabel[group.block]}
               </p>
-              <ol className="relative flex flex-col gap-4 border-l border-primary/30 pl-5">
+              <ol className="flex flex-col">
                 {group.items.map((stop) => {
                   const active = stop.id === activeStopId
                   return (
-                    <li key={stop.id} className="relative min-w-0">
-                      <span
-                        className={cn(
-                          "absolute top-5 -left-[27px] size-3 rounded-full ring-4 ring-background",
-                          active ? "bg-primary" : "bg-foreground/30"
-                        )}
-                      />
+                    <li key={stop.id} className="min-w-0">
                       <Link
                         href={`/day/${day.id}/stop/${stop.id}`}
                         className={cn(
-                          "block w-full min-w-0 rounded-2xl border bg-card px-4 py-4 transition-colors",
-                          active
-                            ? "border-primary ring-1 ring-primary/30"
-                            : "border-border hover:border-primary/40"
+                          "grid w-full min-w-0 items-baseline gap-x-3 border-t border-border py-4 transition-colors hover:bg-muted/70",
+                          compact
+                            ? "grid-cols-[3.25rem_minmax(0,1fr)] px-2"
+                            : "grid-cols-[3.25rem_2rem_minmax(0,1fr)] px-2",
+                          active && "bg-secondary"
                         )}
                       >
-                        <div className="flex w-full min-w-0 items-start gap-3">
-                          <div className="min-w-0 flex-1">
-                            <p className="cjk-flow text-[11px] leading-6 text-muted-foreground">
-                              {String(stop.order).padStart(2, "0")} · {stop.area}
-                              {stop.optional ? " · 可选" : ""}
-                            </p>
-                            <p className="cjk-flow mt-1 font-heading text-lg leading-snug">
-                              {stop.name}
-                            </p>
-                          </div>
-                          <span className="flex shrink-0 items-center gap-1 text-xs tabular-nums text-muted-foreground">
-                            <Clock3 className="size-3.5" />
-                            {stop.arrive}
+                        <span
+                          className={cn(
+                            "text-sm tabular-nums",
+                            active ? "text-primary" : "text-muted-foreground"
+                          )}
+                        >
+                          {stop.arrive}
+                        </span>
+                        {compact ? null : (
+                          <span className="text-xs tabular-nums text-muted-foreground">
+                            {String(stop.order).padStart(2, "0")}
                           </span>
-                        </div>
-                        <p className="cjk-flow mt-2 text-sm leading-7 text-foreground">
-                          {stopFactLine(stop)}
-                        </p>
-                        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] leading-5 text-muted-foreground">
-                          {stopFactChips(stop).map((chip) => (
-                            <span key={chip} className="inline-flex items-center gap-1">
-                              {chip.includes("机位") ? <Camera className="size-3" /> : null}
-                              {chip.includes("店") ? <ShoppingBag className="size-3" /> : null}
-                              {chip}
+                        )}
+                        <span className="min-w-0">
+                          <span className="cjk-flow block text-base leading-6 font-medium">
+                            {stop.name}
+                          </span>
+                          {stop.optional ? (
+                            <span className="cjk-flow mt-1 block text-sm leading-6 text-muted-foreground">
+                              可选
                             </span>
-                          ))}
-                          <span className="inline-flex items-center gap-1">
-                            <Clock3 className="size-3" />
-                            {stop.duration}
-                          </span>
-                        </div>
+                          ) : null}
+                        </span>
                       </Link>
                     </li>
                   )

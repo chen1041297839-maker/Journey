@@ -3,7 +3,6 @@
 import { useEffect, useId, useRef } from "react"
 import "leaflet/dist/leaflet.css"
 import type { Day, GeoPoint } from "@/data/types"
-import { Copy, MetaLabel, Panel } from "@/components/layout-system"
 import { gcj02ToWgs84 } from "@/lib/geo"
 import { visibleFactNames } from "@/lib/stop-facts"
 
@@ -43,12 +42,12 @@ export function DayRouteMap({ day }: { day: Day }) {
         attribution: "&copy; OpenStreetMap",
         maxZoom: 19,
       }).addTo(map)
-      const line = L.polyline(points, { color: "#b4532a", weight: 3, opacity: 0.85 }).addTo(map)
+      const line = L.polyline(points, { color: "#111111", weight: 2, opacity: 0.9 }).addTo(map)
       located.forEach((stop, index) => {
         L.circleMarker(wgs(stop.location as GeoPoint), {
           radius: 6,
-          color: "#b4532a",
-          fillColor: "#fff7ed",
+          color: "#111111",
+          fillColor: "#fdfcf8",
           fillOpacity: 1,
           weight: 2,
         })
@@ -59,8 +58,8 @@ export function DayRouteMap({ day }: { day: Day }) {
         if (!shop.location) return
         L.circleMarker(wgs(shop.location), {
           radius: 5,
-          color: "#0f766e",
-          fillColor: "#99f6e4",
+          color: "#2f56ff",
+          fillColor: "#2f56ff",
           fillOpacity: 1,
           weight: 2,
         })
@@ -85,47 +84,22 @@ export function DayRouteMap({ day }: { day: Day }) {
   }, [day.id, located.length, hungShops.length])
 
   return (
-    <Panel>
-      <MetaLabel>当天路线 · 圆周旅迹顺序</MetaLabel>
-      <Copy>棕线按导入顺序走，没有重排。青色点是挂在已有站上的店。</Copy>
-      <ol className="flex w-full min-w-0 flex-wrap gap-2">
-        {day.stops.map((stop, index) => (
-          <li
-            key={stop.id}
-            className="max-w-full rounded-lg border border-border bg-background px-3 py-1.5 text-sm leading-6"
-          >
-            <span className="tabular-nums text-primary">{String(index + 1).padStart(2, "0")}</span>{" "}
-            {stop.name.replace(/[（(].*$/, "")}
-          </li>
-        ))}
-      </ol>
+    <figure className="flex w-full min-w-0 flex-col gap-2">
       {located.length === 0 ? (
-        <p className="cjk-flow rounded-xl border border-dashed px-4 py-6 text-center text-sm leading-7 text-muted-foreground">
+        <p className="cjk-flow border border-border px-4 py-10 text-sm leading-7 text-muted-foreground">
           这一天还没有坐标。导入圆周旅迹后会按原顺序画路线。
         </p>
       ) : (
         <div
           id={`day-map-${hostId}`}
           ref={mapRef}
-          className="h-[280px] w-full overflow-hidden rounded-2xl border border-border bg-muted sm:h-[380px]"
+          className="h-[320px] w-full overflow-hidden rounded-md border border-border bg-muted sm:h-[420px]"
         />
       )}
-      {hungShops.length > 0 ? (
-        <ul className="flex w-full min-w-0 flex-col gap-2">
-          {hungShops.map(({ shop, stopName }) => (
-            <li key={`${shop.id}-${stopName}`} className="cjk-flow text-sm leading-7">
-              <span className="text-primary">{shop.name}</span>
-              {shop.whatToLookFor ? `，${shop.whatToLookFor}` : ""}
-              <span className="text-muted-foreground">。挂在{stopName}。</span>
-              {shop.mapPick?.why ? ` ${shop.mapPick.why}` : ""}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <Copy muted className="text-xs leading-6">
-          这一天还没有沿路挂上的店。
-        </Copy>
-      )}
-    </Panel>
+      <figcaption className="text-xs leading-6 text-muted-foreground">
+        黑线按导入顺序走，没有重排。
+        {hungShops.length > 0 ? ` 蓝点是沿路挂上的 ${hungShops.length} 家店，写在对应站点里。` : ""}
+      </figcaption>
+    </figure>
   )
 }

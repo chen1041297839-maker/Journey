@@ -12,7 +12,7 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex w-full min-w-0 flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/60 px-6 py-16 text-center",
+        "flex w-full min-w-0 flex-col items-start justify-center px-1 py-12 text-left",
         className
       )}
     >
@@ -30,7 +30,7 @@ export function SectionEmpty({
   hint: string
 }) {
   return (
-    <div className="w-full min-w-0 rounded-xl border border-dashed border-border bg-muted/40 px-5 py-8 text-center">
+    <div className="w-full min-w-0 border-t border-border px-1 py-8">
       <p className="cjk-flow text-sm font-medium leading-7 text-foreground">{title}</p>
       <p className="cjk-flow mt-2 text-sm leading-7 text-muted-foreground">{hint}</p>
     </div>

@@ -1,20 +1,19 @@
 import type { Metadata } from "next"
-import { Geist_Mono, Noto_Sans_SC, Noto_Serif_SC } from "next/font/google"
+import { Geist, Geist_Mono, Noto_Sans_SC } from "next/font/google"
 import { AppProviders } from "@/components/app-providers"
 import { TripHeader } from "@/components/trip-header"
 import { loadSharedTrip } from "@/lib/persist"
 import "./globals.css"
 
-const sans = Noto_Sans_SC({
-  variable: "--font-sans",
+const geist = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 })
 
-const serif = Noto_Serif_SC({
-  variable: "--font-serif",
+const noto = Noto_Sans_SC({
+  variable: "--font-noto",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["400", "500", "700"],
 })
 
 const mono = Geist_Mono({
@@ -35,7 +34,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-CN"
-      className={`${sans.variable} ${serif.variable} ${mono.variable} h-full antialiased`}
+      className={`${geist.variable} ${noto.variable} ${mono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full min-w-0 flex-col bg-background text-foreground">
         <AppProviders initialTrip={trip}>

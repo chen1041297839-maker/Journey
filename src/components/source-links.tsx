@@ -45,7 +45,7 @@ export function SourceLinks({
 export function ReadFlags({ flags }: { flags?: string[] }) {
   if (!flags?.length) return null
   return (
-    <div className="cjk-flow rounded-xl border border-dashed border-border bg-muted/40 px-4 py-3 text-sm leading-7 text-muted-foreground">
+    <div className="cjk-flow text-sm leading-7 text-muted-foreground">
       {flags.join(" · ")}
     </div>
   )
